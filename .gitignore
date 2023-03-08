@@ -1,0 +1,9 @@
+/markup/
+/build/
+/lib/
+/dist/
+/docs/
+
+*.log
+*.env
+db/
