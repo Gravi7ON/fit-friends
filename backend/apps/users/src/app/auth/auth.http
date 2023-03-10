@@ -1,0 +1,14 @@
+### Create user
+POST http://localhost:3333/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Chip Hawk",
+  "email": "me@gmail.com",
+  "password": "123456",
+  "sex": "мужской",
+  "dateBirth": "1993-03-26",
+  "role": "тренер",
+  "location": "Пионерская",
+  "about": "Sunt dolore ut dolore minim minim magna aute magna laborum ex pariatur enim enim amet."
+}
