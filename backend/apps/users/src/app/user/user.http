@@ -1,0 +1,16 @@
+### Find user
+GET http://localhost:3333/api/user/640b424084b71dfc366837ec HTTP/1.1
+
+### Update user profile
+PATCH http://localhost:3333/api/user/640b42bc84b71dfc366837f2 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Hawk Chip",
+  "about": "Cupidatat ex nostrud sunt nostrud magna.",
+  "experience": "профессионал",
+  "specializations": ["йога", "бокс"],
+  "certificates": "test.pdf",
+  "achievement": "Dolore duis ea nostrud consequat eu laborum excepteur labore adipisicing esse sit duis sit minim.",
+  "isIndividualTraining": true
+}

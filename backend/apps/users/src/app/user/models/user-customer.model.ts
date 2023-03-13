@@ -30,12 +30,12 @@ export class UserCustomerModel extends UserModel implements UserCustomer {
   @Prop({
     default: 0
   })
-  public targetReduceСalories?: number;
+  public targetDeclineСalories?: number;
 
   @Prop({
     default: 0
   })
-  public dayReduceCalories?: number;
+  public dayDeclineCalories?: number;
 
   @Prop({
     default: false

@@ -4,11 +4,50 @@ Content-Type: application/json
 
 {
   "name": "Chip Hawk",
-  "email": "me@gmail.com",
+  "email": "me2@gmail.com",
   "password": "123456",
   "sex": "мужской",
   "dateBirth": "1993-03-26",
   "role": "тренер",
   "location": "Пионерская",
   "about": "Sunt dolore ut dolore minim minim magna aute magna laborum ex pariatur enim enim amet."
+}
+
+### Login user
+POST http://localhost:3333/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "me2@gmail.com",
+  "password": "123456"
+}
+
+### Refresh tokens
+POST http://localhost:3333/api/auth/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDBlZjRlN2M2ODgxY2NmOTkxODFjMjUiLCJlbWFpbCI6Im1lMkBnbWFpbC5jb20iLCJyb2xlIjoi0YLRgNC10L3QtdGAIiwibmFtZSI6IkNoaXAgSGF3ayIsImlhdCI6MTY3ODcyMTc3MSwiZXhwIjoxNjc5MzI2NTcxfQ.cbxRl9xgvu39JC9QDU5oiF7KtJRtUvKCr9YPh4YDyac
+
+### Add trainer info
+PATCH http://localhost:3333/api/auth/additional-info/640ef4e7c6881ccf99181c25 HTTP/1.1
+Content-Type: application/json
+
+{
+  "experience": "профессионал",
+  "specializations": ["йога", "бокс"],
+  "certificates": "test.pdf",
+  "achievement": "Dolore duis ea nostrud consequat eu laborum excepteur labore adipisicing esse sit duis sit minim.",
+  "isIndividualTraining": true
+}
+
+
+### Add customer info
+PATCH http://localhost:3333/api/auth/additional-info/640b42bc84b71dfc366837f2 HTTP/1.1
+Content-Type: application/json
+
+{
+  "experience": "любитель",
+  "specializations": ["йога", "бокс"],
+  "trainingTime": "10-30 мин",
+  "targetDeclineСalories": 1000,
+  "dayDeclineCalories": 1000,
+  "isReadyTraining": false
 }

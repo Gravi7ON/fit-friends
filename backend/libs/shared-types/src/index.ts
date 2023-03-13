@@ -7,3 +7,6 @@ export * from './lib/user-specialization.enum';
 export * from './lib/user-training-time.enum';
 export * from './lib/user-customer.interface';
 export * from './lib/user.interface';
+export * from './lib/request-with-user.interface';
+export * from './lib/token-payload.interface';
+export * from './lib/request-with-token-payload.interface';

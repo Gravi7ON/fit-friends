@@ -6,5 +6,9 @@ export enum EnvValidationMessage {
   DBPortRequired = 'MongoDB port is required',
   DBUserRequired = 'MongoDB user is required',
   DBPasswordRequired = 'MongoDB password is required',
-  DBBaseAuthRequired = 'MongoDB authentication base is required'
+  DBBaseAuthRequired = 'MongoDB authentication base is required',
+  AccessJWTRequired = 'Access JWT secret is required',
+  RefreshJWTRequired = 'Refresh JWT secret is required',
+  RefreshJWTExpiresRequired = 'Refresh JWT expires is required',
+  AccessJWTExpiresRequired = 'Access JWT expires is required'
 }

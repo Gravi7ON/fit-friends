@@ -35,6 +35,26 @@ class EnvironmentsConfig {
     message: EnvValidationMessage.DBBaseAuthRequired
   })
   public MONGO_AUTH_BASE: string;
+
+  @IsString({
+    message: EnvValidationMessage.AccessJWTRequired
+  })
+  public JWT_AT_SECRET: string;
+
+  @IsString({
+    message: EnvValidationMessage.AccessJWTExpiresRequired
+  })
+  public JWT_AT_EXPIRES_IN: string;
+
+  @IsString({
+    message: EnvValidationMessage.RefreshJWTRequired
+  })
+  public JWT_RT_SECRET: string;
+
+  @IsString({
+    message: EnvValidationMessage.RefreshJWTExpiresRequired
+  })
+  public JWT_RT_EXPIRES_IN: string;
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {

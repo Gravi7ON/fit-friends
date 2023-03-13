@@ -7,7 +7,7 @@ export interface UserCustomer extends User {
   experience?: UserExperience;
   specializations?: UserSpecialization[];
   trainingTime?: TrainingTime;
-  targetReduceСalories?: number;
-  dayReduceCalories?: number;
+  targetDeclineСalories?: number;
+  dayDeclineCalories?: number;
   isReadyTraining?: boolean;
 }
