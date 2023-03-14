@@ -10,6 +10,7 @@ import { AddUserInfoGuard } from './guards/add-user-info.guard';
 import { AddUserInfoDto } from './dto/add-user-info.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { JwtAuthGuard } from '../common-guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,17 +29,21 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Request() request: RequestWithUser) {
-    const { user } = request;
+    return this.authService.loginUser(request);
+  }
 
-    return this.authService.loginUser(user);
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async revoke(@Request() request: RequestWithTokenPayload) {
+    return this.authService.revokeToken(request);
   }
 
   @UseGuards(JwtRefreshGuard)
-  @Post('refresh')
+  @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
   async refresh(@Request() request: RequestWithTokenPayload) {
-    const { user: tokenPayload } = request;
-    return this.authService.loginUser(tokenPayload);
+    return this.authService.loginUser(request);
   }
 
   @UseGuards(AddUserInfoGuard)

@@ -30,7 +30,7 @@ export class UserController {
     @Request() request: RequestWithTokenPayload,
     @Body() dto: UpdateUserDto
   ) {
-    const userId = request.user.sub;
+    const userId = request.user._id;
     const existedUser = await this.userService.updateUser(userId, dto);
 
     return existedUser.role === UserRole.Trainer ?

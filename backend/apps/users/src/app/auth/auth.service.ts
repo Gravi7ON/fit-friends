@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -7,13 +7,14 @@ import { ConfigType } from '@nestjs/config';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from '../user/user.repository';
-import { TokenPayload, User, UserCustomer, UserRole, UserTrainer } from '@backend/shared-types';
+import { RequestWithTokenPayload, RequestWithUser, TokenPayload, User, UserCustomer, UserRole, UserTrainer } from '@backend/shared-types';
 import { UserEntity } from '../user/entities/user.entity';
-import { AuthUserMessageException } from './auth.constant';
+import { AUTHORIZATION_SCHEMA, AuthUserMessageException, REQUEST_LOGIN_PATH } from './auth.constant';
 import { UserCustomerEntity } from '../user/entities/user-customer.entity';
 import { UserTrainerEntity } from '../user/entities/user-trainer.entity';
 import { AddUserInfoDto } from './dto/add-user-info.dto';
 import { jwtOptions } from '../../config/jwt.config';
+import { TokenRepository } from '../user/token.repository';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -22,6 +23,7 @@ dayjs.extend(timezone);
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly tokenRepository: TokenRepository,
     private readonly jwtService: JwtService,
     @Inject (jwtOptions.KEY) private readonly jwtConfig: ConfigType<typeof jwtOptions>
   ) {}
@@ -93,21 +95,69 @@ export class AuthService {
     }
   }
 
-  async loginUser(user:  Pick<User, '_id' | 'email' | 'role' | 'name'>) {
+  async loginUser(request: RequestWithUser | RequestWithTokenPayload) {
+    if (request.headers.authorization && request.route.path === REQUEST_LOGIN_PATH) {
+      const accessToken = request.headers.authorization.replace(AUTHORIZATION_SCHEMA, '');
+
+      try {
+        this.jwtService.verify(accessToken, {secret: this.jwtConfig.accessTokenSecret});
+      } catch(err) {
+        throw new UnauthorizedException(err.cause);
+      }
+
+      const refreshToken = (
+        await this.tokenRepository
+          .findToken(request.user._id)
+      )?.refreshToken;
+
+      return {
+        accessToken,
+        refreshToken
+      }
+    }
+
+    const user: Pick<User, '_id' | 'email' | 'role' | 'name'> = request.user;
     const payload: TokenPayload = {
-      sub: user._id,
+      _id: user._id,
       email: user.email,
       role: user.role,
       name: user.name
     };
 
+    const [accessToken, refreshToken, existedToken] = await Promise.all([
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload, {
+      secret: this.jwtConfig.refreshTokenSecret,
+      expiresIn: this.jwtConfig.refreshTokenExpiresIn
+      }),
+      this.tokenRepository.findToken(request.user._id)
+    ]);
+
+    if (existedToken) {
+      await Promise.all([
+        this.tokenRepository.destroyToken(existedToken.refreshToken),
+        this.tokenRepository.saveRevokedToken(existedToken.refreshToken)
+      ])
+    }
+    await this.tokenRepository.saveToken(user._id, refreshToken);
+
     return {
-      accessToken: await this.jwtService.signAsync(payload),
-      refreshToken: await this.jwtService.signAsync(payload, {
-        secret: this.jwtConfig.refreshTokenSecret,
-        expiresIn: this.jwtConfig.refreshTokenExpiresIn,
-      })
+      accessToken,
+      refreshToken
     };
+  }
+
+  async revokeToken(request: RequestWithTokenPayload) {
+    const existedToken = await this.tokenRepository.findToken(request.user._id);
+
+    if (!existedToken) {
+      throw new BadRequestException(AuthUserMessageException.MissingToken);
+    }
+
+    await Promise.all([
+      this.tokenRepository.destroyToken(existedToken.refreshToken),
+      this.tokenRepository.saveRevokedToken(existedToken.refreshToken)
+    ])
   }
 }
 

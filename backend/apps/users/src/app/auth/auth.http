@@ -16,15 +16,21 @@ Content-Type: application/json
 ### Login user
 POST http://localhost:3333/api/auth/login HTTP/1.1
 Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBlZjRlN2M2ODgxY2NmOTkxODFjMjUiLCJlbWFpbCI6Im1lMkBnbWFpbC5jb20iLCJyb2xlIjoi0YLRgNC10L3QtdGAIiwibmFtZSI6IkNoaXAgSGF3ayIsImlhdCI6MTY3ODgwMDEyOCwiZXhwIjoxNjc4ODAxMDI4fQ.GB_Z-kMlyVCngGsSO98bO1YCsw2-2BjkPzPRvuxhyyY
 
 {
   "email": "me2@gmail.com",
   "password": "123456"
 }
 
-### Refresh tokens
-POST http://localhost:3333/api/auth/refresh HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDBlZjRlN2M2ODgxY2NmOTkxODFjMjUiLCJlbWFpbCI6Im1lMkBnbWFpbC5jb20iLCJyb2xlIjoi0YLRgNC10L3QtdGAIiwibmFtZSI6IkNoaXAgSGF3ayIsImlhdCI6MTY3ODcyMTc3MSwiZXhwIjoxNjc5MzI2NTcxfQ.cbxRl9xgvu39JC9QDU5oiF7KtJRtUvKCr9YPh4YDyac
+### Logout user
+POST http://localhost:3333/api/auth/logout HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBlZjRlN2M2ODgxY2NmOTkxODFjMjUiLCJlbWFpbCI6Im1lMkBnbWFpbC5jb20iLCJyb2xlIjoi0YLRgNC10L3QtdGAIiwibmFtZSI6IkNoaXAgSGF3ayIsImlhdCI6MTY3ODgwMTk3MSwiZXhwIjoxNjc4ODAyODcxfQ.XIyIGLRQNgmtmJ9e21kSBDMupu6Cwxh1a6sBcP3P-ao
+
+
+### Refresh token
+POST http://localhost:3333/api/auth/refresh-token HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBlZjRlN2M2ODgxY2NmOTkxODFjMjUiLCJlbWFpbCI6Im1lMkBnbWFpbC5jb20iLCJyb2xlIjoi0YLRgNC10L3QtdGAIiwibmFtZSI6IkNoaXAgSGF3ayIsImlhdCI6MTY3ODc5OTgwOSwiZXhwIjoxNjc5NDA0NjA5fQ.yulWRuYpS605rBfXDdNG6Y7AOdO2sJ8mkccHOwktRPI
 
 ### Add trainer info
 PATCH http://localhost:3333/api/auth/additional-info/640ef4e7c6881ccf99181c25 HTTP/1.1
