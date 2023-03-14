@@ -5,7 +5,8 @@ export enum AuthUserMessageException {
   EmailNotValid = 'The email is not valid',
   ForbiddenAddInfo = 'The user registration proccess is complete, you can update only',
   RevokedToken = 'This token has been revoked',
-  MissingToken = 'Missing authorization token'
+  MissingToken = 'Missing authorization token',
+  AlreadyRegisterAndAuth = 'You already register and authorized, if you have to a new profile, you should send request without autorization header'
 }
 
 export const AUTHORIZATION_SCHEMA = 'Bearer ';

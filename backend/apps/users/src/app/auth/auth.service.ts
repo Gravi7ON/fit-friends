@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -28,7 +28,18 @@ export class AuthService {
     @Inject (jwtOptions.KEY) private readonly jwtConfig: ConfigType<typeof jwtOptions>
   ) {}
 
-  async register(dto: CreateUserDto) {
+  async register(dto: CreateUserDto, request: RequestWithTokenPayload) {
+    if (request.headers.authorization) {
+      const accessToken = request.headers.authorization.replace(AUTHORIZATION_SCHEMA, '');
+
+      try {
+        this.jwtService.verify(accessToken, {secret: this.jwtConfig.accessTokenSecret});
+        throw new ForbiddenException(AuthUserMessageException.AlreadyRegisterAndAuth);
+      } catch(err) {
+        throw new UnauthorizedException(err.cause);
+      }
+    }
+
     const user: User = {
       ...dto,
       dateBirth: dto.dateBirth ? dayjs.tz(dto.dateBirth, 'Europe/London').toDate() : null
