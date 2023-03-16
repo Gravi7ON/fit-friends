@@ -1,19 +1,19 @@
-import { UserExperience, UserSpecialization, UserTrainer } from '@backend/shared-types';
+import { UserExperience, UserSpecialization, UserCoach } from '@backend/shared-types';
 import { UserEntity } from './user.entity';
 
-export class UserTrainerEntity extends UserEntity {
+export class UserCoachEntity extends UserEntity {
   public experience?: UserExperience;
   public specializations?: UserSpecialization[];
   public certificates?: string[];
   public achievement?: string;
   public isIndividualTraining?: boolean;
 
-  constructor(user: UserTrainer) {
+  constructor(user: UserCoach) {
     super(user);
     this.fillRoleEntity(user);
   }
 
-  public updateEntity(user: UserTrainer) {
+  public updateEntity(user: UserCoach) {
     this._id = user._id;
     this.name = user.name;
     this.avatar = user.avatar;
@@ -27,14 +27,14 @@ export class UserTrainerEntity extends UserEntity {
     this.isIndividualTraining = user.isIndividualTraining;
   }
 
-  public addInfoEntity(user: UserTrainer) {
+  public addInfoEntity(user: UserCoach) {
     this.experience = user.experience;
     this.specializations = user.specializations;
     this.achievement = user.achievement;
     this.isIndividualTraining = user.isIndividualTraining;
   }
 
-  public fillRoleEntity(user: UserTrainer) {
+  public fillRoleEntity(user: UserCoach) {
     this.experience = user.experience;
     this.specializations = user.specializations;
     this.certificates = user.certificates;

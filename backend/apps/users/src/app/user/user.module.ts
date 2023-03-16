@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserTrainerModel, UserTrainerSchema } from './models/user-trainer.model';
+import { UserCoachModel, UserCoachSchema } from './models/user-coach.model';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { UserRepository } from './user.repository';
@@ -12,7 +12,7 @@ import { BlackListTokenModel, BlackListTokenSchema } from './models/black-list-t
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: UserTrainerModel.name, schema: UserTrainerSchema },
+      { name: UserCoachModel.name, schema: UserCoachSchema },
       { name: UserCustomerModel.name, schema: UserCustomerSchema },
       { name: TokenModel.name, schema: TokenSchema },
       { name: BlackListTokenModel.name, schema: BlackListTokenSchema }

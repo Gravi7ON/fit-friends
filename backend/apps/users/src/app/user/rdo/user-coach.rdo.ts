@@ -1,6 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
 
-export class UserTrainerRdo {
+export class UserCoachRdo {
   @Expose()
   @Transform(({obj}) => obj._id.toString())
   public id: string;

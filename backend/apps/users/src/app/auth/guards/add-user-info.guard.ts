@@ -33,7 +33,7 @@ export class AddUserInfoGuard implements CanActivate {
       dayDeclineCalories,
       isReadyTraining
     } = existUser;
-    const additionalTrainerFields = [
+    const additionalCoachFields = [
       experience,
       specializations?.length,
       certificates?.length,
@@ -50,9 +50,9 @@ export class AddUserInfoGuard implements CanActivate {
     ];
 
     switch(existUser.role) {
-      case UserRole.Trainer:
+      case UserRole.Coach:
         if(
-          additionalTrainerFields
+          additionalCoachFields
             .filter((item) => !item).length === ALL_EMPTY_ADDITIONAL_TRAINER_FIELDS
         ) {
           return true;

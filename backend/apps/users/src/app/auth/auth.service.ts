@@ -7,11 +7,11 @@ import { ConfigType } from '@nestjs/config';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from '../user/user.repository';
-import { RequestWithTokenPayload, RequestWithUser, TokenPayload, User, UserCustomer, UserRole, UserTrainer } from '@backend/shared-types';
+import { RequestWithTokenPayload, RequestWithUser, TokenPayload, User, UserCustomer, UserRole, UserCoach } from '@backend/shared-types';
 import { UserEntity } from '../user/entities/user.entity';
 import { AUTHORIZATION_SCHEMA, AuthUserMessageException, REQUEST_LOGIN_PATH } from './auth.constant';
 import { UserCustomerEntity } from '../user/entities/user-customer.entity';
-import { UserTrainerEntity } from '../user/entities/user-trainer.entity';
+import { UserCoachEntity } from '../user/entities/user-coach.entity';
 import { AddUserInfoDto } from './dto/add-user-info.dto';
 import { jwtOptions } from '../../config/jwt.config';
 import { TokenRepository } from '../user/token.repository';
@@ -64,11 +64,11 @@ export class AuthService {
       throw new ConflictException(AuthUserMessageException.NotFound);
     }
 
-    let userEntity : UserCustomerEntity & UserTrainerEntity;
+    let userEntity : UserCustomerEntity & UserCoachEntity;
 
     switch(existUser.role) {
-      case UserRole.Trainer:
-        userEntity = new UserTrainerEntity(existUser);
+      case UserRole.Coach:
+        userEntity = new UserCoachEntity(existUser);
         userEntity.certificates.push(dto.certificates);
         userEntity.addInfoEntity({
           ...existUser,
@@ -94,11 +94,11 @@ export class AuthService {
       throw new NotFoundException(AuthUserMessageException.NotFound);
     }
 
-    let userEntity : UserCustomerEntity & UserTrainerEntity;
+    let userEntity : UserCustomerEntity & UserCoachEntity;
 
     switch(existUser.role) {
-      case UserRole.Trainer:
-        userEntity = new UserTrainerEntity(existUser);
+      case UserRole.Coach:
+        userEntity = new UserCoachEntity(existUser);
         return await getVerifyUser(userEntity, password);
       case UserRole.Customer:
         userEntity = new UserCustomerEntity(existUser);
@@ -172,7 +172,7 @@ export class AuthService {
   }
 }
 
-const getVerifyUser = async function(entity: UserCustomerEntity | UserTrainerEntity, password: string): Promise<UserCustomer | UserTrainer> {
+const getVerifyUser = async function(entity: UserCustomerEntity | UserCoachEntity, password: string): Promise<UserCustomer | UserCoach> {
   if (!await entity.comparePassword(password)) {
     throw new BadRequestException(AuthUserMessageException.PasswordWrong);
   }

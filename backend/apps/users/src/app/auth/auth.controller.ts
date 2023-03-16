@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreatedUserRdo } from './rdo/created-user.rdo';
 import { RequestWithTokenPayload, RequestWithUser, UserRole } from '@backend/shared-types';
-import { UserTrainerRdo } from '../user/rdo/user-trainer.rdo';
+import { UserCoachRdo } from '../user/rdo/user-coach.rdo';
 import { UserCustomerRdo } from '../user/rdo/user-customer.rdo';
 import { AddUserInfoGuard } from './guards/add-user-info.guard';
 import { AddUserInfoDto } from './dto/add-user-info.dto';
@@ -54,8 +54,8 @@ export class AuthController {
   ) {
     const existedUser = await this.authService.addUserInfo(id, dto);
 
-    return existedUser.role === UserRole.Trainer ?
-      fillObject(UserTrainerRdo, existedUser) :
+    return existedUser.role === UserRole.Coach ?
+      fillObject(UserCoachRdo, existedUser) :
       fillObject(UserCustomerRdo, existedUser);
   }
 }

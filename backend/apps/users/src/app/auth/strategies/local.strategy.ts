@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { UserCustomer, UserTrainer } from '@backend/shared-types';
+import { UserCustomer, UserCoach } from '@backend/shared-types';
 
 const USERNAME_FIELD_NAME = 'email';
 
@@ -16,7 +16,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  public async validate(email: string, password: string): Promise<UserCustomer | UserTrainer> {
+  public async validate(email: string, password: string): Promise<UserCustomer | UserCoach> {
     return this.authService.verifyUser({email, password});
   }
 }

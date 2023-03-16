@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UserExperience, UserSpecialization, UserTrainer } from '@backend/shared-types';
+import { UserExperience, UserSpecialization, UserCoach } from '@backend/shared-types';
 import { UserModel } from './user-common.model';
 
 @Schema({
-  collection: 'users-trainer',
+  collection: 'users-coach',
   timestamps: true
 })
-export class UserTrainerModel extends UserModel implements UserTrainer {
+export class UserCoachModel extends UserModel implements UserCoach {
   constructor() {
     super();
   }
@@ -38,4 +38,4 @@ export class UserTrainerModel extends UserModel implements UserTrainer {
   public isIndividualTraining?: boolean;
 }
 
-export const UserTrainerSchema = SchemaFactory.createForClass(UserTrainerModel);
+export const UserCoachSchema = SchemaFactory.createForClass(UserCoachModel);

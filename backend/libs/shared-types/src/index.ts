@@ -1,4 +1,4 @@
-export * from './lib/user-trainer.interface';
+export * from './lib/user-coach.interface';
 export * from './lib/user-location.enum';
 export * from './lib/user-role.enum';
 export * from './lib/user-sex.enum';
