@@ -5,6 +5,7 @@ import { ENV_FILE_PATH } from './app.constant';
 import { validateEnvironments } from './env.validation';
 import { PrismaModule } from './prisma/prisma.module';
 import { WorkoutModule } from './workout/workout.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { WorkoutModule } from './workout/workout.module';
       validate: validateEnvironments,
     }),
     WorkoutModule,
+    FileModule,
   ],
   controllers: [],
   providers: [],

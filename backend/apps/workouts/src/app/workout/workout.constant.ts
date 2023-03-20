@@ -6,4 +6,8 @@ enum RangeImages {
 }
 
 
-export const RANDOM_IMAGE_PATH = `training-${getRandomPositiveInteger(RangeImages.Min, RangeImages.Max)}.jpg`
+export const RANDOM_STATIC_IMAGE_PATH = `http://localhost:${process.env.PORT}/api/files/training-${getRandomPositiveInteger(RangeImages.Min, RangeImages.Max)}.jpg`
+
+export enum WorkoutMessageException {
+  OnlyCoach = 'Users with role coach only'
+}
