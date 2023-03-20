@@ -1,9 +1,11 @@
 import { fillObject } from '@backend/core';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { RequestWithTokenPayload } from '@backend/shared-types';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
+import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { RoleCoachGuard } from './guards/role-coach.guard';
-import { CreatedWorkoutRto } from './rdo/created-workout.rdo';
+import { CreatedWorkoutRdo } from './rdo/created-workout.rdo';
 import { WorkoutService } from './workout.service';
 
 @Controller('workouts')
@@ -14,9 +16,26 @@ export class WorkoutController {
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Post('/')
-  async create(@Body() dto: CreateWorkoutDto,) {
-    const newWorkout = await this.workoutService.createWorkout(dto);
+  async create(@Body() dto: CreateWorkoutDto, @Request() request: RequestWithTokenPayload) {
+    const coachId = request.user._id;
+    const newWorkout = await this.workoutService.createWorkout(dto, coachId);
 
-    return fillObject(CreatedWorkoutRto, newWorkout);
+    return fillObject(CreatedWorkoutRdo, newWorkout);
+  }
+
+  // @UseGuards(JwtAuthGuard, RoleCoachGuard)
+  @Patch('/:id')
+  async update(@Param('id', ParseIntPipe) workoutId: number, @Body() dto: UpdateWorkoutDto,) {
+    // const newWorkout = await this.workoutService.updateWorkout(workoutId, dto);
+
+    // return fillObject(CreatedWorkoutRdo, newWorkout);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('/:id')
+  async find(@Param('id', ParseIntPipe) workoutId: number) {
+    const newWorkout = await this.workoutService.findWorkout(workoutId);
+
+    return fillObject(CreatedWorkoutRdo, newWorkout);
   }
 }

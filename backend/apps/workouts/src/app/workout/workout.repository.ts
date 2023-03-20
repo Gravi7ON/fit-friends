@@ -23,4 +23,13 @@ export class WorkoutRepository {
       }
     });
   }
+
+  public find(workoutId: number): Promise<Workout | null> {
+    return this.prisma.workout.findFirst({
+      where: { id: workoutId },
+      include: {
+        reviews: true,
+      }
+    })
+  }
 }

@@ -2,7 +2,7 @@ import { Review, TrainingTime, UserExperience, UserSexForWorkout, UserSpecializa
 import { Expose } from 'class-transformer';
 
 
-export class CreatedWorkoutRto {
+export class CreatedWorkoutRdo {
   @Expose()
   public title: string;
 

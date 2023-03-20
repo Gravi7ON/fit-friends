@@ -9,5 +9,6 @@ enum RangeImages {
 export const RANDOM_STATIC_IMAGE_PATH = `http://localhost:${process.env.PORT}/api/files/training-${getRandomPositiveInteger(RangeImages.Min, RangeImages.Max)}.jpg`
 
 export enum WorkoutMessageException {
+  NotFound = 'Workout with this id not found',
   OnlyCoach = 'Users with role coach only'
 }

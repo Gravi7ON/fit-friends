@@ -1,6 +1,7 @@
 ### Create a new workout
 POST http://localhost:3334/api/workouts HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer
 
 {
   "title": "Amet dolore.",
@@ -13,3 +14,25 @@ Content-Type: application/json
   "sex": "для всех",
   "isSpecialOffer": true
 }
+
+### Update existed workout
+PATCH http://localhost:3334/api/workouts/1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer
+
+
+{
+  "title": "Amet dolore.",
+  "specialization": "пилатес",
+  "trainingTime": "50-80 мин",
+  "cost": 1500,
+  "calories": 2700,
+  "description": "Nulla mollit consequat deserunt in ex.",
+  "sex": "для мужчин",
+  "isSpecialOffer": false
+}
+
+### Find existed workout
+GET  http://localhost:3334/api/workouts/1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer

@@ -1,7 +1,7 @@
 import { Workout } from '@backend/shared-types';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
-import { RANDOM_STATIC_IMAGE_PATH } from './workout.constant';
+import { RANDOM_STATIC_IMAGE_PATH, WorkoutMessageException } from './workout.constant';
 import { WorkoutEntity } from './workout.entity';
 import { WorkoutRepository } from './workout.repository';
 
@@ -11,13 +11,23 @@ export class WorkoutService {
     private readonly workoutRepository: WorkoutRepository,
   ) {}
 
-  async createWorkout(dto: CreateWorkoutDto): Promise<Workout> {
+  async createWorkout(dto: CreateWorkoutDto, coachId: string): Promise<Workout> {
     const workoutEntity = new WorkoutEntity({
       ...dto,
-      backgroundImage: RANDOM_STATIC_IMAGE_PATH
+      backgroundImage: RANDOM_STATIC_IMAGE_PATH,
+      coachId
     });
 
     return this.workoutRepository.create(workoutEntity);
   }
 
+  async findWorkout(workoutId: number): Promise<Workout | null> {
+    const existedWorkout = await this.workoutRepository.find(workoutId);
+
+    if (!existedWorkout) {
+      throw new NotFoundException(WorkoutMessageException.NotFound);
+    }
+
+    return existedWorkout;
+  }
 }
