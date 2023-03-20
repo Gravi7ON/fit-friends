@@ -2,6 +2,7 @@ import { Workout } from '@backend/shared-types';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
+import { CoachWorkoutsQuery } from './queries/coach-workouts.query';
 import { RANDOM_STATIC_IMAGE_PATH, WorkoutMessageException } from './workout.constant';
 import { WorkoutEntity } from './workout.entity';
 import { WorkoutRepository } from './workout.repository';
@@ -45,5 +46,11 @@ export class WorkoutService {
     }
 
     return existedWorkout;
+  }
+
+  async findWorkouts(coachId: string, query: CoachWorkoutsQuery): Promise<Workout[]> {
+    const existedWorkouts = await this.workoutRepository.findMany(coachId, query);
+
+    return existedWorkouts;
   }
 }
