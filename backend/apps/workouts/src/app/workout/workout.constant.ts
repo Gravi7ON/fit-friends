@@ -10,5 +10,6 @@ export const RANDOM_STATIC_IMAGE_PATH = `http://localhost:${process.env.PORT}/ap
 
 export enum WorkoutMessageException {
   NotFound = 'Workout with this id not found',
-  OnlyCoach = 'Users with role coach only'
+  OnlyCoach = 'Users with role coach only create workout',
+  OnlyOwnWorkout = 'You may edit own workout only'
 }

@@ -1,5 +1,6 @@
 import { Entity } from '@backend/core';
 import { Review, TrainingTime, UserExperience, UserSexForWorkout, UserSpecialization, Workout } from '@backend/shared-types';
+import { UpdateWorkoutDto } from './dto/update-workout.dto';
 
 export class WorkoutEntity implements Entity<WorkoutEntity>, Workout {
   public id?: number;
@@ -40,6 +41,18 @@ export class WorkoutEntity implements Entity<WorkoutEntity>, Workout {
     this.isSpecialOffer = entity.isSpecialOffer;
     this.createdAt = entity.createdAt;
     this.reviews = [];
+  }
+
+  public updateEntity(entity: UpdateWorkoutDto) {
+    this.title = entity.title;
+    this.specialization = entity.specialization;
+    this.trainingTime = entity.trainingTime;
+    this.cost = entity.cost;
+    this.calories = entity.calories;
+    this.description = entity.description;
+    this.sex = entity.sex;
+    this.workoutVideo = entity.workoutVideo;
+    this.isSpecialOffer = entity.isSpecialOffer;
   }
 
   public toObject(): WorkoutEntity {

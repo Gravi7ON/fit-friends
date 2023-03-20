@@ -19,7 +19,7 @@ Content-Type: application/json
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBlZjRlN2M2ODgxY2NmOTkxODFjMjUiLCJlbWFpbCI6Im1lMkBnbWFpbC5jb20iLCJyb2xlIjoi0YLRgNC10L3QtdGAIiwibmFtZSI6IkNoaXAgSGF3ayIsImlhdCI6MTY3ODgwMDEyOCwiZXhwIjoxNjc4ODAxMDI4fQ.GB_Z-kMlyVCngGsSO98bO1YCsw2-2BjkPzPRvuxhyyY
 
 {
-  "email": "me1@gmail.com",
+  "email": "me@gmail.com",
   "password": "123456"
 }
 

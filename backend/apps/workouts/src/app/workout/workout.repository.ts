@@ -24,6 +24,23 @@ export class WorkoutRepository {
     });
   }
 
+  public update(item: WorkoutEntity, workoutId: number): Promise<Workout> {
+    const workout = item.toObject();
+
+    return this.prisma.workout.update({
+      where: { id: workoutId },
+      data: {
+        ...workout,
+        reviews: {
+          connect: []
+        }
+      },
+      include: {
+        reviews: true
+      }
+    });
+  }
+
   public find(workoutId: number): Promise<Workout | null> {
     return this.prisma.workout.findFirst({
       where: { id: workoutId },

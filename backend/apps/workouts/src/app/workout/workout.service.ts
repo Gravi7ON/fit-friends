@@ -1,6 +1,7 @@
 import { Workout } from '@backend/shared-types';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
+import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { RANDOM_STATIC_IMAGE_PATH, WorkoutMessageException } from './workout.constant';
 import { WorkoutEntity } from './workout.entity';
 import { WorkoutRepository } from './workout.repository';
@@ -19,6 +20,21 @@ export class WorkoutService {
     });
 
     return this.workoutRepository.create(workoutEntity);
+  }
+
+  async updateWorkout(dto: UpdateWorkoutDto, workoutId: number, coachId: string): Promise<Workout> {
+    const existedWorkout = await this.findWorkout(workoutId);
+
+    if (existedWorkout.coachId !== coachId) {
+      throw new ForbiddenException(WorkoutMessageException.OnlyOwnWorkout);
+    }
+
+    const workoutEntity = new WorkoutEntity({
+      ...existedWorkout
+    });
+    workoutEntity.updateEntity(dto);
+
+    return this.workoutRepository.update(workoutEntity, workoutId);
   }
 
   async findWorkout(workoutId: number): Promise<Workout | null> {

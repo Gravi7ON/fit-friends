@@ -23,15 +23,16 @@ export class WorkoutController {
     return fillObject(CreatedWorkoutRdo, newWorkout);
   }
 
-  // @UseGuards(JwtAuthGuard, RoleCoachGuard)
+  @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Patch('/:id')
-  async update(@Param('id', ParseIntPipe) workoutId: number, @Body() dto: UpdateWorkoutDto,) {
-    // const newWorkout = await this.workoutService.updateWorkout(workoutId, dto);
+  async update(@Param('id', ParseIntPipe) workoutId: number, @Body() dto: UpdateWorkoutDto, @Request() request: RequestWithTokenPayload) {
+    const coachId: string = request.user._id;
+    const newWorkout = await this.workoutService.updateWorkout(dto, workoutId, coachId);
 
-    // return fillObject(CreatedWorkoutRdo, newWorkout);
+    return fillObject(CreatedWorkoutRdo, newWorkout);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   async find(@Param('id', ParseIntPipe) workoutId: number) {
     const newWorkout = await this.workoutService.findWorkout(workoutId);
