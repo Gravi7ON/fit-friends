@@ -10,7 +10,7 @@ import { UserService } from './user.service';
 import { UsersQuery } from './queries/users.query';
 import { RoleCustomerGuard } from '../common-guards/role-customer.guard';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(
     private readonly userService: UserService

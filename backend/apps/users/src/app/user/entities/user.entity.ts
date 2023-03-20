@@ -1,9 +1,10 @@
+import { Entity } from '@backend/core';
 import { User, UserLocation, UserRole, UserSex } from '@backend/shared-types';
 import { genSalt, compare, hash } from 'bcrypt';
 
 const SALT_ROUNDS = 10;
 
-export class UserEntity implements User {
+export class UserEntity implements Entity<UserEntity>, User {
   public _id: string;
   public name: string;
   public email: string;

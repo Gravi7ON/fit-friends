@@ -10,3 +10,6 @@ export * from './lib/user.interface';
 export * from './lib/request-with-user.interface';
 export * from './lib/token-payload.interface';
 export * from './lib/request-with-token-payload.interface';
+export * from './lib/workout.inteface';
+export * from './lib/review.interface';
+export * from './lib/user-sex-for-workout.enum';

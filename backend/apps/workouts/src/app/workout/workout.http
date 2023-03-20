@@ -1,0 +1,15 @@
+### Create a new workout
+POST http://localhost:3334/api/workouts HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Amet dolore.",
+  "experience": "любитель",
+  "specialization": "пилатес",
+  "trainingTime": "30-50 мин",
+  "cost": 1000,
+  "calories": 1700,
+  "description": "Nulla mollit consequat deserunt in ex.",
+  "sex": "для всех",
+  "isSpecialOffer": true
+}

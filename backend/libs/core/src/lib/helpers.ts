@@ -7,3 +7,10 @@ export function getMongoConnectionString({username, password, host, port, databa
 export function fillObject<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
   return plainToInstance(someDto, plainObject, {excludeExtraneousValues: true});
 }
+
+
+export function getRandomPositiveInteger(min: number, max: number): number {
+  const from = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
+  const to = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
+  return Math.floor(Math.random() * (to - from + 1) + from);
+}
