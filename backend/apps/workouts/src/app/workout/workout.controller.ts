@@ -5,7 +5,9 @@ import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { RoleCoachGuard } from './guards/role-coach.guard';
+import { CoachOrdersQuery } from './queries/coach-orders.query';
 import { CoachWorkoutsQuery } from './queries/coach-workouts.query';
+import { CoachWorkoutOrdersRdo } from './rdo/coach-workout-orders.rdo';
 import { CreatedWorkoutRdo } from './rdo/created-workout.rdo';
 import { WorkoutService } from './workout.service';
 
@@ -27,7 +29,7 @@ export class WorkoutController {
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Patch('/:id')
   async update(@Param('id', ParseIntPipe) workoutId: number, @Body() dto: UpdateWorkoutDto, @Request() request: RequestWithTokenPayload) {
-    const coachId: string = request.user._id;
+    const coachId: string = request.user?._id;
     const newWorkout = await this.workoutService.updateWorkout(dto, workoutId, coachId);
 
     return fillObject(CreatedWorkoutRdo, newWorkout);
@@ -36,10 +38,19 @@ export class WorkoutController {
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Get('/')
   async findMany(@Request() request: RequestWithTokenPayload, @Query() query: CoachWorkoutsQuery) {
-    const coachId: string = request.user._id;
+    const coachId: string = request.user?._id;
     const coachWorkouts = await this.workoutService.findWorkouts(coachId, query);
 
     return fillObject(CreatedWorkoutRdo, coachWorkouts);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCoachGuard)
+  @Get('/coach-orders')
+  async findCoachOrders(@Request() request: RequestWithTokenPayload, @Query() query: CoachOrdersQuery) {
+    const coachId: string = request?.user._id;
+    const coachOrders = await this.workoutService.findCoachOrders(coachId, query);
+
+    return fillObject(CoachWorkoutOrdersRdo, coachOrders);
   }
 
   @UseGuards(JwtAuthGuard)

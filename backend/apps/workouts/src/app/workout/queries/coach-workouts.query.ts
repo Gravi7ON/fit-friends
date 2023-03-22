@@ -1,17 +1,17 @@
 import { IsEnum, IsIn, IsInt, IsNumber, IsOptional, Max, Min } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { DefaultCoachWorkoutQuery } from '../workout.constant';
+import { DefaultCoachQuery } from '../workout.constant';
 import { TrainingTime } from '@backend/shared-types';
 
 export class CoachWorkoutsQuery {
   @IsNumber()
-  @Transform(({ value } ) => +value || DefaultCoachWorkoutQuery.Limit)
+  @Transform(({ value } ) => +value || DefaultCoachQuery.Limit)
   @IsOptional()
-  public limit?: number = DefaultCoachWorkoutQuery.Limit;
+  public limit?: number = DefaultCoachQuery.Limit;
 
   @IsIn(['asc', 'desc'])
   @IsOptional()
-  public sortDirection?: 'desc' | 'asc' = DefaultCoachWorkoutQuery.SortDirection;
+  public sortDirection?: 'desc' | 'asc' = DefaultCoachQuery.SortDirection;
 
   @Min(0, {
     each: true

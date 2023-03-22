@@ -13,3 +13,4 @@ export * from './lib/request-with-token-payload.interface';
 export * from './lib/workout.inteface';
 export * from './lib/review.interface';
 export * from './lib/user-sex-for-workout.enum';
+export * from './lib/order-workout.interface';

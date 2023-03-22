@@ -1,6 +1,7 @@
+import { Workout } from '@backend/shared-types';
 import { Injectable } from '@nestjs/common';
-import { Workout } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { CoachOrdersQuery } from './queries/coach-orders.query';
 import { CoachWorkoutsQuery } from './queries/coach-workouts.query';
 import { WorkoutEntity } from './workout.entity';
 
@@ -16,6 +17,9 @@ export class WorkoutRepository {
       data: {
         ...workout,
         reviews: {
+          connect: []
+        },
+        orders: {
           connect: []
         }
       },
@@ -34,6 +38,9 @@ export class WorkoutRepository {
         ...workout,
         reviews: {
           connect: []
+        },
+        orders: {
+          connect: []
         }
       },
       include: {
@@ -51,7 +58,7 @@ export class WorkoutRepository {
     })
   }
 
-  public findMany(coachId: string, {limit, page, sortDirection, costs, calories, rating, trainingTimes}: CoachWorkoutsQuery): Promise<Workout[] | null> {
+  public findMany(coachId: string, {limit, page, sortDirection, costs, calories, rating, trainingTimes}: CoachWorkoutsQuery = {}): Promise<Workout[]> {
     return this.prisma.workout.findMany({
       where: {
         coachId,
@@ -68,10 +75,43 @@ export class WorkoutRepository {
       },
       take: limit,
       include: {
-        reviews: true
+        reviews: true,
       },
       orderBy: [ { createdAt: sortDirection } ],
       skip: page > 0 ? limit * (page - 1) : undefined,
+    });
+  }
+
+  public findOrders(coachId: string, coachWorkoutIds: number[], {limit, page}: CoachOrdersQuery): Promise<Workout[]> {
+    return this.prisma.workout.findMany({
+      where: {
+        coachId,
+        orders: {
+          some: {
+            workoutId: {
+              in: coachWorkoutIds
+            }
+          },
+        }
+      },
+      include: {
+        orders: {
+          select: {
+            sum: true,
+            amountWorkout: true
+          }
+        }
+      },
+      take: limit,
+      skip: page > 0 ? limit * (page - 1) : undefined,
+    });
+  }
+
+  public findAll(coachId: string): Promise<Workout[]> {
+    return this.prisma.workout.findMany({
+      where: {
+        coachId
+      }
     });
   }
 }

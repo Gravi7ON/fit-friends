@@ -1,5 +1,5 @@
 import { Entity } from '@backend/core';
-import { Review, TrainingTime, UserExperience, UserSexForWorkout, UserSpecialization, Workout } from '@backend/shared-types';
+import { OrderWorkout, Review, TrainingTime, UserExperience, UserSexForWorkout, UserSpecialization, Workout } from '@backend/shared-types';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 
 export class WorkoutEntity implements Entity<WorkoutEntity>, Workout {
@@ -19,6 +19,7 @@ export class WorkoutEntity implements Entity<WorkoutEntity>, Workout {
   public isSpecialOffer?: boolean;
   public createdAt?: Date;
   public reviews?: Review[];
+  public orders?: OrderWorkout[]
 
   constructor(task: Workout) {
     this.fillEntity(task);
@@ -41,6 +42,7 @@ export class WorkoutEntity implements Entity<WorkoutEntity>, Workout {
     this.isSpecialOffer = entity.isSpecialOffer;
     this.createdAt = entity.createdAt;
     this.reviews = [];
+    this.orders = [];
   }
 
   public updateEntity(entity: UpdateWorkoutDto) {

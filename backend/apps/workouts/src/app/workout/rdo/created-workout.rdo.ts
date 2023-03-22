@@ -1,8 +1,10 @@
 import { Review, TrainingTime, UserExperience, UserSexForWorkout, UserSpecialization } from '@backend/shared-types';
 import { Expose } from 'class-transformer';
 
-
 export class CreatedWorkoutRdo {
+  @Expose()
+  public id: number;
+
   @Expose()
   public title: string;
 

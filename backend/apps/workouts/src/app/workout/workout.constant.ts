@@ -10,11 +10,20 @@ export const RANDOM_STATIC_IMAGE_PATH = `http://localhost:${process.env.PORT}/ap
 export enum WorkoutMessageException {
   NotFound = 'Workout with this id not found',
   OnlyCoach = 'Users with role coach only create workout',
-  OnlyOwnWorkout = 'You may edit own workout only'
+  OnlyOwnWorkout = 'You may edit own workout only',
+  NotAnyWorkout = `You don't have any workout yet`
+}
+export enum SortingDirection {
+  Asc = 'asc',
+  Desc = 'desc'
 }
 
-export enum DefaultCoachWorkoutQuery {
+export enum DefaultCoachQuery {
   Limit = 50,
-  SortDirection = 'desc',
-  SortFiled = 'createdAt'
+  SortDirection = 'desc'
+}
+
+export enum SortFiled {
+  Sum = 'sum',
+  AmountWorkout = 'amountWorkout'
 }

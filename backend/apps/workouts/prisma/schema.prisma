@@ -28,6 +28,7 @@ model Workout {
   isSpecialOffer     Boolean @default(false)
   createdAt          DateTime @default(now())
   reviews            Review[]
+  orders             OrderWorkout[]
 }
 
 model Review {
@@ -38,4 +39,36 @@ model Review {
   workout     Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   workoutId   Int
   createdAt   DateTime @default(now())
+}
+
+model OrderWorkout {
+  id              Int @id @default(autoincrement())
+  type            String
+  workout         Workout @relation(fields: [workoutId], references: [id])
+  workoutId       Int
+  customerId      String
+  cost            Int
+  amountWorkout   Int
+  sum             Int
+  payment         String
+  createdAt       DateTime @default(now())
+}
+
+model OrderGym {
+  id                  Int @id @default(autoincrement())
+  type                String
+  gym                 Gym @relation(fields: [gymId], references: [id])
+  gymId               Int
+  customerId          String
+  cost                Int
+  amountSubscription  Int
+  sum                 Int
+  payment             String
+  createdAt           DateTime @default(now())
+}
+
+model Gym {
+  id              Int @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  orders          OrderGym[]
 }

@@ -1,4 +1,4 @@
-import { UserSpecialization, UserExperience, TrainingTime, UserSexForWorkout } from '@backend/shared-types';
+import { UserSpecialization, UserExperience, TrainingTime, UserSexForWorkout, OrderWorkout } from '@backend/shared-types';
 import { Review } from './review.interface';
 
 export interface Workout {
@@ -18,4 +18,5 @@ export interface Workout {
   isSpecialOffer?: boolean;
   createdAt?: Date;
   reviews?: Review[];
+  orders?: OrderWorkout[]
 }
