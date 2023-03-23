@@ -1,4 +1,8 @@
-import { UserSpecialization, UserExperience, TrainingTime, UserSexForWorkout, OrderWorkout } from '@backend/shared-types';
+import { UserSpecialization } from './user-specialization.enum';
+import { UserExperience } from './user-experience.enum';
+import { TrainingTime } from './user-training-time.enum';
+import { UserSexForWorkout } from './user-sex-for-workout.enum';
+import { OrderWorkout } from './order-workout.interface';
 import { Review } from './review.interface';
 
 export interface Workout {

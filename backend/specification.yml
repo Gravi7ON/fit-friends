@@ -1,0 +1,1403 @@
+openapi: 3.0.0
+info:
+  title: API сервер для проекта «FitFriends».
+  description: |-
+    * Список ресурсов и маршрутов сервера «FitFriends.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+tags:
+  - name: workouts
+    description: Действия с тренировками.
+  - name: users
+    description: Действия с пользователем.
+
+paths:
+  /api/auth/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              examples:
+                customer:
+                  summary: customer
+                  value:
+                    id: 6329c3d6a04ab1061c6425ea
+
+                    email: keks@htmlacademy.ru
+
+                    name: Keks Doe
+
+                    password: 123456
+
+                    sex: женский
+
+                    dateBirth: '1993-03-26'
+
+                    role: тренер
+
+                    location: Спортивная
+
+                    about: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+                    experience: ''
+
+                    specializations: []
+
+                    trainingTime: ''
+
+                    targetDeclineСalories: 0
+
+                    dayDeclineCalories: 0
+
+                    isReadyTraining: false
+
+                coach:
+                  summary: coach
+                  value:
+                    id: 6329c3d6a04ab1061c6425ea
+
+                    email: keks@htmlacademy.ru
+
+                    name: Keks Doe
+
+                    password: 123456
+
+                    sex: женский
+
+                    dateBirth: '1993-03-26'
+
+                    role: тренер
+
+                    location: Спортивная
+
+                    about: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+                    experience: ''
+
+                    specializations: []
+
+                    certificates: []
+
+                    achievement: ''
+
+                    isIndividualTraining: false
+        "400":
+          description: Некорректные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 400
+
+                  messages:
+                    type: array
+                    items:
+                      type: string
+                      example: password must be longer than or equal to 6 character
+
+                  error:
+                    type: string
+                    example: Bad Request
+
+        "409":
+          description: Пользователь с таким email уже существует.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 409
+
+                  message:
+                    type: string
+                    example: User with this email already exists
+
+                  error:
+                    type: string
+                    example: Conflict
+
+  /api/auth/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля.
+
+      requestBody:
+        description: Объект, содержащий токены доступа и обновления.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: keks@htmlacademy.ru
+
+                password:
+                  type: string
+                  example: 123456
+        required: true
+
+      responses:
+        "200":
+          description: Ok.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2UzOTBiMThmODFjNWU3MDdiZTcyMzEiLCJlbWFpbCI6InRzZHNkdHlAZ21haWwuY29tIiwibmFtZSI6ImRkaGlwIEhhd2siLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NzYxMDc3OTUsImV4cCI6MTY3NjExMzc5NX0.4Ru0-8PHS4iEloulpmIUC8D9TDNW-1F4zM7KVkufJQA
+
+                  refreshToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2UzOTBiMThmODFjNWU3MDdiZTcyMzEiLCJlbWFpbCI6InRzZHNkdHlAZ21haWwuY29tIiwibmFtZSI6ImRkaGlwIEhhd2siLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NzYxMDc3OTUsImV4cCI6MTY3NjExMzc5NX0.4Ru0-8PHS4iEloulpmIUC8D9TDNW-1F4zM7KVkufJQA
+
+
+        "400":
+          description: Некорректные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 400
+
+                  messages:
+                    type: array
+                    items:
+                      type: string
+                      example: password must be longer than or equal to 6 character
+
+                  error:
+                    type: string
+                    example: Bad Request
+
+        "404":
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 404
+
+                  messages:
+                    type: string
+                    example: User not found
+
+                  error:
+                    type: string
+                    example: Not Found
+
+  /api/auth/logout:
+    post:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Выход из системы
+      description: Отзывает токен обновления, дальнейшее взаимодействие через очередной вход в систему.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      responses:
+        "204":
+          description: No Content.
+
+        "400":
+          description: Токен был отозван ранее.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 400
+
+                  message:
+                    type: string
+                    example: Missing authorization token
+
+                  error:
+                    type: string
+                    example: Bad Request
+
+  /api/auth/refresh-token:
+    post:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Обновление токенов
+      description: Обновляет токены доступа и обновления.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      responses:
+        "200":
+          description: Ok.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2UzOTBiMThmODFjNWU3MDdiZTcyMzEiLCJlbWFpbCI6InRzZHNkdHlAZ21haWwuY29tIiwibmFtZSI6ImRkaGlwIEhhd2siLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NzYxMDc3OTUsImV4cCI6MTY3NjExMzc5NX0.4Ru0-8PHS4iEloulpmIUC8D9TDNW-1F4zM7KVkufJQA
+
+                  refreshToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2UzOTBiMThmODFjNWU3MDdiZTcyMzEiLCJlbWFpbCI6InRzZHNkdHlAZ21haWwuY29tIiwibmFtZSI6ImRkaGlwIEhhd2siLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NzYxMDc3OTUsImV4cCI6MTY3NjExMzc5NX0.4Ru0-8PHS4iEloulpmIUC8D9TDNW-1F4zM7KVkufJQA
+
+  /api/auth/additional-info/{userId}:
+    patch:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Дополнительная информация
+      description: Добавляет дополнительную информацию о пользователях при регистрации.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              customer:
+                summary: Customer
+                value:
+                  experience: любитель
+
+                  specializations: [кроссфит, аэробика]
+
+                  trainingTime: 10-30 мин
+
+                  targetDeclineСalories: 1000
+
+                  dayDeclineCalories: 1000
+
+                  isReadyTraining: true
+
+              coach:
+                  summary: Coach
+                  value:
+                    experience: любитель
+
+                    specializations: [кроссфит, аэробика]
+
+                    certificates: test.pdf
+
+                    achievement: Dolore duis ea nostrud consequat eu laborum excepteur labore adipisicing esse sit duis sit minim
+
+                    isIndividualTraining: true
+        required: true
+
+      responses:
+        "200":
+          description: Пользователю добавлена доп информация. Объект пользователя.
+          content:
+            application/json:
+              examples:
+                customer:
+                  summary: customer
+                  value:
+                    id: 6329c3d6a04ab1061c6425ea
+
+                    email: keks@htmlacademy.ru
+
+                    name: Keks Doe
+
+                    password: 123456
+
+                    sex: женский
+
+                    dateBirth: '1993-03-26'
+
+                    role: тренер
+
+                    location: Спортивная
+
+                    about: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+                    experience: любитель
+
+                    specializations: [кроссфит, аэробика]
+
+                    trainingTime: 10-30 мин
+
+                    targetDeclineСalories: 1000
+
+                    dayDeclineCalories: 1000
+
+                    isReadyTraining: true
+
+                coach:
+                  summary: coach
+                  value:
+                    id: 6329c3d6a04ab1061c6425ea
+
+                    email: keks@htmlacademy.ru
+
+                    name: Keks Doe
+
+                    password: 123456
+
+                    sex: женский
+
+                    dateBirth: '1993-03-26'
+
+                    role: тренер
+
+                    location: Спортивная
+
+                    about: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+                    experience: любитель
+
+                    specializations: [кроссфит, аэробика]
+
+                    certificates: test.pdf
+
+                    achievement: Dolore duis ea nostrud consequat eu laborum excepteur labore adipisicing esse sit duis sit minim
+
+                    isIndividualTraining: true
+
+        "400":
+          description: Некорректные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 400
+
+                  messages:
+                    type: array
+                    items:
+                      type: string
+                      example: trainingTime must be a string
+
+                  error:
+                    type: string
+                    example: Bad Request
+
+        "404":
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 404
+
+                  messages:
+                    type: string
+                    example: User not found
+
+                  error:
+                    type: string
+                    example: Not Found
+
+  /api/users/{userId}:
+    get:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Дополнительная информация
+      description: Добавляет дополнительную информацию о пользователях при регистрации.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: userId
+          schema:
+            type: string
+            example: 6329c3d6a04ab1061c6425ea
+          required: true
+          description: Уникальный идентификатор пользователя.
+
+      responses:
+        "200":
+          description: Объект пользователя.
+          content:
+            application/json:
+              examples:
+                customer:
+                  summary: customer
+                  value:
+                    id: 6329c3d6a04ab1061c6425ea
+
+                    email: keks@htmlacademy.ru
+
+                    name: Keks Doe
+
+                    password: 123456
+
+                    sex: женский
+
+                    dateBirth: '1993-03-26'
+
+                    role: тренер
+
+                    location: Спортивная
+
+                    about: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+                    experience: любитель
+
+                    specializations: [кроссфит, аэробика]
+
+                    trainingTime: 10-30 мин
+
+                    targetDeclineСalories: 1000
+
+                    dayDeclineCalories: 1000
+
+                    isReadyTraining: true
+
+                coach:
+                  summary: coach
+                  value:
+                    id: 6329c3d6a04ab1061c6425ea
+
+                    email: keks@htmlacademy.ru
+
+                    name: Keks Doe
+
+                    password: 123456
+
+                    sex: женский
+
+                    dateBirth: '1993-03-26'
+
+                    role: тренер
+
+                    location: Спортивная
+
+                    about: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+                    experience: любитель
+
+                    specializations: [кроссфит, аэробика]
+
+                    certificates: test.pdf
+
+                    achievement: Dolore duis ea nostrud consequat eu laborum excepteur labore adipisicing esse sit duis sit minim
+
+                    isIndividualTraining: true
+
+        "400":
+          description: Некорректные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 400
+
+                  messages:
+                    type: string
+                    example: Incorrect mongo id
+
+                  error:
+                    type: string
+                    example: Bad Request
+
+        "404":
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 404
+
+                  messages:
+                    type: string
+                    example: User not found
+
+                  error:
+                    type: string
+                    example: Not Found
+
+  /api/users:
+    get:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Список пользователей
+      description: Возвращает список зарегистрированных пользователей.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: queryOrders
+          schema:
+            type: string
+            example: limit=5&page=1&sortDirection=asc&locations=Удельная,Звёздная&specializations=йога,бег,стрейчинг,силовые&experience=новичок&role=пользователь
+          required: false
+
+      responses:
+        "200":
+          description: Массив объектов пользователей.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: 6329c3d6a04ab1061c6425ea
+
+                    email:
+                      type: string
+                      example: keks@htmlacademy.ru
+
+                    name:
+                      type: string
+                      example: Keks Doe
+
+                    password:
+                      type: string
+                      example: 123456
+
+                    sex:
+                      type: string
+                      example: женский
+
+                    dateBirth:
+                      type: string
+                      example: '1993-03-26'
+
+                    role:
+                      type: string
+                      example: тренер
+
+                    location:
+                      type: string
+                      example: Спортивная
+
+                    about:
+                      type: string
+                      example: Cupidatat l
+
+                    experience:
+                      type: string
+                      example: любитель
+
+                    specializations:
+                      type: array
+                      items:
+                        type: string
+                        example: [кроссфит, аэробика]
+
+                    trainingTime:
+                      type: string
+                      example: 10-30 мин
+
+                    targetDeclineСalories:
+                      type: number
+                      example: 1000
+
+                    dayDeclineCalories:
+                      type: number
+                      example: 1000
+
+                    isReadyTraining:
+                      type: boolean
+                      example: true
+
+    patch:
+      tags:
+        - users
+      summary: Редактирование профиля пользователя
+      description: Редактирует профиль пользователя.
+
+      requestBody:
+        description: Информация для редактирования пользователя.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Keks Doe
+
+                sex:
+                  type: string
+                  example: женский
+
+                dateBirth:
+                  type: string
+                  example: '1993-03-26'
+
+                location:
+                  type: string
+                  example: Спортивная
+
+                about:
+                  type: string
+                  example: Cupidatat l
+
+                experience:
+                  type: string
+                  example: любитель
+
+                specializations:
+                  type: array
+                  items:
+                    type: string
+                    example: [кроссфит, аэробика]
+
+                trainingTime:
+                  type: string
+                  example: 10-30 мин
+
+                targetDeclineСalories:
+                  type: number
+                  example: 1000
+
+                dayDeclineCalories:
+                  type: number
+                  example: 1000
+
+                isReadyTraining:
+                  type: boolean
+                  example: true
+        required: true
+
+      responses:
+        "200":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              examples:
+                customer:
+                  summary: customer
+                  value:
+                    id: 6329c3d6a04ab1061c6425ea
+
+                    email: keks@htmlacademy.ru
+
+                    name: Keks Doe
+
+                    password: 123456
+
+                    sex: женский
+
+                    dateBirth: '1993-03-26'
+
+                    role: тренер
+
+                    location: Спортивная
+
+                    about: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+                    experience: ''
+
+                    specializations: []
+
+                    trainingTime: ''
+
+                    targetDeclineСalories: 0
+
+                    dayDeclineCalories: 0
+
+                    isReadyTraining: false
+
+                coach:
+                  summary: coach
+                  value:
+                    id: 6329c3d6a04ab1061c6425ea
+
+                    email: keks@htmlacademy.ru
+
+                    name: Keks Doe
+
+                    password: 123456
+
+                    sex: женский
+
+                    dateBirth: '1993-03-26'
+
+                    role: тренер
+
+                    location: Спортивная
+
+                    about: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+                    experience: ''
+
+                    specializations: []
+
+                    certificates: []
+
+                    achievement: ''
+
+                    isIndividualTraining: false
+        "400":
+          description: Некорректные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 400
+
+                  messages:
+                    type: array
+                    items:
+                      type: string
+                      example: trainingTime must be a string
+
+                  error:
+                    type: string
+                    example: Bad Request
+
+        "404":
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 404
+
+                  messages:
+                    type: string
+                    example: User not found
+
+                  error:
+                    type: string
+                    example: Not Found
+
+  /api/users/my-friends:
+    get:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Список друзей пользователей
+      description: Возвращает список друзей пользователя.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: queryOrders
+          schema:
+            type: string
+            example: limit=5&page=1&sortDirection=asc
+          required: false
+
+      responses:
+        "200":
+          description: Массив объектов пользователей.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: 6329c3d6a04ab1061c6425ea
+
+                    email:
+                      type: string
+                      example: keks@htmlacademy.ru
+
+                    name:
+                      type: string
+                      example: Keks Doe
+
+                    password:
+                      type: string
+                      example: 123456
+
+                    sex:
+                      type: string
+                      example: женский
+
+                    dateBirth:
+                      type: string
+                      example: '1993-03-26'
+
+                    role:
+                      type: string
+                      example: тренер
+
+                    location:
+                      type: string
+                      example: Спортивная
+
+                    about:
+                      type: string
+                      example: Cupidatat l
+
+                    experience:
+                      type: string
+                      example: любитель
+
+                    specializations:
+                      type: array
+                      items:
+                        type: string
+                        example: [кроссфит, аэробика]
+
+                    trainingTime:
+                      type: string
+                      example: 10-30 мин
+
+                    targetDeclineСalories:
+                      type: number
+                      example: 1000
+
+                    dayDeclineCalories:
+                      type: number
+                      example: 1000
+
+                    isReadyTraining:
+                      type: boolean
+                      example: true
+
+  /api/workouts/{workoutId}:
+    get:
+      tags:
+        - "workouts"
+      security:
+        - ApiKeyAuth: []
+      summary: Получить тренировку
+      description: Возвращает тренировку с идентификатором `workoutId`.
+
+      parameters:
+        - in: header
+          name: Autorization
+          description: Только для тренера.
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: workoutId
+          schema:
+            type: string
+            example: 6
+          required: true
+          description: Уникальный идентификатор тренировки.
+
+      responses:
+        "200":
+          description: Ok.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/workout'
+
+        "404":
+          description: Ресурсы не нейдены.
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 404
+
+                    messages:
+                      type: string
+                      example: Workout not found
+
+                    error:
+                      type: string
+                      example: Not Found
+
+    patch:
+      tags:
+        - "workouts"
+      security:
+        - ApiKeyAuth: []
+      summary: Редактирование тренировки
+      description: Редактирует тренировку.
+
+      parameters:
+        - in: header
+          name: Autorization
+          description: Только для тренера.
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: workoutId
+          schema:
+            type: string
+            example: 6
+          required: true
+          description: Уникальный идентификатор тренировки.
+
+      requestBody:
+        description: Информация для редактирования тренировки.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Amet dolore
+
+                description:
+                  type: string
+                  example: new amazing exelent cool guitar
+
+                cost:
+                  type: number
+                  example: 1000
+
+                experience:
+                  type: string
+                  example: любитель
+
+                specialization:
+                  type: string
+                  example: пилатес
+
+                calories:
+                  type: number
+                  example: 1000
+
+                trainingTime:
+                  type: string
+                  example: больше 80 мин
+
+                sex:
+                  type: string
+                  example: для всех
+
+                isSpecialOffer:
+                  type: boolean
+                  example: true
+        required: true
+
+      responses:
+        "200":
+          description: Ok.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/workout'
+
+        "403":
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 403
+
+                  messages:
+                    type: string
+                    example: You may edit own workout only
+
+                  error:
+                    type: string
+                    example: Forbidden.
+
+  /api/workouts:
+    get:
+      tags:
+        - "workouts"
+      security:
+        - ApiKeyAuth: []
+      summary: Получить список тренировок
+      description: Возвращает список тренировок.
+
+      parameters:
+        - in: header
+          name: Autorization
+          description: Только для тренера.
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: queryOrders
+          schema:
+            type: string
+            example: limit=6&page=1&rating=3&costs=1400,2000&calories=1300,2900&trainingTimes=больше 80 мин
+          required: false
+
+      responses:
+        "200":
+          description: Ok.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: '#/components/schemas/workout'
+
+    post:
+      tags:
+        - "workouts"
+      security:
+        - ApiKeyAuth: []
+      summary: Создать тренировку
+      description: Создает тренировку.
+
+      parameters:
+        - in: header
+          name: Autorization
+          description: Только для тренера.
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      requestBody:
+        description: Информация для создания новой тренировки.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Amet dolore
+
+                description:
+                  type: string
+                  example: new amazing exelent cool guitar
+
+                cost:
+                  type: number
+                  example: 1000
+
+                experience:
+                  type: string
+                  example: любитель
+
+                specialization:
+                  type: string
+                  example: пилатес
+
+                calories:
+                  type: number
+                  example: 1000
+
+                trainingTime:
+                  type: string
+                  example: больше 80 мин
+
+                sex:
+                  type: string
+                  example: для всех
+
+                isSpecialOffer:
+                  type: boolean
+                  example: true
+        required: true
+
+      responses:
+        "201":
+          description: Created.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/workout'
+
+  /api/workouts/coach-orders:
+    get:
+      tags:
+        - "workouts"
+      security:
+        - ApiKeyAuth: []
+      summary: Получить список заказов тренировок
+      description: Возвращает список с заказами тренировок.
+
+      parameters:
+        - in: header
+          name: Autorization
+          description: Только для тренера.
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: queryOrders
+          schema:
+            type: string
+            example: sortField=amountWorkout&sortDirection=desc
+          required: false
+
+      responses:
+        "200":
+          description: Ok.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      example: 11
+
+                    title:
+                      type: string
+                      example: Amet dolore
+
+                    description:
+                      type: string
+                      example: new amazing exelent cool guitar
+
+                    cost:
+                      type: number
+                      example: 1000
+
+                    experience:
+                      type: string
+                      example: любитель
+
+                    specialization:
+                      type: string
+                      example: пилатес
+
+                    calories:
+                      type: number
+                      example: 1000
+
+                    trainingTime:
+                      type: string
+                      example: больше 80 мин
+
+                    sex:
+                      type: string
+                      example: для всех
+
+                    isSpecialOffer:
+                      type: boolean
+                      example: true
+
+                    orders:
+                      type: object
+                      properties:
+                        sum:
+                          type: number
+                          example: 3000
+
+                        amountWorkout:
+                          type: number
+                          example: 3
+
+        "404":
+          description: Тренировки еще не созданы.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 404
+
+                  messages:
+                    type: string
+                    example: You don't have any workout yet
+
+                  error:
+                    type: string
+                    example: Not Found
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    createUser:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+
+        name:
+          type: string
+          example: Keks Doe
+
+        password:
+          type: string
+          example: 123456
+
+        sex:
+          type: string
+          example: женский
+
+        dateBirth:
+          type: string
+          example: '1993-03-26'
+
+        role:
+          type: string
+          example: тренер
+
+        location:
+          type: string
+          example: Спортивная
+
+        about:
+          type: string
+          example: Cupidatat labore occaecat pariatur ex aliqua tempor dolore Lorem id sit fugiat occaecat dolor.
+
+    workout:
+      type: object
+
+      properties:
+        id:
+          type: number
+          example: 11
+
+        title:
+          type: string
+          example: Amet dolore
+
+        description:
+          type: string
+          example: new amazing exelent cool guitar
+
+        cost:
+          type: number
+          example: 1000
+
+        experience:
+          type: string
+          example: любитель
+
+        specialization:
+          type: string
+          example: пилатес
+
+        calories:
+          type: number
+          example: 1000
+
+        trainingTime:
+          type: string
+          example: больше 80 мин
+
+        sex:
+          type: string
+          example: для всех
+
+        isSpecialOffer:
+          type: boolean
+          example: true
+
+        reviews:
+          type: array
+          example: []
