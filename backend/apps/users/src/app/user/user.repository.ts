@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserRole, UserCoach, UserCustomer } from '@backend/shared-types';
 import { UserCoachModel } from './models/user-coach.model';
@@ -9,12 +9,15 @@ import { UserCoachEntity } from './entities/user-coach.entity';
 import { UserCustomerEntity } from './entities/user-customer.entity';
 import { UsersQuery } from './queries/users.query';
 import { COACH_COLLECTION_NAME } from './user.constant';
+import { MyFriendsModel } from './models/my-friends.model';
+import { MyFriendsQuery } from './queries/my-friends.query';
 
 @Injectable()
 export class UserRepository {
   constructor(
     @InjectModel(UserCoachModel.name) private readonly userCoachModel: Model<UserCoachModel>,
-    @InjectModel(UserCustomerModel.name) private readonly userCustomerModel: Model<UserCustomerModel>
+    @InjectModel(UserCustomerModel.name) private readonly userCustomerModel: Model<UserCustomerModel>,
+    @InjectModel(MyFriendsModel.name) private readonly myFriendsModel: Model<MyFriendsModel>
     ) {}
 
   public async create(item: UserEntity): Promise<User> {
@@ -37,22 +40,12 @@ export class UserRepository {
               specializations: specializations ? { $in: specializations } : { $ne: {}  },
               experience: experience || { $ne: {}  }
             }
-          } : { $addFields: {} },
-          {
-            $skip: page > 0 ? limit * (page - 1) : 0
-          },
-          {
-            $limit: limit
-          },
-          {
-            $sort: { createdAt: sortDirection }
-          },
-          {
-            $addFields: { id: { $toString: '$_id' } }
-          },
-          {
-            $project: {__v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0}
-          }
+          } : { $addFields: { } },
+          { $skip: page > 0 ? limit * (page - 1) : 0 },
+          { $limit: limit },
+          { $sort: { createdAt: sortDirection } },
+          { $addFields: { id: { $toString: '$_id' } } },
+          { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } }
         ])
       case UserRole.Coach:
         return this.userCoachModel.aggregate([
@@ -63,22 +56,12 @@ export class UserRepository {
               specializations: specializations ? { $in: specializations } : { $ne: {}  },
               experience: experience || { $ne: {}  }
             }
-          } : { $addFields: {} },
-          {
-            $skip: page > 0 ? limit * (page - 1) : 0
-          },
-          {
-            $limit: limit
-          },
-          {
-            $sort: { createdAt: sortDirection }
-          },
-          {
-            $addFields: { id: { $toString: '$_id' } }
-          },
-          {
-            $project: {__v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0}
-          }
+          } : { $addFields: { } },
+          { $skip: page > 0 ? limit * (page - 1) : 0 },
+          { $limit: limit },
+          { $sort: { createdAt: sortDirection } },
+          { $addFields: { id: { $toString: '$_id' } } },
+          { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } }
         ])
       default:
         return this.userCustomerModel.aggregate([
@@ -89,7 +72,7 @@ export class UserRepository {
               specializations: specializations ? { $in: specializations } : { $ne: {}  },
               experience: experience || { $ne: {}  }
             }
-          } : { $addFields: {} },
+          } : { $addFields: { } },
           {
             $unionWith:{
               coll: COACH_COLLECTION_NAME,
@@ -101,27 +84,43 @@ export class UserRepository {
                     specializations: specializations ? { $in: specializations } : { $ne: {}  },
                     experience: experience || { $ne: {}  }
                   }
-                } : { $addFields: {} },
+                } : { $addFields: { } },
               ]
             }
           },
-          {
-            $sort: { createdAt: sortDirection }
-          },
-          {
-            $skip: page > 0 ? limit * (page - 1) : 0
-          },
-          {
-            $limit: limit
-          },
-          {
-            $addFields: { id: { $toString: '$_id' } }
-          },
-          {
-            $project: {__v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0}
-          }
+          { $skip: page > 0 ? limit * (page - 1) : 0 },
+          { $limit: limit },
+          { $sort: { createdAt: sortDirection } },
+          { $addFields: { id: { $toString: '$_id' } } },
+          { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } }
         ])
     }
+  }
+
+  public async findUserFriends(userId: string, {limit, sortDirection, page}: MyFriendsQuery): Promise<UserCustomer[] & UserCoach[] | null> {
+    const userFiendsIds = (await this.myFriendsModel.find({userId}))
+      .map((record) => new Types.ObjectId(record.friendId));
+
+    return this.userCustomerModel.aggregate([
+      { $match: { _id: { $in: userFiendsIds } } },
+      {
+        $unionWith: {
+          coll: 'users-coach',
+          pipeline: [
+            {
+              $match: {
+                _id: { $in: userFiendsIds }
+              }
+            }
+          ]
+        }
+      },
+      { $skip: page > 0 ? limit * (page - 1) : 0 },
+      { $limit: limit },
+      { $sort: { createdAt: sortDirection } },
+      { $addFields: { id: { $toString: '$_id' } } },
+      { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } }
+    ])
   }
 
   public async findById(id: string): Promise<UserCustomer & UserCoach | null> {

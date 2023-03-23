@@ -6,6 +6,7 @@ import { UserCoachEntity } from './entities/user-coach.entity';
 import { UserMessageException } from './user.constant';
 import { UserRepository } from './user.repository';
 import { UsersQuery } from './queries/users.query';
+import { MyFriendsQuery } from './queries/my-friends.query';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,12 @@ export class UserService {
 
   async findUsers(query: UsersQuery) {
     const users = await this.userRepository.findUsers(query);
+
+    return users;
+  }
+
+  async findUserFriends(userId: string, query: MyFriendsQuery) {
+    const users = await this.userRepository.findUserFriends(userId, query);
 
     return users;
   }

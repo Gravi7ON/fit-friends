@@ -1,6 +1,7 @@
 export enum UserMessageException {
   NotFound = 'User not found',
-  OnlyCustomer = 'Users with role customer only'
+  OnlyCustomer = 'Users with role customer only',
+  OnlyCoach = 'Users with role coach only'
 }
 
 export enum DefaultUsersQuery {

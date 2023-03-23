@@ -8,6 +8,7 @@ import { UserCustomerModel, UserCustomerSchema } from './models/user-customer.mo
 import { TokenModel, TokenSchema } from './models/token.model';
 import { TokenRepository } from './token.repository';
 import { BlackListTokenModel, BlackListTokenSchema } from './models/black-list-token.model';
+import { MyFriendsModel, MyFriendsSchema } from './models/my-friends.model';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { BlackListTokenModel, BlackListTokenSchema } from './models/black-list-t
       { name: UserCoachModel.name, schema: UserCoachSchema },
       { name: UserCustomerModel.name, schema: UserCustomerSchema },
       { name: TokenModel.name, schema: TokenSchema },
-      { name: BlackListTokenModel.name, schema: BlackListTokenSchema }
+      { name: BlackListTokenModel.name, schema: BlackListTokenSchema },
+      { name: MyFriendsModel.name, schema: MyFriendsSchema }
     ]),
   ],
   providers: [UserRepository, UserService, TokenRepository],
