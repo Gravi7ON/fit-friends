@@ -1,6 +1,17 @@
 import { fillObject } from '@backend/core';
 import { RequestWithTokenPayload } from '@backend/shared-types';
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
@@ -13,13 +24,14 @@ import { WorkoutService } from './workout.service';
 
 @Controller('workouts')
 export class WorkoutController {
-  constructor(
-    private readonly workoutService: WorkoutService
-  ) {}
+  constructor(private readonly workoutService: WorkoutService) {}
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Post('/')
-  async create(@Body() dto: CreateWorkoutDto, @Request() request: RequestWithTokenPayload) {
+  async create(
+    @Body() dto: CreateWorkoutDto,
+    @Request() request: RequestWithTokenPayload
+  ) {
     const coachId = request.user?._id;
     const newWorkout = await this.workoutService.createWorkout(dto, coachId);
 
@@ -28,27 +40,47 @@ export class WorkoutController {
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Patch('/:id')
-  async update(@Param('id', ParseIntPipe) workoutId: number, @Body() dto: UpdateWorkoutDto, @Request() request: RequestWithTokenPayload) {
+  async update(
+    @Param('id', ParseIntPipe) workoutId: number,
+    @Body() dto: UpdateWorkoutDto,
+    @Request() request: RequestWithTokenPayload
+  ) {
     const coachId: string = request.user?._id;
-    const newWorkout = await this.workoutService.updateWorkout(dto, workoutId, coachId);
+    const newWorkout = await this.workoutService.updateWorkout(
+      dto,
+      workoutId,
+      coachId
+    );
 
     return fillObject(CreatedWorkoutRdo, newWorkout);
   }
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Get('/')
-  async findMany(@Request() request: RequestWithTokenPayload, @Query() query: CoachWorkoutsQuery) {
+  async findMany(
+    @Request() request: RequestWithTokenPayload,
+    @Query() query: CoachWorkoutsQuery
+  ) {
     const coachId: string = request.user?._id;
-    const coachWorkouts = await this.workoutService.findWorkouts(coachId, query);
+    const coachWorkouts = await this.workoutService.findWorkouts(
+      coachId,
+      query
+    );
 
     return fillObject(CreatedWorkoutRdo, coachWorkouts);
   }
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Get('/coach-orders')
-  async findCoachOrders(@Request() request: RequestWithTokenPayload, @Query() query: CoachOrdersQuery) {
+  async findCoachOrders(
+    @Request() request: RequestWithTokenPayload,
+    @Query() query: CoachOrdersQuery
+  ) {
     const coachId: string = request?.user._id;
-    const coachOrders = await this.workoutService.findCoachOrders(coachId, query);
+    const coachOrders = await this.workoutService.findCoachOrders(
+      coachId,
+      query
+    );
 
     return fillObject(CoachWorkoutOrdersRdo, coachOrders);
   }

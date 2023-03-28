@@ -7,5 +7,5 @@ export interface OrderWorkout {
   amountWorkout?: number;
   sum?: number;
   payment?: string;
-  createdAt?: Date
+  createdAt?: Date;
 }

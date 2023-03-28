@@ -18,11 +18,9 @@ import { UserModule } from './user/user.module';
       load: [databaseConfig, jwtOptions],
       validate: validateEnvironments,
     }),
-    MongooseModule.forRootAsync(
-      getMongoDbConfig()
-    ),
+    MongooseModule.forRootAsync(getMongoDbConfig()),
     AuthModule,
-    UserModule
+    UserModule,
   ],
   controllers: [],
   providers: [],

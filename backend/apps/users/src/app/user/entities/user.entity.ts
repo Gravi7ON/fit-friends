@@ -22,8 +22,8 @@ export class UserEntity implements Entity<UserEntity>, User {
 
   public toObject() {
     return {
-      ...this
-    }
+      ...this,
+    };
   }
 
   public async hashPassword(password: string): Promise<UserEntity> {

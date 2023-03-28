@@ -7,25 +7,23 @@ import { WorkoutEntity } from './workout.entity';
 
 @Injectable()
 export class WorkoutRepository {
-  constructor(
-    private readonly prisma: PrismaService
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  public async create(item: WorkoutEntity): Promise<Workout>  {
+  public async create(item: WorkoutEntity): Promise<Workout> {
     const workout = item.toObject();
     return this.prisma.workout.create({
       data: {
         ...workout,
         reviews: {
-          connect: []
+          connect: [],
         },
         orders: {
-          connect: []
-        }
+          connect: [],
+        },
       },
       include: {
         reviews: true,
-      }
+      },
     });
   }
 
@@ -37,15 +35,15 @@ export class WorkoutRepository {
       data: {
         ...workout,
         reviews: {
-          connect: []
+          connect: [],
         },
         orders: {
-          connect: []
-        }
+          connect: [],
+        },
       },
       include: {
-        reviews: true
-      }
+        reviews: true,
+      },
     });
   }
 
@@ -54,53 +52,68 @@ export class WorkoutRepository {
       where: { id: workoutId },
       include: {
         reviews: true,
-      }
-    })
+      },
+    });
   }
 
-  public findMany(coachId: string, {limit, page, sortDirection, costs, calories, rating, trainingTimes}: CoachWorkoutsQuery = {}): Promise<Workout[]> {
+  public findMany(
+    coachId: string,
+    {
+      limit,
+      page,
+      sortDirection,
+      costs,
+      calories,
+      rating,
+      trainingTimes,
+    }: CoachWorkoutsQuery = {}
+  ): Promise<Workout[]> {
     return this.prisma.workout.findMany({
       where: {
         coachId,
         rating,
-        trainingTime: { in:  trainingTimes},
+        trainingTime: { in: trainingTimes },
         cost: {
           gte: costs?.at(0),
-          lte: costs?.at(1)
+          lte: costs?.at(1),
         },
         calories: {
           gte: calories?.at(0),
-          lte: calories?.at(1)
-        }
+          lte: calories?.at(1),
+        },
       },
       take: limit,
       include: {
         reviews: true,
       },
-      orderBy: [ { createdAt: sortDirection } ],
+      orderBy: [{ createdAt: sortDirection }],
       skip: page > 0 ? limit * (page - 1) : undefined,
     });
   }
 
-  public findOrders(coachId: string, coachWorkoutIds: number[], {limit, page}: CoachOrdersQuery): Promise<Workout[]> {
+  public findOrders(
+    coachId: string,
+    coachWorkoutIds: number[],
+    { limit, page }: CoachOrdersQuery
+  ): Promise<Workout[]> {
     return this.prisma.workout.findMany({
       where: {
         coachId,
         orders: {
           some: {
             workoutId: {
-              in: coachWorkoutIds
-            }
+              in: coachWorkoutIds,
+            },
           },
-        }
+        },
       },
       include: {
         orders: {
           select: {
             sum: true,
-            amountWorkout: true
-          }
-        }
+            amountWorkout: true,
+          },
+        },
       },
       take: limit,
       skip: page > 0 ? limit * (page - 1) : undefined,
@@ -110,8 +123,8 @@ export class WorkoutRepository {
   public findAll(coachId: string): Promise<Workout[]> {
     return this.prisma.workout.findMany({
       where: {
-        coachId
-      }
+        coachId,
+      },
     });
   }
 }

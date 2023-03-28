@@ -10,10 +10,13 @@ import {
   Max,
   MaxLength,
   Min,
-  MinLength
+  MinLength,
 } from 'class-validator';
-import { TrainingTime, UserExperience, UserSpecialization } from '@backend/shared-types';
-
+import {
+  TrainingTime,
+  UserExperience,
+  UserSpecialization,
+} from '@backend/shared-types';
 
 export class AddUserInfoDto {
   @IsString()
@@ -21,10 +24,10 @@ export class AddUserInfoDto {
   public experience: UserExperience;
 
   @IsString({
-    each: true
+    each: true,
   })
   @IsEnum(UserSpecialization, {
-    each: true
+    each: true,
   })
   @ArrayMaxSize(3)
   @ArrayUnique()

@@ -4,35 +4,35 @@ import { User, UserLocation, UserRole, UserSex } from '@backend/shared-types';
 
 export class UserModel extends Document implements User {
   @Prop({
-    required: true
+    required: true,
   })
   public name: string;
 
   @Prop({
     required: true,
-    unique: true
+    unique: true,
   })
   public email: string;
 
   @Prop({
-    default: 'unknown.jpg'
+    default: 'unknown.jpg',
   })
   public avatar?: string;
 
   @Prop({
-    required: true
+    required: true,
   })
   public password: string;
 
   @Prop({
     required: true,
     type: String,
-    enum: UserSex
+    enum: UserSex,
   })
   public sex: UserSex;
 
   @Prop({
-    default: null
+    default: null,
   })
   public dateBirth?: Date | null;
 
@@ -51,7 +51,7 @@ export class UserModel extends Document implements User {
   public location: UserLocation;
 
   @Prop({
-    default: ''
+    default: '',
   })
   public about?: string;
 }

@@ -1,4 +1,9 @@
-import { TrainingTime, UserCustomer, UserExperience, UserSpecialization } from '@backend/shared-types';
+import {
+  TrainingTime,
+  UserCustomer,
+  UserExperience,
+  UserSpecialization,
+} from '@backend/shared-types';
 import { UserEntity } from './user.entity';
 
 export class UserCustomerEntity extends UserEntity {

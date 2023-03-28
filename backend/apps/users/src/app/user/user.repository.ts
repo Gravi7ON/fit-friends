@@ -15,91 +15,143 @@ import { MyFriendsQuery } from './queries/my-friends.query';
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectModel(UserCoachModel.name) private readonly userCoachModel: Model<UserCoachModel>,
-    @InjectModel(UserCustomerModel.name) private readonly userCustomerModel: Model<UserCustomerModel>,
-    @InjectModel(MyFriendsModel.name) private readonly myFriendsModel: Model<MyFriendsModel>
-    ) {}
+    @InjectModel(UserCoachModel.name)
+    private readonly userCoachModel: Model<UserCoachModel>,
+    @InjectModel(UserCustomerModel.name)
+    private readonly userCustomerModel: Model<UserCustomerModel>,
+    @InjectModel(MyFriendsModel.name)
+    private readonly myFriendsModel: Model<MyFriendsModel>
+  ) {}
 
   public async create(item: UserEntity): Promise<User> {
     const user = item.toObject();
-    const newUser = user.role === UserRole.Coach ?
-      new this.userCoachModel(item.toObject()) :
-      new this.userCustomerModel(item.toObject());
+    const newUser =
+      user.role === UserRole.Coach
+        ? new this.userCoachModel(item.toObject())
+        : new this.userCustomerModel(item.toObject());
 
     return newUser.save();
   }
 
-  public async findUsers({limit, page, sortDirection, locations, specializations, experience, role}: UsersQuery): Promise<UserCustomer[] & UserCoach[]> {
-    switch(role) {
+  public async findUsers({
+    limit,
+    page,
+    sortDirection,
+    locations,
+    specializations,
+    experience,
+    role,
+  }: UsersQuery): Promise<UserCustomer[] & UserCoach[]> {
+    switch (role) {
       case UserRole.Customer:
         return this.userCustomerModel.aggregate([
-          locations || specializations || experience ?
-          {
-            $match: {
-              location: locations ? { $in:  locations } : { $ne: {} },
-              specializations: specializations ? { $in: specializations } : { $ne: {}  },
-              experience: experience || { $ne: {}  }
-            }
-          } : { $addFields: { } },
+          locations || specializations || experience
+            ? {
+                $match: {
+                  location: locations ? { $in: locations } : { $ne: {} },
+                  specializations: specializations
+                    ? { $in: specializations }
+                    : { $ne: {} },
+                  experience: experience || { $ne: {} },
+                },
+              }
+            : { $addFields: {} },
           { $skip: page > 0 ? limit * (page - 1) : 0 },
           { $limit: limit },
           { $sort: { createdAt: sortDirection } },
           { $addFields: { id: { $toString: '$_id' } } },
-          { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } }
-        ])
+          {
+            $project: {
+              __v: 0,
+              createdAt: 0,
+              updatedAt: 0,
+              password: 0,
+              _id: 0,
+            },
+          },
+        ]);
       case UserRole.Coach:
         return this.userCoachModel.aggregate([
-          locations || specializations || experience ?
-          {
-            $match: {
-              location: locations ? { $in:  locations } : { $ne: {} },
-              specializations: specializations ? { $in: specializations } : { $ne: {}  },
-              experience: experience || { $ne: {}  }
-            }
-          } : { $addFields: { } },
+          locations || specializations || experience
+            ? {
+                $match: {
+                  location: locations ? { $in: locations } : { $ne: {} },
+                  specializations: specializations
+                    ? { $in: specializations }
+                    : { $ne: {} },
+                  experience: experience || { $ne: {} },
+                },
+              }
+            : { $addFields: {} },
           { $skip: page > 0 ? limit * (page - 1) : 0 },
           { $limit: limit },
           { $sort: { createdAt: sortDirection } },
           { $addFields: { id: { $toString: '$_id' } } },
-          { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } }
-        ])
+          {
+            $project: {
+              __v: 0,
+              createdAt: 0,
+              updatedAt: 0,
+              password: 0,
+              _id: 0,
+            },
+          },
+        ]);
       default:
         return this.userCustomerModel.aggregate([
-          locations || specializations || experience ?
+          locations || specializations || experience
+            ? {
+                $match: {
+                  location: locations ? { $in: locations } : { $ne: {} },
+                  specializations: specializations
+                    ? { $in: specializations }
+                    : { $ne: {} },
+                  experience: experience || { $ne: {} },
+                },
+              }
+            : { $addFields: {} },
           {
-            $match: {
-              location: locations ? { $in:  locations } : { $ne: {} },
-              specializations: specializations ? { $in: specializations } : { $ne: {}  },
-              experience: experience || { $ne: {}  }
-            }
-          } : { $addFields: { } },
-          {
-            $unionWith:{
+            $unionWith: {
               coll: COACH_COLLECTION_NAME,
               pipeline: [
-                locations || specializations || experience ?
-                {
-                  $match: {
-                    location: locations ? { $in:  locations } : { $ne: {} },
-                    specializations: specializations ? { $in: specializations } : { $ne: {}  },
-                    experience: experience || { $ne: {}  }
-                  }
-                } : { $addFields: { } },
-              ]
-            }
+                locations || specializations || experience
+                  ? {
+                      $match: {
+                        location: locations ? { $in: locations } : { $ne: {} },
+                        specializations: specializations
+                          ? { $in: specializations }
+                          : { $ne: {} },
+                        experience: experience || { $ne: {} },
+                      },
+                    }
+                  : { $addFields: {} },
+              ],
+            },
           },
           { $skip: page > 0 ? limit * (page - 1) : 0 },
           { $limit: limit },
           { $sort: { createdAt: sortDirection } },
           { $addFields: { id: { $toString: '$_id' } } },
-          { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } }
-        ])
+          {
+            $project: {
+              __v: 0,
+              createdAt: 0,
+              updatedAt: 0,
+              password: 0,
+              _id: 0,
+            },
+          },
+        ]);
     }
   }
 
-  public async findUserFriends(userId: string, {limit, sortDirection, page}: MyFriendsQuery): Promise<UserCustomer[] & UserCoach[] | null> {
-    const userFiendsIds = (await this.myFriendsModel.find({userId}))
-      .map((record) => new Types.ObjectId(record.friendId));
+  public async findUserFriends(
+    userId: string,
+    { limit, sortDirection, page }: MyFriendsQuery
+  ): Promise<(UserCustomer[] & UserCoach[]) | null> {
+    const userFiendsIds = (await this.myFriendsModel.find({ userId })).map(
+      (record) => new Types.ObjectId(record.friendId)
+    );
 
     return this.userCustomerModel.aggregate([
       { $match: { _id: { $in: userFiendsIds } } },
@@ -109,28 +161,26 @@ export class UserRepository {
           pipeline: [
             {
               $match: {
-                _id: { $in: userFiendsIds }
-              }
-            }
-          ]
-        }
+                _id: { $in: userFiendsIds },
+              },
+            },
+          ],
+        },
       },
       { $skip: page > 0 ? limit * (page - 1) : 0 },
       { $limit: limit },
       { $sort: { createdAt: sortDirection } },
       { $addFields: { id: { $toString: '$_id' } } },
-      { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } }
-    ])
+      { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } },
+    ]);
   }
 
-  public async findById(id: string): Promise<UserCustomer & UserCoach | null> {
+  public async findById(
+    id: string
+  ): Promise<(UserCustomer & UserCoach) | null> {
     const [userCoach, userCustomer] = await Promise.all([
-      this.userCoachModel
-        .findOne({_id: id})
-        .exec(),
-      this.userCustomerModel
-        .findOne({_id: id})
-        .exec()
+      this.userCoachModel.findOne({ _id: id }).exec(),
+      this.userCustomerModel.findOne({ _id: id }).exec(),
     ]);
 
     if (userCoach) {
@@ -140,14 +190,12 @@ export class UserRepository {
     return userCustomer;
   }
 
-  public async findByEmail(email: string): Promise<UserCustomer & UserCoach | null> {
+  public async findByEmail(
+    email: string
+  ): Promise<(UserCustomer & UserCoach) | null> {
     const [userCoach, userCustomer] = await Promise.all([
-      this.userCoachModel
-        .findOne({email})
-        .exec(),
-      this.userCustomerModel
-        .findOne({email})
-        .exec()
+      this.userCoachModel.findOne({ email }).exec(),
+      this.userCustomerModel.findOne({ email }).exec(),
     ]);
 
     if (userCoach) {
@@ -157,22 +205,33 @@ export class UserRepository {
     return userCustomer;
   }
 
-  public async update(id: string, user: UserCoachEntity | UserCustomerEntity): Promise<UserCustomer & UserCoach | null> {
+  public async update(
+    id: string,
+    user: UserCoachEntity | UserCustomerEntity
+  ): Promise<(UserCustomer & UserCoach) | null> {
     const updatedUser = user.toObject();
 
-    switch(updatedUser.role) {
+    switch (updatedUser.role) {
       case UserRole.Coach:
         return this.userCoachModel
-        .findByIdAndUpdate(id, {
-          ...updatedUser,
-        }, {new: true})
-        .exec();
+          .findByIdAndUpdate(
+            id,
+            {
+              ...updatedUser,
+            },
+            { new: true }
+          )
+          .exec();
       case UserRole.Customer:
         return this.userCustomerModel
-        .findByIdAndUpdate(id, {
-          ...updatedUser,
-        }, {new: true})
-        .exec();
+          .findByIdAndUpdate(
+            id,
+            {
+              ...updatedUser,
+            },
+            { new: true }
+          )
+          .exec();
     }
   }
 }

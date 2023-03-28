@@ -2,10 +2,7 @@ import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { AuthUserMessageException } from '../auth.constant';
 
 export class LoginUserDto {
-  @IsEmail(
-    {},
-    {message: AuthUserMessageException.EmailNotValid as string}
-  )
+  @IsEmail({}, { message: AuthUserMessageException.EmailNotValid as string })
   public email: string;
 
   @IsString()

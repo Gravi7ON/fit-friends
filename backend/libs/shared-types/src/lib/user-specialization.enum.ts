@@ -6,5 +6,5 @@ export enum UserSpecialization {
   Crossfit = 'кроссфит',
   Aerobics = 'аэробика',
   Pilates = 'пилатес',
-  Strength = 'силовые'
+  Strength = 'силовые',
 }

@@ -3,16 +3,16 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({
   collection: 'tokens',
-  timestamps: true
+  timestamps: true,
 })
 export class TokenModel extends Document {
   @Prop({
-    required: true
+    required: true,
   })
   public userId: string;
 
   @Prop({
-    required: true
+    required: true,
   })
   public refreshToken: string;
 }

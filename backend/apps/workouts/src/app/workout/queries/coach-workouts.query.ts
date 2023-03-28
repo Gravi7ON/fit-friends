@@ -1,11 +1,19 @@
-import { IsEnum, IsIn, IsInt, IsNumber, IsOptional, Max, Min } from 'class-validator';
+import {
+  IsEnum,
+  IsIn,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  Max,
+  Min,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { DefaultCoachQuery } from '../workout.constant';
 import { TrainingTime } from '@backend/shared-types';
 
 export class CoachWorkoutsQuery {
   @IsNumber()
-  @Transform(({ value } ) => +value || DefaultCoachQuery.Limit)
+  @Transform(({ value }) => +value || DefaultCoachQuery.Limit)
   @IsOptional()
   public limit?: number = DefaultCoachQuery.Limit;
 
@@ -14,25 +22,29 @@ export class CoachWorkoutsQuery {
   public sortDirection?: 'desc' | 'asc' = DefaultCoachQuery.SortDirection;
 
   @Min(0, {
-    each: true
+    each: true,
   })
   @IsInt({
-    each: true
+    each: true,
   })
-  @Transform(({ value }) => value.split(',').map((item: string) => Number(item)))
+  @Transform(({ value }) =>
+    value.split(',').map((item: string) => Number(item))
+  )
   @IsOptional()
   public costs?: number[];
 
   @Min(1000, {
-    each: true
+    each: true,
   })
   @Max(5000, {
-    each: true
+    each: true,
   })
   @IsInt({
-    each: true
+    each: true,
   })
-  @Transform(({ value }) => value.split(',').map((item: string) => Number(item)))
+  @Transform(({ value }) =>
+    value.split(',').map((item: string) => Number(item))
+  )
   @IsOptional()
   public calories?: number[];
 
@@ -44,9 +56,9 @@ export class CoachWorkoutsQuery {
   public rating?: number;
 
   @IsEnum(TrainingTime, {
-    each: true
+    each: true,
   })
-  @Transform(({value}) => value.split(',').map((item: string) => item))
+  @Transform(({ value }) => value.split(',').map((item: string) => item))
   @IsOptional()
   public trainingTimes?: TrainingTime[];
 

@@ -22,5 +22,5 @@ export interface Workout {
   isSpecialOffer?: boolean;
   createdAt?: Date;
   reviews?: Review[];
-  orders?: OrderWorkout[]
+  orders?: OrderWorkout[];
 }

@@ -6,10 +6,9 @@ import {
   IsString,
   Matches,
   MaxLength,
-  MinLength
+  MinLength,
 } from 'class-validator';
 import { UserLocation, UserRole, UserSex } from '@backend/shared-types';
-
 
 export class CreateUserDto {
   @IsString()

@@ -8,10 +8,13 @@ import {
   Max,
   MaxLength,
   Min,
-  MinLength
+  MinLength,
 } from 'class-validator';
-import { TrainingTime, UserSexForWorkout, UserSpecialization } from '@backend/shared-types';
-
+import {
+  TrainingTime,
+  UserSexForWorkout,
+  UserSpecialization,
+} from '@backend/shared-types';
 
 export class UpdateWorkoutDto {
   @IsOptional()

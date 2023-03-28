@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, UseGuards, Request, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { fillObject } from '@backend/core';
 import { RequestWithTokenPayload, UserRole } from '@backend/shared-types';
 import { JwtAuthGuard } from '../common-guards/jwt-auth.guard';
@@ -13,9 +22,7 @@ import { MyFriendsQuery } from './queries/my-friends.query';
 
 @Controller('users')
 export class UserController {
-  constructor(
-    private readonly userService: UserService
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Get('/')
@@ -34,14 +41,17 @@ export class UserController {
     const userId = request.user._id;
     const existedUser = await this.userService.updateUser(userId, dto);
 
-    return existedUser.role === UserRole.Coach ?
-      fillObject(UserCoachRdo, existedUser) :
-      fillObject(UserCustomerRdo, existedUser);
+    return existedUser.role === UserRole.Coach
+      ? fillObject(UserCoachRdo, existedUser)
+      : fillObject(UserCustomerRdo, existedUser);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/my-friends')
-  async findUserFriends(@Request() request: RequestWithTokenPayload, @Query() query: MyFriendsQuery) {
+  async findUserFriends(
+    @Request() request: RequestWithTokenPayload,
+    @Query() query: MyFriendsQuery
+  ) {
     const userId = request.user._id;
     const users = await this.userService.findUserFriends(userId, query);
 
@@ -53,8 +63,8 @@ export class UserController {
   async findUser(@Param('id', MongoidValidationPipe) id: string) {
     const existedUser = await this.userService.findUser(id);
 
-    return existedUser.role === UserRole.Coach ?
-      fillObject(UserCoachRdo, existedUser) :
-      fillObject(UserCustomerRdo, existedUser);
+    return existedUser.role === UserRole.Coach
+      ? fillObject(UserCoachRdo, existedUser)
+      : fillObject(UserCustomerRdo, existedUser);
   }
 }

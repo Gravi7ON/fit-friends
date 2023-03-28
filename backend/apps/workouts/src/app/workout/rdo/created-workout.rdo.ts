@@ -1,4 +1,10 @@
-import { Review, TrainingTime, UserExperience, UserSexForWorkout, UserSpecialization } from '@backend/shared-types';
+import {
+  Review,
+  TrainingTime,
+  UserExperience,
+  UserSexForWorkout,
+  UserSpecialization,
+} from '@backend/shared-types';
 import { Expose } from 'class-transformer';
 
 export class CreatedWorkoutRdo {

@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Types } from 'mongoose';
 import { UserRole } from '@backend/shared-types';
 import { BAD_MONGOID_ERROR } from '@backend/core';

@@ -10,9 +10,7 @@ import { MyFriendsQuery } from './queries/my-friends.query';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly userRepository: UserRepository
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async findUser(id: string) {
     const existedUser = await this.userRepository.findById(id);
@@ -39,26 +37,28 @@ export class UserService {
   async updateUser(id: string, dto: UpdateUserDto) {
     const existUser = await this.findUser(id);
 
-    let userEntity : UserCustomerEntity & UserCoachEntity;
+    let userEntity: UserCustomerEntity & UserCoachEntity;
 
-    switch(existUser.role) {
+    switch (existUser.role) {
       case UserRole.Coach:
         userEntity = new UserCoachEntity(existUser);
-        dto.certificates ? userEntity.certificates.push(dto.certificates) : null;
+        dto.certificates
+          ? userEntity.certificates.push(dto.certificates)
+          : null;
         userEntity.updateEntity({
           ...existUser,
-          ...dto
+          ...dto,
         });
         break;
       case UserRole.Customer:
         userEntity = new UserCustomerEntity(existUser);
         userEntity.updateEntity({
           ...existUser,
-          ...dto
+          ...dto,
         });
     }
 
-    const updatedUser = await this.userRepository.update(id, userEntity)
+    const updatedUser = await this.userRepository.update(id, userEntity);
 
     return updatedUser;
   }

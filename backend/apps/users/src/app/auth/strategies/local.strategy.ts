@@ -8,15 +8,16 @@ const USERNAME_FIELD_NAME = 'email';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private authService: AuthService
-  ) {
+  constructor(private authService: AuthService) {
     super({
-      usernameField: USERNAME_FIELD_NAME
+      usernameField: USERNAME_FIELD_NAME,
     });
   }
 
-  public async validate(email: string, password: string): Promise<UserCustomer | UserCoach> {
-    return this.authService.verifyUser({email, password});
+  public async validate(
+    email: string,
+    password: string
+  ): Promise<UserCustomer | UserCoach> {
+    return this.authService.verifyUser({ email, password });
   }
 }

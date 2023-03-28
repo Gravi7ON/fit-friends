@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Types } from 'mongoose';
 import { BAD_MONGOID_ERROR } from '@backend/core';
 import { UserRole } from '@backend/shared-types';
@@ -10,9 +16,7 @@ const ALL_EMPTY_ADDITIONAL_CUSTOMER_FIELDS = 6;
 
 @Injectable()
 export class AddUserInfoGuard implements CanActivate {
-  constructor(
-    private readonly userRepository: UserRepository
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const userId = request.params.id;
@@ -31,14 +35,14 @@ export class AddUserInfoGuard implements CanActivate {
       trainingTime,
       targetDeclineСalories,
       dayDeclineCalories,
-      isReadyTraining
+      isReadyTraining,
     } = existUser;
     const additionalCoachFields = [
       experience,
       specializations?.length,
       certificates?.length,
       achievement,
-      isIndividualTraining
+      isIndividualTraining,
     ];
     const additionalCustomerFields = [
       experience,
@@ -46,27 +50,31 @@ export class AddUserInfoGuard implements CanActivate {
       trainingTime,
       targetDeclineСalories,
       dayDeclineCalories,
-      isReadyTraining
+      isReadyTraining,
     ];
 
-    switch(existUser.role) {
+    switch (existUser.role) {
       case UserRole.Coach:
-        if(
-          additionalCoachFields
-            .filter((item) => !item).length === ALL_EMPTY_ADDITIONAL_TRAINER_FIELDS
+        if (
+          additionalCoachFields.filter((item) => !item).length ===
+          ALL_EMPTY_ADDITIONAL_TRAINER_FIELDS
         ) {
           return true;
         } else {
-          throw new ForbiddenException(AuthUserMessageException.ForbiddenAddInfo);
+          throw new ForbiddenException(
+            AuthUserMessageException.ForbiddenAddInfo
+          );
         }
       case UserRole.Customer:
-        if(
-          additionalCustomerFields
-            .filter((item) => !item).length === ALL_EMPTY_ADDITIONAL_CUSTOMER_FIELDS
+        if (
+          additionalCustomerFields.filter((item) => !item).length ===
+          ALL_EMPTY_ADDITIONAL_CUSTOMER_FIELDS
         ) {
           return true;
         } else {
-          throw new ForbiddenException(AuthUserMessageException.ForbiddenAddInfo);
+          throw new ForbiddenException(
+            AuthUserMessageException.ForbiddenAddInfo
+          );
         }
     }
   }

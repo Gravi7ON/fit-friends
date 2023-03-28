@@ -1,10 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { TrainingTime, UserCustomer, UserExperience, UserSpecialization } from '@backend/shared-types';
+import {
+  TrainingTime,
+  UserCustomer,
+  UserExperience,
+  UserSpecialization,
+} from '@backend/shared-types';
 import { UserModel } from './user-common.model';
 
 @Schema({
   collection: 'users-customer',
-  timestamps: true
+  timestamps: true,
 })
 export class UserCustomerModel extends UserModel implements UserCustomer {
   constructor() {
@@ -12,35 +17,36 @@ export class UserCustomerModel extends UserModel implements UserCustomer {
   }
   @Prop({
     default: '',
-    type: String
+    type: String,
   })
   public experience?: UserExperience;
 
   @Prop({
-    default: []
+    default: [],
   })
   public specializations?: UserSpecialization[];
 
   @Prop({
     default: '',
-    type: String
+    type: String,
   })
   public trainingTime: TrainingTime;
 
   @Prop({
-    default: 0
+    default: 0,
   })
   public targetDeclineСalories?: number;
 
   @Prop({
-    default: 0
+    default: 0,
   })
   public dayDeclineCalories?: number;
 
   @Prop({
-    default: false
+    default: false,
   })
   public isReadyTraining?: boolean;
 }
 
-export const UserCustomerSchema = SchemaFactory.createForClass(UserCustomerModel);
+export const UserCustomerSchema =
+  SchemaFactory.createForClass(UserCustomerModel);

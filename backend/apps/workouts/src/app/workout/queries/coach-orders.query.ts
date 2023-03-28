@@ -4,7 +4,7 @@ import { DefaultCoachQuery } from '../workout.constant';
 
 export class CoachOrdersQuery {
   @IsNumber()
-  @Transform(({ value } ) => +value || DefaultCoachQuery.Limit)
+  @Transform(({ value }) => +value || DefaultCoachQuery.Limit)
   @IsOptional()
   public limit?: number = DefaultCoachQuery.Limit;
 

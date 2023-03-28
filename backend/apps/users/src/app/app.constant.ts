@@ -10,5 +10,5 @@ export enum EnvValidationMessage {
   AccessJWTRequired = 'Access JWT secret is required',
   RefreshJWTRequired = 'Refresh JWT secret is required',
   RefreshJWTExpiresRequired = 'Refresh JWT expires is required',
-  AccessJWTExpiresRequired = 'Access JWT expires is required'
+  AccessJWTExpiresRequired = 'Access JWT expires is required',
 }

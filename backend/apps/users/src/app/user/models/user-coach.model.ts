@@ -1,10 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UserExperience, UserSpecialization, UserCoach } from '@backend/shared-types';
+import {
+  UserExperience,
+  UserSpecialization,
+  UserCoach,
+} from '@backend/shared-types';
 import { UserModel } from './user-common.model';
 
 @Schema({
   collection: 'users-coach',
-  timestamps: true
+  timestamps: true,
 })
 export class UserCoachModel extends UserModel implements UserCoach {
   constructor() {
@@ -13,27 +17,27 @@ export class UserCoachModel extends UserModel implements UserCoach {
 
   @Prop({
     default: '',
-    type: String
+    type: String,
   })
   public experience?: UserExperience;
 
   @Prop({
-    default: []
+    default: [],
   })
   public specializations?: UserSpecialization[];
 
   @Prop({
-    default: []
+    default: [],
   })
   public certificates?: string[];
 
   @Prop({
-    default: ''
+    default: '',
   })
   public achievement?: string;
 
   @Prop({
-    default: false
+    default: false,
   })
   public isIndividualTraining?: boolean;
 }

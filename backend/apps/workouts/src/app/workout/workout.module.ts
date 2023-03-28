@@ -12,8 +12,8 @@ import { WorkoutRepository } from './workout.repository';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: getJwtConfig
-    })
+      useFactory: getJwtConfig,
+    }),
   ],
   providers: [WorkoutService, WorkoutRepository, JwtStrategy],
   controllers: [WorkoutController],
