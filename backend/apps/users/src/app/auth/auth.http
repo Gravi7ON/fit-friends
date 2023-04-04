@@ -18,14 +18,17 @@ POST http://localhost:3333/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "me@gmail.com",
+  "email": "me1@gmail.com",
   "password": "123456"
 }
+
+### Refresh user access
+POST http://localhost:3333/api/auth/refresh-token HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDU4ODc4MCwiZXhwIjoxNjgxMTkzNTgwfQ.ivDXsuVLWGWOnlqOUMsVnPytWdvSA-LKSeOekL2Zfxw
 
 ### Logout user
 POST http://localhost:3333/api/auth/logout HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBlZjRlN2M2ODgxY2NmOTkxODFjMjUiLCJlbWFpbCI6Im1lMkBnbWFpbC5jb20iLCJyb2xlIjoi0YLRgNC10L3QtdGAIiwibmFtZSI6IkNoaXAgSGF3ayIsImlhdCI6MTY3ODgwMTk3MSwiZXhwIjoxNjc4ODAyODcxfQ.XIyIGLRQNgmtmJ9e21kSBDMupu6Cwxh1a6sBcP3P-ao
-
 
 ### Refresh token
 POST http://localhost:3333/api/auth/refresh-token HTTP/1.1
@@ -42,7 +45,6 @@ Content-Type: application/json
   "achievement": "Dolore duis ea nostrud consequat eu laborum excepteur labore adipisicing esse sit duis sit minim.",
   "isIndividualTraining": true
 }
-
 
 ### Add customer info
 PATCH http://localhost:3333/api/auth/additional-info/64120109f25c1ba058dd1e4c HTTP/1.1

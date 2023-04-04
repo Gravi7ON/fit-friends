@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserRole, UserCoach, UserCustomer } from '@backend/shared-types';
+import {
+  User,
+  UserRole,
+  UserCoach,
+  UserCustomer,
+  WeekFoodDiary,
+} from '@backend/shared-types';
 import { UserCoachModel } from './models/user-coach.model';
 import { UserEntity } from './entities/user.entity';
 import { UserCustomerModel } from './models/user-customer.model';
@@ -11,6 +17,7 @@ import { UsersQuery } from './queries/users.query';
 import { COACH_COLLECTION_NAME } from './user.constant';
 import { MyFriendsModel } from './models/my-friends.model';
 import { MyFriendsQuery } from './queries/my-friends.query';
+import { FoodDiaryModel } from './models/food-diary.model';
 
 @Injectable()
 export class UserRepository {
@@ -20,7 +27,9 @@ export class UserRepository {
     @InjectModel(UserCustomerModel.name)
     private readonly userCustomerModel: Model<UserCustomerModel>,
     @InjectModel(MyFriendsModel.name)
-    private readonly myFriendsModel: Model<MyFriendsModel>
+    private readonly myFriendsModel: Model<MyFriendsModel>,
+    @InjectModel(FoodDiaryModel.name)
+    private readonly foodDiaryModel: Model<FoodDiaryModel>
   ) {}
 
   public async create(item: UserEntity): Promise<User> {
@@ -176,11 +185,11 @@ export class UserRepository {
   }
 
   public async findById(
-    id: string
+    userId: string
   ): Promise<(UserCustomer & UserCoach) | null> {
     const [userCoach, userCustomer] = await Promise.all([
-      this.userCoachModel.findOne({ _id: id }).exec(),
-      this.userCustomerModel.findOne({ _id: id }).exec(),
+      this.userCoachModel.findOne({ _id: userId }).exec(),
+      this.userCustomerModel.findOne({ _id: userId }).exec(),
     ]);
 
     if (userCoach) {
@@ -203,6 +212,49 @@ export class UserRepository {
     }
 
     return userCustomer;
+  }
+
+  public async updateFoodDiary({
+    calories,
+    userId,
+    year,
+    weekOfYear,
+  }: WeekFoodDiary): Promise<WeekFoodDiary | null> {
+    const currentWeekDiary = this.foodDiaryModel.findOneAndUpdate(
+      {
+        userId: userId,
+        year: year,
+        weekOfYear: weekOfYear,
+      },
+      { calories: calories },
+      { new: true }
+    );
+
+    return currentWeekDiary;
+  }
+
+  public async saveFoodDiary(
+    foodDiary: WeekFoodDiary
+  ): Promise<WeekFoodDiary | null> {
+    const currentWeekDiary = this.foodDiaryModel.create({ ...foodDiary });
+
+    return currentWeekDiary;
+  }
+
+  public async findFoodDiary({
+    userId,
+    weekOfYear,
+    year,
+  }: WeekFoodDiary): Promise<WeekFoodDiary | null> {
+    const currentWeekDiary = this.foodDiaryModel
+      .findOne({
+        userId,
+        year,
+        weekOfYear,
+      })
+      .exec();
+
+    return currentWeekDiary;
   }
 
   public async update(

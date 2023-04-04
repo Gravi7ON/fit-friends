@@ -19,6 +19,9 @@ import { UserService } from './user.service';
 import { UsersQuery } from './queries/users.query';
 import { RoleCoachGuard } from '../common-guards/role-coach.guard';
 import { MyFriendsQuery } from './queries/my-friends.query';
+import { RoleCustomerGuard } from '../common-guards/role-customer.guard';
+import { UserFoodDiaryDto } from './dto/user-food-diary.dto';
+import { UserWeekFoodDiaryRdo } from './rdo/user-week-diary.rdo';
 
 @Controller('users')
 export class UserController {
@@ -56,6 +59,27 @@ export class UserController {
     const users = await this.userService.findUserFriends(userId, query);
 
     return users;
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Get('/food-diary')
+  async findFoodDiary(@Request() request: RequestWithTokenPayload) {
+    const userId = request.user._id;
+    const weekDiary = await this.userService.findFoodDiary(userId);
+
+    return fillObject(UserWeekFoodDiaryRdo, weekDiary);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Patch('/food-diary')
+  async saveFoodDiary(
+    @Request() request: RequestWithTokenPayload,
+    @Body() dto: UserFoodDiaryDto
+  ) {
+    const userId = request.user._id;
+    const weekDiary = await this.userService.saveFoodDiary(userId, dto);
+
+    return fillObject(UserWeekFoodDiaryRdo, weekDiary);
   }
 
   @UseGuards(JwtAuthGuard)
