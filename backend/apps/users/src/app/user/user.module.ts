@@ -16,6 +16,10 @@ import {
 } from './models/black-list-token.model';
 import { MyFriendsModel, MyFriendsSchema } from './models/my-friends.model';
 import { FoodDiaryModel, FoodDiarySchema } from './models/food-diary.model';
+import {
+  WorkoutDiaryModel,
+  WorkoutDiarySchema,
+} from './models/workout-diary.model';
 
 @Module({
   imports: [
@@ -26,6 +30,7 @@ import { FoodDiaryModel, FoodDiarySchema } from './models/food-diary.model';
       { name: BlackListTokenModel.name, schema: BlackListTokenSchema },
       { name: MyFriendsModel.name, schema: MyFriendsSchema },
       { name: FoodDiaryModel.name, schema: FoodDiarySchema },
+      { name: WorkoutDiaryModel.name, schema: WorkoutDiarySchema },
     ]),
   ],
   providers: [UserRepository, UserService, TokenRepository],

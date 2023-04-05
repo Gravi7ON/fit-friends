@@ -22,17 +22,13 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### Refresh user access
+### Refresh access token
 POST http://localhost:3333/api/auth/refresh-token HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDU4ODc4MCwiZXhwIjoxNjgxMTkzNTgwfQ.ivDXsuVLWGWOnlqOUMsVnPytWdvSA-LKSeOekL2Zfxw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDY3NjU4OCwiZXhwIjoxNjgxMjgxMzg4fQ._ZHCFIioellF-SYiLwuoknoYj69XwBE8sCPQuNJyAHU
 
 ### Logout user
 POST http://localhost:3333/api/auth/logout HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBlZjRlN2M2ODgxY2NmOTkxODFjMjUiLCJlbWFpbCI6Im1lMkBnbWFpbC5jb20iLCJyb2xlIjoi0YLRgNC10L3QtdGAIiwibmFtZSI6IkNoaXAgSGF3ayIsImlhdCI6MTY3ODgwMTk3MSwiZXhwIjoxNjc4ODAyODcxfQ.XIyIGLRQNgmtmJ9e21kSBDMupu6Cwxh1a6sBcP3P-ao
-
-### Refresh token
-POST http://localhost:3333/api/auth/refresh-token HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDI0MDg0YjcxZGZjMzY2ODM3ZWMiLCJlbWFpbCI6Im1lQGdtYWlsLmNvbSIsInJvbGUiOiLRgtGA0LXQvdC10YAiLCJuYW1lIjoiSGF3ayBDaGlwIiwiaWF0IjoxNjc5OTk4MDY1LCJleHAiOjE2ODA2MDI4NjV9.iE5Zx2O7gsmuMKULTe4uvy4BxMpMeu4MPKG7TqsIl20
 
 ### Add coach info
 PATCH http://localhost:3333/api/auth/additional-info/6412f62f52534cf32deec48c HTTP/1.1

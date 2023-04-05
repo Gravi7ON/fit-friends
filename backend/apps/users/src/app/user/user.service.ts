@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { UserRole, WeekFoodDiary } from '@backend/shared-types';
+import {
+  UserRole,
+  WeekFoodDiary,
+  WeekWorkoutDiary,
+} from '@backend/shared-types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserCustomerEntity } from './entities/user-customer.entity';
 import { UserCoachEntity } from './entities/user-coach.entity';
@@ -10,6 +14,8 @@ import { UserRepository } from './user.repository';
 import { UsersQuery } from './queries/users.query';
 import { MyFriendsQuery } from './queries/my-friends.query';
 import { UserFoodDiaryDto } from './dto/user-food-diary.dto';
+import { UserWorkoutDiaryDto } from './dto/user-workout-diary.dto';
+import { WeekWorkoutDiaryEntity } from './entities/week-workout-diary.entity';
 
 dayjs.extend(isoWeek);
 
@@ -60,6 +66,66 @@ export class UserService {
     }
 
     return this.userRepository.updateFoodDiary(foodDiary);
+  }
+
+  async saveWorkoutDiary(
+    userId: string,
+    { calory, date, trainingTime, workoutId }: UserWorkoutDiaryDto
+  ) {
+    const workoutDiary: WeekWorkoutDiary = {
+      userId,
+      year: dayjs().year(),
+      weekOfYear: dayjs().isoWeek(),
+    };
+
+    const currentWeekDiary = await this.userRepository.findWorkoutDiary({
+      userId,
+      year: workoutDiary.year,
+      weekOfYear: workoutDiary.weekOfYear,
+    });
+
+    if (!currentWeekDiary) {
+      const diaryEntity = new WeekWorkoutDiaryEntity({
+        calory,
+        trainingTime,
+        workoutId,
+        date,
+      }).toObject();
+
+      const newWorkoutDiary = await this.userRepository.saveWorkoutDiary({
+        ...workoutDiary,
+        diary: diaryEntity,
+      });
+
+      return newWorkoutDiary;
+    }
+
+    const updateDiaryEntity = new WeekWorkoutDiaryEntity({
+      calory,
+      trainingTime,
+      workoutId,
+      date,
+      diary: currentWeekDiary.diary,
+    }).toObject();
+
+    return this.userRepository.updateWorkoutDiary({
+      ...workoutDiary,
+      diary: updateDiaryEntity,
+    });
+  }
+
+  async findWorkoutDiary(userId: string) {
+    const weekDiary = await this.userRepository.findWorkoutDiary({
+      userId,
+      year: dayjs().year(),
+      weekOfYear: dayjs().isoWeek(),
+    });
+
+    if (!weekDiary) {
+      throw new NotFoundException(UserMessageException.FoodDiaryNotFound);
+    }
+
+    return weekDiary;
   }
 
   async findFoodDiary(userId: string) {

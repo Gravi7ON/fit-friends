@@ -7,6 +7,7 @@ import {
   UserCoach,
   UserCustomer,
   WeekFoodDiary,
+  WeekWorkoutDiary,
 } from '@backend/shared-types';
 import { UserCoachModel } from './models/user-coach.model';
 import { UserEntity } from './entities/user.entity';
@@ -18,6 +19,7 @@ import { COACH_COLLECTION_NAME } from './user.constant';
 import { MyFriendsModel } from './models/my-friends.model';
 import { MyFriendsQuery } from './queries/my-friends.query';
 import { FoodDiaryModel } from './models/food-diary.model';
+import { WorkoutDiaryModel } from './models/workout-diary.model';
 
 @Injectable()
 export class UserRepository {
@@ -29,7 +31,9 @@ export class UserRepository {
     @InjectModel(MyFriendsModel.name)
     private readonly myFriendsModel: Model<MyFriendsModel>,
     @InjectModel(FoodDiaryModel.name)
-    private readonly foodDiaryModel: Model<FoodDiaryModel>
+    private readonly foodDiaryModel: Model<FoodDiaryModel>,
+    @InjectModel(WorkoutDiaryModel.name)
+    private readonly workoutDiaryModel: Model<WorkoutDiaryModel>
   ) {}
 
   public async create(item: UserEntity): Promise<User> {
@@ -233,10 +237,59 @@ export class UserRepository {
     return currentWeekDiary;
   }
 
-  public async saveFoodDiary(
-    foodDiary: WeekFoodDiary
-  ): Promise<WeekFoodDiary | null> {
+  public async updateWorkoutDiary({
+    year,
+    userId,
+    weekOfYear,
+    diary,
+  }: WeekWorkoutDiary): Promise<WeekWorkoutDiary | null> {
+    const currentWeekDiary = this.workoutDiaryModel.findOneAndUpdate(
+      {
+        userId: userId,
+        year: year,
+        weekOfYear: weekOfYear,
+      },
+      { diary: { ...diary } },
+      { new: true }
+    );
+
+    return currentWeekDiary;
+  }
+
+  public async saveFoodDiary(foodDiary: WeekFoodDiary): Promise<WeekFoodDiary> {
     const currentWeekDiary = this.foodDiaryModel.create({ ...foodDiary });
+
+    return currentWeekDiary;
+  }
+
+  public async saveWorkoutDiary({
+    year,
+    userId,
+    weekOfYear,
+    diary,
+  }: WeekWorkoutDiary): Promise<WeekWorkoutDiary> {
+    const currentWeekDiary = this.workoutDiaryModel.create({
+      userId,
+      weekOfYear,
+      year,
+      diary,
+    });
+
+    return currentWeekDiary;
+  }
+
+  public async findWorkoutDiary({
+    userId,
+    weekOfYear,
+    year,
+  }: WeekWorkoutDiary): Promise<WeekWorkoutDiary | null> {
+    const currentWeekDiary = this.workoutDiaryModel
+      .findOne({
+        userId,
+        year,
+        weekOfYear,
+      })
+      .exec();
 
     return currentWeekDiary;
   }
