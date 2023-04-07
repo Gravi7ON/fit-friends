@@ -1,6 +1,23 @@
 import { PrismaClient } from '@prisma/client';
 import { UserLocation } from '../../../libs/shared-types/src/lib/user-location.enum';
 
+const MOCK_GYMS_AMOUNT = 5;
+
+enum RangeImage {
+  Min = 1,
+  Max = 12,
+}
+
+enum RangeMockField {
+  Min = 0,
+  Max = 4,
+}
+
+enum ConvertToBool {
+  False = 0,
+  True = 1,
+}
+
 const prisma = new PrismaClient();
 
 export async function fillDb() {
@@ -42,22 +59,30 @@ export async function fillDb() {
     ['бассейн', 'бесплатная парковка', 'детская комната', 'массаж'],
   ];
 
-  for (const iter of Array(5)
+  for (const iter of Array(MOCK_GYMS_AMOUNT)
     .fill(1)
     .map((_number, index) => (index += 1))) {
+    const randomImageNumber = randomInteger(RangeImage.Min, RangeImage.Max);
     await prisma.gym.upsert({
       where: { id: iter },
       update: {},
       create: {
-        title: titles[randomInteger(0, 4)],
-        location: locations[randomInteger(0, 4)],
-        isOriginal: Boolean(randomInteger(0, 1)),
-        features: features[randomInteger(0, 4)],
+        title: titles[randomInteger(RangeMockField.Min, RangeMockField.Max)],
+        location:
+          locations[randomInteger(RangeMockField.Min, RangeMockField.Max)],
+        isOriginal: Boolean(
+          randomInteger(ConvertToBool.False, ConvertToBool.True)
+        ),
+        features:
+          features[randomInteger(RangeMockField.Min, RangeMockField.Max)],
         image: `http://localhost:${
           globalThis.process.env.PORT
-        }/api/files/test/workouts/gym-${randomInteger(1, 12)}.jpg`,
-        description: descriptions[randomInteger(0, 4)],
-        cost: costs[randomInteger(0, 4)],
+        }/api/files/gyms/gym-${
+          randomImageNumber < 10 ? `0${randomImageNumber}` : randomImageNumber
+        }.jpg`,
+        description:
+          descriptions[randomInteger(RangeMockField.Min, RangeMockField.Max)],
+        cost: costs[randomInteger(RangeMockField.Min, RangeMockField.Max)],
       },
     });
   }

@@ -127,4 +127,12 @@ export class WorkoutRepository {
       },
     });
   }
+
+  public findGym(gymId: number) {
+    return this.prisma.gym.findFirst({
+      where: {
+        id: gymId,
+      },
+    });
+  }
 }

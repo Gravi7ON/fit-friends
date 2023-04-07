@@ -64,6 +64,16 @@ export class WorkoutService {
     return existedWorkout;
   }
 
+  async findGym(gymId: number) {
+    const existedGym = await this.workoutRepository.findGym(gymId);
+
+    if (!existedGym) {
+      throw new NotFoundException(WorkoutMessageException.NotFoundGym);
+    }
+
+    return existedGym;
+  }
+
   async findWorkouts(coachId: string, query: CoachWorkoutsQuery) {
     const existedWorkouts = await this.workoutRepository.findMany(
       coachId,

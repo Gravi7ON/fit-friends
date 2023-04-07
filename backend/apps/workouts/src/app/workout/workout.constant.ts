@@ -14,6 +14,7 @@ export const RANDOM_STATIC_IMAGE_PATH = `http://localhost:${
 
 export enum WorkoutMessageException {
   NotFound = 'Workout with this id not found',
+  NotFoundGym = 'Gym with this id not found',
   OnlyCoach = 'Users with role coach only create workout',
   OnlyOwnWorkout = 'You may edit own workout only',
   NotAnyWorkout = `You don't have any workout yet`,

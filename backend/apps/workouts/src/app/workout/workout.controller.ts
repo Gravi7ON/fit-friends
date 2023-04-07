@@ -92,4 +92,12 @@ export class WorkoutController {
 
     return fillObject(CreatedWorkoutRdo, existedWorkout);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/gyms/:id')
+  async findGym(@Param('id', ParseIntPipe) gymId: number) {
+    const existedGym = await this.workoutService.findGym(gymId);
+
+    return existedGym;
+  }
 }
