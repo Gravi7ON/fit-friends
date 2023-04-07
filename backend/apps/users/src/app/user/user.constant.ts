@@ -3,7 +3,6 @@ export enum UserMessageException {
   OnlyCustomer = 'Users with role customer only',
   OnlyCoach = 'Users with role coach only',
   AlreadyExists = `User's friend with this id already exists`,
-  FoodDiaryNotFound = `This week user haven't diary yet`,
 }
 
 export enum DefaultUsersQuery {

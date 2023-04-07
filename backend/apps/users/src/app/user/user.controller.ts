@@ -24,10 +24,6 @@ import { UsersQuery } from './queries/users.query';
 import { RoleCoachGuard } from '../common-guards/role-coach.guard';
 import { MyFriendsQuery } from './queries/my-friends.query';
 import { RoleCustomerGuard } from '../common-guards/role-customer.guard';
-import { UserFoodDiaryDto } from './dto/user-food-diary.dto';
-import { UserWeekFoodDiaryRdo } from './rdo/user-week-food-diary.rdo';
-import { UserWorkoutDiaryDto } from './dto/user-workout-diary.dto';
-import { UserWeekWorkoutDiaryRdo } from './rdo/user-week-workout-diary.rdo';
 import { UserFriendRdo } from './rdo/user-friend.rdo';
 
 @Controller('users')
@@ -89,48 +85,6 @@ export class UserController {
   ) {
     const userId = request.user._id;
     this.userService.deleteUserFriend(userId, friendId);
-  }
-
-  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
-  @Get('/food-diary')
-  async findFoodDiary(@Request() request: RequestWithTokenPayload) {
-    const userId = request.user._id;
-    const weekDiary = await this.userService.findFoodDiary(userId);
-
-    return fillObject(UserWeekFoodDiaryRdo, weekDiary);
-  }
-
-  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
-  @Patch('/food-diary')
-  async saveFoodDiary(
-    @Request() request: RequestWithTokenPayload,
-    @Body() dto: UserFoodDiaryDto
-  ) {
-    const userId = request.user._id;
-    const weekDiary = await this.userService.saveFoodDiary(userId, dto);
-
-    return fillObject(UserWeekFoodDiaryRdo, weekDiary);
-  }
-
-  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
-  @Get('/workout-diary')
-  async findWorkoutDiary(@Request() request: RequestWithTokenPayload) {
-    const userId = request.user._id;
-    const weekDiary = await this.userService.findWorkoutDiary(userId);
-
-    return fillObject(UserWeekWorkoutDiaryRdo, weekDiary);
-  }
-
-  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
-  @Patch('/workout-diary')
-  async saveWorkoutDiary(
-    @Request() request: RequestWithTokenPayload,
-    @Body() dto: UserWorkoutDiaryDto
-  ) {
-    const userId = request.user._id;
-    const weekDiary = await this.userService.saveWorkoutDiary(userId, dto);
-
-    return fillObject(UserWeekWorkoutDiaryRdo, weekDiary);
   }
 
   @UseGuards(JwtAuthGuard)

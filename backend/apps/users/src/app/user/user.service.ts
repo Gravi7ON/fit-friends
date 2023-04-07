@@ -1,16 +1,11 @@
 import {
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Model } from 'mongoose';
-import dayjs from 'dayjs';
-import isoWeek from 'dayjs/plugin/isoWeek';
-import {
-  UserRole,
-  WeekFoodDiary,
-  WeekWorkoutDiary,
-} from '@backend/shared-types';
+import { UserRole } from '@backend/shared-types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserCustomerEntity } from './entities/user-customer.entity';
 import { UserCoachEntity } from './entities/user-coach.entity';
@@ -18,13 +13,8 @@ import { UserMessageException } from './user.constant';
 import { UserRepository } from './user.repository';
 import { UsersQuery } from './queries/users.query';
 import { MyFriendsQuery } from './queries/my-friends.query';
-import { UserFoodDiaryDto } from './dto/user-food-diary.dto';
-import { UserWorkoutDiaryDto } from './dto/user-workout-diary.dto';
-import { WeekWorkoutDiaryEntity } from './entities/week-workout-diary.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { MyFriendsModel } from './models/my-friends.model';
-
-dayjs.extend(isoWeek);
 
 @Injectable()
 export class UserService {
@@ -76,111 +66,14 @@ export class UserService {
   }
 
   async deleteUserFriend(userId: string, friendId: string) {
-    const existedFriend = await this.userRepository.deleteUserFriend(
+    const removedFriend = await this.userRepository.deleteUserFriend(
       userId,
       friendId
     );
 
-    if (!existedFriend) {
-      throw new NotFoundException(UserMessageException.NotFound);
+    if (!removedFriend) {
+      Logger.error(UserMessageException.NotFound);
     }
-  }
-
-  async saveFoodDiary(userId: string, dto: UserFoodDiaryDto) {
-    const foodDiary: WeekFoodDiary = {
-      ...dto,
-      userId,
-      year: dayjs().year(),
-      weekOfYear: dayjs().isoWeek(),
-    };
-
-    const currentWeekDiary = await this.userRepository.findFoodDiary({
-      userId,
-      year: foodDiary.year,
-      weekOfYear: foodDiary.weekOfYear,
-    });
-
-    if (!currentWeekDiary) {
-      const newFoodDiary = await this.userRepository.saveFoodDiary(foodDiary);
-
-      return newFoodDiary;
-    }
-
-    return this.userRepository.updateFoodDiary(foodDiary);
-  }
-
-  async saveWorkoutDiary(
-    userId: string,
-    { calory, date, trainingTime, workoutId }: UserWorkoutDiaryDto
-  ) {
-    const workoutDiary: WeekWorkoutDiary = {
-      userId,
-      year: dayjs().year(),
-      weekOfYear: dayjs().isoWeek(),
-    };
-
-    const currentWeekDiary = await this.userRepository.findWorkoutDiary({
-      userId,
-      year: workoutDiary.year,
-      weekOfYear: workoutDiary.weekOfYear,
-    });
-
-    if (!currentWeekDiary) {
-      const diaryEntity = new WeekWorkoutDiaryEntity({
-        calory,
-        trainingTime,
-        workoutId,
-        date,
-      }).toObject();
-
-      const newWorkoutDiary = await this.userRepository.saveWorkoutDiary({
-        ...workoutDiary,
-        diary: diaryEntity,
-      });
-
-      return newWorkoutDiary;
-    }
-
-    const updateDiaryEntity = new WeekWorkoutDiaryEntity({
-      calory,
-      trainingTime,
-      workoutId,
-      date,
-      diary: currentWeekDiary.diary,
-    }).toObject();
-
-    return this.userRepository.updateWorkoutDiary({
-      ...workoutDiary,
-      diary: updateDiaryEntity,
-    });
-  }
-
-  async findWorkoutDiary(userId: string) {
-    const weekDiary = await this.userRepository.findWorkoutDiary({
-      userId,
-      year: dayjs().year(),
-      weekOfYear: dayjs().isoWeek(),
-    });
-
-    if (!weekDiary) {
-      throw new NotFoundException(UserMessageException.FoodDiaryNotFound);
-    }
-
-    return weekDiary;
-  }
-
-  async findFoodDiary(userId: string) {
-    const weekDiary = await this.userRepository.findFoodDiary({
-      userId,
-      year: dayjs().year(),
-      weekOfYear: dayjs().isoWeek(),
-    });
-
-    if (!weekDiary) {
-      throw new NotFoundException(UserMessageException.FoodDiaryNotFound);
-    }
-
-    return weekDiary;
   }
 
   async updateUser(id: string, dto: UpdateUserDto) {

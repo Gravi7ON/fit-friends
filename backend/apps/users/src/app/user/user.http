@@ -12,41 +12,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiY
 
 ### Add to user's friends
 POST http://localhost:3333/api/users/my-friends/641200eef25c1ba058dd1e41 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDg0MzEwMiwiZXhwIjoxNjgwODQ0MDAyfQ.A34SbK_vc8r3ZpUfQBkdAxCPtUAeaiyZ43AGsKcU744
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDg3MDI0MSwiZXhwIjoxNjgwODcxMTQxfQ.6e4GGEauY0T90Djz6F55f8PrzcIj4BCxkFhP6mtrdUs
 
 ### Delete user's friend
-DELETE http://localhost:3333/api/users/my-friends/641200eef25c1ba058dd1e41 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDg0MzEwMiwiZXhwIjoxNjgwODQ0MDAyfQ.A34SbK_vc8r3ZpUfQBkdAxCPtUAeaiyZ43AGsKcU744
-
-### Find user's food diary
-GET http://localhost:3333/api/users/food-diary HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDYwMTMyOCwiZXhwIjoxNjgwNjAyMjI4fQ.X7d9AYj_PQ2astgm7MGEHCO4YdZX9lCErk5adTWEQ4U
-
-### Find user's workout diary
-GET http://localhost:3333/api/users/workout-diary HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDY4NjA5MSwiZXhwIjoxNjgwNjg2OTkxfQ.1Qqwr9E70Y2fBSJaA5doG3ccZXDWiFt_9z-LaItbb7g
-
-### Save user's food diary
-PATCH http://localhost:3333/api/users/food-diary HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDY4MTkyMiwiZXhwIjoxNjgwNjgyODIyfQ.pxrtFzKF2j1fOY4b-Q10QkvOA7cDFqi7tn9sDQPUVBA
-
-{
-  # сбор данных с таблицы через FormData API
-  "calories": ["820", "", "620", "", "620", "", "620", "", "810", "", "810", "", "810", "810", "770", "", "770", "770", "", "770", "770", "390", "390", "", "390", "390", "", "390"]
-}
-
-### Save user's workout diary
-PATCH http://localhost:3333/api/users/workout-diary HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDY4NTAzOCwiZXhwIjoxNjgwNjg1OTM4fQ.s8o-fnkdvOZGgouKrKhDBo87TLElox2r96wvuAWS1_A
-
-{
-  "workoutId": 4,
-  "calory": "870",
-  "trainingTime": "80",
-  "date": "05.04.2023, thursday"
-}
+DELETE http://localhost:3333/api/users/my-friends/641200eef25c1ba058dd1e42 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MDg3MDI0MSwiZXhwIjoxNjgwODcxMTQxfQ.6e4GGEauY0T90Djz6F55f8PrzcIj4BCxkFhP6mtrdUs
 
 ### Update user profile
 PATCH http://localhost:3333/api/users HTTP/1.1

@@ -20,6 +20,8 @@ import { MyFriendsModel } from './models/my-friends.model';
 import { MyFriendsQuery } from './queries/my-friends.query';
 import { FoodDiaryModel } from './models/food-diary.model';
 import { WorkoutDiaryModel } from './models/workout-diary.model';
+import { FavoriteGymsModel } from './models/favorite-gyms.model';
+import { FavoriteGymsQuery } from '../personal-account/queries/favorite-gyms.query';
 
 @Injectable()
 export class UserRepository {
@@ -33,7 +35,9 @@ export class UserRepository {
     @InjectModel(FoodDiaryModel.name)
     private readonly foodDiaryModel: Model<FoodDiaryModel>,
     @InjectModel(WorkoutDiaryModel.name)
-    private readonly workoutDiaryModel: Model<WorkoutDiaryModel>
+    private readonly workoutDiaryModel: Model<WorkoutDiaryModel>,
+    @InjectModel(FavoriteGymsModel.name)
+    private readonly favoriteGymsModel: Model<FavoriteGymsModel>
   ) {}
 
   public async create(item: UserEntity): Promise<User> {
@@ -44,6 +48,66 @@ export class UserRepository {
         : new this.userCustomerModel(item.toObject());
 
     return newUser.save();
+  }
+
+  public async update(
+    id: string,
+    user: UserCoachEntity | UserCustomerEntity
+  ): Promise<(UserCustomer & UserCoach) | null> {
+    const updatedUser = user.toObject();
+
+    switch (updatedUser.role) {
+      case UserRole.Coach:
+        return this.userCoachModel
+          .findByIdAndUpdate(
+            id,
+            {
+              ...updatedUser,
+            },
+            { new: true }
+          )
+          .exec();
+      case UserRole.Customer:
+        return this.userCustomerModel
+          .findByIdAndUpdate(
+            id,
+            {
+              ...updatedUser,
+            },
+            { new: true }
+          )
+          .exec();
+    }
+  }
+
+  public async findById(
+    userId: string
+  ): Promise<(UserCustomer & UserCoach) | null> {
+    const [userCoach, userCustomer] = await Promise.all([
+      this.userCoachModel.findOne({ _id: userId }).exec(),
+      this.userCustomerModel.findOne({ _id: userId }).exec(),
+    ]);
+
+    if (userCoach) {
+      return userCoach;
+    }
+
+    return userCustomer;
+  }
+
+  public async findByEmail(
+    email: string
+  ): Promise<(UserCustomer & UserCoach) | null> {
+    const [userCoach, userCustomer] = await Promise.all([
+      this.userCoachModel.findOne({ email }).exec(),
+      this.userCustomerModel.findOne({ email }).exec(),
+    ]);
+
+    if (userCoach) {
+      return userCoach;
+    }
+
+    return userCustomer;
   }
 
   public async findUsers({
@@ -158,6 +222,16 @@ export class UserRepository {
     }
   }
 
+  public async addUserFriend(
+    userId: string,
+    friendId: string
+  ): Promise<{ userId: string; friendId: string }> {
+    return this.myFriendsModel.create({
+      userId,
+      friendId,
+    });
+  }
+
   public async findUserFriends(
     userId: string,
     { limit, sortDirection, page }: MyFriendsQuery
@@ -176,16 +250,6 @@ export class UserRepository {
     ]);
   }
 
-  public async addUserFriend(
-    userId: string,
-    friendId: string
-  ): Promise<{ userId: string; friendId: string }> {
-    return this.myFriendsModel.create({
-      userId,
-      friendId,
-    });
-  }
-
   public async deleteUserFriend(
     userId: string,
     friendId: string
@@ -198,34 +262,26 @@ export class UserRepository {
       .exec();
   }
 
-  public async findById(
-    userId: string
-  ): Promise<(UserCustomer & UserCoach) | null> {
-    const [userCoach, userCustomer] = await Promise.all([
-      this.userCoachModel.findOne({ _id: userId }).exec(),
-      this.userCustomerModel.findOne({ _id: userId }).exec(),
-    ]);
+  public async saveFoodDiary(foodDiary: WeekFoodDiary): Promise<WeekFoodDiary> {
+    const currentWeekDiary = this.foodDiaryModel.create({ ...foodDiary });
 
-    if (userCoach) {
-      return userCoach;
-    }
-
-    return userCustomer;
+    return currentWeekDiary;
   }
 
-  public async findByEmail(
-    email: string
-  ): Promise<(UserCustomer & UserCoach) | null> {
-    const [userCoach, userCustomer] = await Promise.all([
-      this.userCoachModel.findOne({ email }).exec(),
-      this.userCustomerModel.findOne({ email }).exec(),
-    ]);
+  public async saveWorkoutDiary({
+    year,
+    userId,
+    weekOfYear,
+    diary,
+  }: WeekWorkoutDiary): Promise<WeekWorkoutDiary> {
+    const currentWeekDiary = this.workoutDiaryModel.create({
+      userId,
+      weekOfYear,
+      year,
+      diary,
+    });
 
-    if (userCoach) {
-      return userCoach;
-    }
-
-    return userCustomer;
+    return currentWeekDiary;
   }
 
   public async updateFoodDiary({
@@ -266,24 +322,18 @@ export class UserRepository {
     return currentWeekDiary;
   }
 
-  public async saveFoodDiary(foodDiary: WeekFoodDiary): Promise<WeekFoodDiary> {
-    const currentWeekDiary = this.foodDiaryModel.create({ ...foodDiary });
-
-    return currentWeekDiary;
-  }
-
-  public async saveWorkoutDiary({
-    year,
+  public async findFoodDiary({
     userId,
     weekOfYear,
-    diary,
-  }: WeekWorkoutDiary): Promise<WeekWorkoutDiary> {
-    const currentWeekDiary = this.workoutDiaryModel.create({
-      userId,
-      weekOfYear,
-      year,
-      diary,
-    });
+    year,
+  }: WeekFoodDiary): Promise<WeekFoodDiary | null> {
+    const currentWeekDiary = this.foodDiaryModel
+      .findOne({
+        userId,
+        year,
+        weekOfYear,
+      })
+      .exec();
 
     return currentWeekDiary;
   }
@@ -304,49 +354,42 @@ export class UserRepository {
     return currentWeekDiary;
   }
 
-  public async findFoodDiary({
-    userId,
-    weekOfYear,
-    year,
-  }: WeekFoodDiary): Promise<WeekFoodDiary | null> {
-    const currentWeekDiary = this.foodDiaryModel
-      .findOne({
-        userId,
-        year,
-        weekOfYear,
-      })
-      .exec();
-
-    return currentWeekDiary;
+  public async addFavoriteGym(
+    userId: string,
+    gymId: number
+  ): Promise<{ userId: string; favoriteGymId: number }> {
+    return this.favoriteGymsModel.create({
+      userId,
+      favoriteGymId: gymId,
+    });
   }
 
-  public async update(
-    id: string,
-    user: UserCoachEntity | UserCustomerEntity
-  ): Promise<(UserCustomer & UserCoach) | null> {
-    const updatedUser = user.toObject();
+  public async findFavoriteGym(
+    gymId: number
+  ): Promise<{ userId: string; favoriteGymId: number }> {
+    return this.favoriteGymsModel.findOne({
+      favoriteGymId: gymId,
+    });
+  }
 
-    switch (updatedUser.role) {
-      case UserRole.Coach:
-        return this.userCoachModel
-          .findByIdAndUpdate(
-            id,
-            {
-              ...updatedUser,
-            },
-            { new: true }
-          )
-          .exec();
-      case UserRole.Customer:
-        return this.userCustomerModel
-          .findByIdAndUpdate(
-            id,
-            {
-              ...updatedUser,
-            },
-            { new: true }
-          )
-          .exec();
-    }
+  public async findFavoriteGyms(
+    userId: string,
+    { limit, page }: FavoriteGymsQuery
+  ): Promise<{ userId: string; favoriteGymId: number }[]> {
+    return this.favoriteGymsModel.aggregate([
+      { $match: { userId } },
+      { $skip: page > 0 ? limit * (page - 1) : 0 },
+      { $limit: limit },
+    ]);
+  }
+
+  public async removeFavoriteGym(
+    gymId: number
+  ): Promise<{ userId: string; favoriteGymId: number }> {
+    return this.favoriteGymsModel
+      .findOneAndDelete({
+        favoriteGymId: gymId,
+      })
+      .exec();
   }
 }

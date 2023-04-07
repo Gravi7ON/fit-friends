@@ -5,6 +5,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -91,6 +92,15 @@ export class WorkoutController {
     const existedWorkout = await this.workoutService.findWorkout(workoutId);
 
     return fillObject(CreatedWorkoutRdo, existedWorkout);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/gyms/:ids')
+  async findGyms(@Param('ids', ParseArrayPipe) gymIds: string[]) {
+    const existedGyms = await this.workoutService.findGyms(gymIds);
+    console.log(existedGyms);
+
+    return existedGyms;
   }
 
   @UseGuards(JwtAuthGuard)

@@ -8,6 +8,7 @@ import { ENV_FILE_PATH } from './app.constant';
 import { AuthModule } from './auth/auth.module';
 import { validateEnvironments } from './env.validation';
 import { UserModule } from './user/user.module';
+import { PersonalAccountModule } from './personal-account/personal-account.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UserModule } from './user/user.module';
     MongooseModule.forRootAsync(getMongoDbConfig()),
     AuthModule,
     UserModule,
+    PersonalAccountModule,
   ],
   controllers: [],
   providers: [],

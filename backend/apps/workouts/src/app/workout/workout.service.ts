@@ -74,6 +74,14 @@ export class WorkoutService {
     return existedGym;
   }
 
+  async findGyms(gymIds: string[]) {
+    const existedGyms = await this.workoutRepository.findGyms(
+      gymIds.map((id) => Number(id))
+    );
+
+    return existedGyms;
+  }
+
   async findWorkouts(coachId: string, query: CoachWorkoutsQuery) {
     const existedWorkouts = await this.workoutRepository.findMany(
       coachId,

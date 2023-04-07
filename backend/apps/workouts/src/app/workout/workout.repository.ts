@@ -135,4 +135,12 @@ export class WorkoutRepository {
       },
     });
   }
+
+  public findGyms(gymIds: number[]) {
+    return this.prisma.gym.findMany({
+      where: {
+        id: { in: gymIds },
+      },
+    });
+  }
 }

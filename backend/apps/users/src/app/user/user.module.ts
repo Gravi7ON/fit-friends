@@ -20,6 +20,10 @@ import {
   WorkoutDiaryModel,
   WorkoutDiarySchema,
 } from './models/workout-diary.model';
+import {
+  FavoriteGymsModel,
+  FavoriteGymsSchema,
+} from './models/favorite-gyms.model';
 
 @Module({
   imports: [
@@ -31,6 +35,7 @@ import {
       { name: MyFriendsModel.name, schema: MyFriendsSchema },
       { name: FoodDiaryModel.name, schema: FoodDiarySchema },
       { name: WorkoutDiaryModel.name, schema: WorkoutDiarySchema },
+      { name: FavoriteGymsModel.name, schema: FavoriteGymsSchema },
     ]),
   ],
   providers: [UserRepository, UserService, TokenRepository],
