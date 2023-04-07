@@ -161,31 +161,41 @@ export class UserRepository {
   public async findUserFriends(
     userId: string,
     { limit, sortDirection, page }: MyFriendsQuery
-  ): Promise<(UserCustomer[] & UserCoach[]) | null> {
+  ): Promise<UserCustomer[] | null> {
     const userFiendsIds = (await this.myFriendsModel.find({ userId })).map(
       (record) => new Types.ObjectId(record.friendId)
     );
 
     return this.userCustomerModel.aggregate([
       { $match: { _id: { $in: userFiendsIds } } },
-      {
-        $unionWith: {
-          coll: 'users-coach',
-          pipeline: [
-            {
-              $match: {
-                _id: { $in: userFiendsIds },
-              },
-            },
-          ],
-        },
-      },
       { $skip: page > 0 ? limit * (page - 1) : 0 },
       { $limit: limit },
       { $sort: { createdAt: sortDirection } },
       { $addFields: { id: { $toString: '$_id' } } },
       { $project: { __v: 0, createdAt: 0, updatedAt: 0, password: 0, _id: 0 } },
     ]);
+  }
+
+  public async addUserFriend(
+    userId: string,
+    friendId: string
+  ): Promise<{ userId: string; friendId: string }> {
+    return this.myFriendsModel.create({
+      userId,
+      friendId,
+    });
+  }
+
+  public async deleteUserFriend(
+    userId: string,
+    friendId: string
+  ): Promise<{ userId: string; friendId: string }> {
+    return this.myFriendsModel
+      .findOneAndDelete({
+        userId,
+        friendId,
+      })
+      .exec();
   }
 
   public async findById(

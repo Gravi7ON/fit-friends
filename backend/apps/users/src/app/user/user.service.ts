@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Model } from 'mongoose';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import {
@@ -16,12 +21,18 @@ import { MyFriendsQuery } from './queries/my-friends.query';
 import { UserFoodDiaryDto } from './dto/user-food-diary.dto';
 import { UserWorkoutDiaryDto } from './dto/user-workout-diary.dto';
 import { WeekWorkoutDiaryEntity } from './entities/week-workout-diary.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { MyFriendsModel } from './models/my-friends.model';
 
 dayjs.extend(isoWeek);
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    @InjectModel(MyFriendsModel.name)
+    private readonly myFriendsModel: Model<MyFriendsModel>
+  ) {}
 
   async findUser(id: string) {
     const existedUser = await this.userRepository.findById(id);
@@ -43,6 +54,36 @@ export class UserService {
     const users = await this.userRepository.findUserFriends(userId, query);
 
     return users;
+  }
+
+  async addUserFriend(userId: string, friendId: string) {
+    const existedUser = await this.userRepository.findById(friendId);
+
+    if (!existedUser) {
+      throw new NotFoundException(UserMessageException.NotFound);
+    }
+
+    const existedFriend = await this.myFriendsModel.findOne({
+      userId,
+      friendId,
+    });
+
+    if (existedFriend) {
+      throw new ConflictException(UserMessageException.AlreadyExists);
+    }
+
+    return this.userRepository.addUserFriend(userId, friendId);
+  }
+
+  async deleteUserFriend(userId: string, friendId: string) {
+    const existedFriend = await this.userRepository.deleteUserFriend(
+      userId,
+      friendId
+    );
+
+    if (!existedFriend) {
+      throw new NotFoundException(UserMessageException.NotFound);
+    }
   }
 
   async saveFoodDiary(userId: string, dto: UserFoodDiaryDto) {

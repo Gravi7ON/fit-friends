@@ -7,6 +7,10 @@ import {
   UseGuards,
   Request,
   Query,
+  Delete,
+  HttpStatus,
+  HttpCode,
+  Post,
 } from '@nestjs/common';
 import { fillObject } from '@backend/core';
 import { RequestWithTokenPayload, UserRole } from '@backend/shared-types';
@@ -24,6 +28,7 @@ import { UserFoodDiaryDto } from './dto/user-food-diary.dto';
 import { UserWeekFoodDiaryRdo } from './rdo/user-week-food-diary.rdo';
 import { UserWorkoutDiaryDto } from './dto/user-workout-diary.dto';
 import { UserWeekWorkoutDiaryRdo } from './rdo/user-week-workout-diary.rdo';
+import { UserFriendRdo } from './rdo/user-friend.rdo';
 
 @Controller('users')
 export class UserController {
@@ -61,6 +66,29 @@ export class UserController {
     const users = await this.userService.findUserFriends(userId, query);
 
     return users;
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Post('/my-friends/:friendId')
+  async addUserFriend(
+    @Request() request: RequestWithTokenPayload,
+    @Param('friendId', MongoidValidationPipe) friendId: string
+  ) {
+    const userId = request.user._id;
+    const userFriend = await this.userService.addUserFriend(userId, friendId);
+
+    return fillObject(UserFriendRdo, userFriend);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/my-friends/:friendId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteUserFriend(
+    @Request() request: RequestWithTokenPayload,
+    @Param('friendId', MongoidValidationPipe) friendId: string
+  ) {
+    const userId = request.user._id;
+    this.userService.deleteUserFriend(userId, friendId);
   }
 
   @UseGuards(JwtAuthGuard, RoleCustomerGuard)
