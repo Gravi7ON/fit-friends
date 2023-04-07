@@ -7,7 +7,7 @@ enum RangeImages {
 
 export const RANDOM_STATIC_IMAGE_PATH = `http://localhost:${
   process.env.PORT
-}/api/files/training-${getRandomPositiveInteger(
+}/api/files/workouts/training-${getRandomPositiveInteger(
   RangeImages.Min,
   RangeImages.Max
 )}.jpg`;

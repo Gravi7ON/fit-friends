@@ -69,6 +69,13 @@ model OrderGym {
 
 model Gym {
   id              Int @id @default(autoincrement())
+  title           String
+  location        String
+  isOriginal      Boolean
+  features        String[]
+  image           String
+  description     String
+  cost            Int
   createdAt       DateTime @default(now())
   orders          OrderGym[]
 }

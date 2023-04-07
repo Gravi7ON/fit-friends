@@ -84,6 +84,13 @@
         "command": "npx prisma generate --schema ./prisma/schema.prisma",
         "cwd": "apps/workouts"
       }
+    },
+    "db-fill": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma db seed",
+        "cwd": "apps/workouts"
+      }
     }
   },
   "tags": []
