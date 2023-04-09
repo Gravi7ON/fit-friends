@@ -24,6 +24,7 @@ import {
   FavoriteGymsModel,
   FavoriteGymsSchema,
 } from './models/favorite-gyms.model';
+import { MyPurchaseModel, MyPurchaseSchema } from './models/my-purchase.model';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import {
       { name: FoodDiaryModel.name, schema: FoodDiarySchema },
       { name: WorkoutDiaryModel.name, schema: WorkoutDiarySchema },
       { name: FavoriteGymsModel.name, schema: FavoriteGymsSchema },
+      { name: MyPurchaseModel.name, schema: MyPurchaseSchema },
     ]),
   ],
   providers: [UserRepository, UserService, TokenRepository],

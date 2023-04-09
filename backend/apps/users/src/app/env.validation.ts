@@ -58,6 +58,16 @@ class EnvironmentsConfig {
     message: EnvValidationMessage.RefreshJWTExpiresRequired,
   })
   public JWT_RT_EXPIRES_IN: string;
+
+  @IsString({
+    message: EnvValidationMessage.PortRequired,
+  })
+  public PORT: string;
+
+  @IsString({
+    message: EnvValidationMessage.WorkoutsServicePort,
+  })
+  public WORKOUTS_PORT: string;
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {

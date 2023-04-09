@@ -12,6 +12,11 @@ class EnvironmentsConfig {
     message: EnvValidationMessage.AccessJWTExpiresRequired,
   })
   public JWT_AT_EXPIRES_IN: string;
+
+  @IsString({
+    message: EnvValidationMessage.PortRequired,
+  })
+  public PORT: string;
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {

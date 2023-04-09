@@ -23,6 +23,8 @@ import { UserWeekWorkoutDiaryRdo } from './rdo/user-week-workout-diary.rdo';
 import { UserWorkoutDiaryDto } from './dto/user-workout-diary.dto';
 import { PersonalAccountService } from './personal-account.service';
 import { FavoriteGymsQuery } from './queries/favorite-gyms.query';
+import { UserFavoriteGymRdo } from './rdo/user-favorite-gym.rdo';
+import { UserFavoriteGymsRdo } from './rdo/user-favorite-gyms.rdo';
 
 @Controller('personal-account')
 export class PersonalAccountController {
@@ -93,7 +95,7 @@ export class PersonalAccountController {
       query
     );
 
-    return favoriteGyms;
+    return fillObject(UserFavoriteGymsRdo, favoriteGyms);
   }
 
   @UseGuards(JwtAuthGuard, RoleCustomerGuard)
@@ -109,7 +111,7 @@ export class PersonalAccountController {
       request
     );
 
-    return favoriteGym;
+    return fillObject(UserFavoriteGymRdo, favoriteGym);
   }
 
   @UseGuards(JwtAuthGuard, RoleCustomerGuard)

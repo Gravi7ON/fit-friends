@@ -98,7 +98,6 @@ export class WorkoutController {
   @Get('/gyms/:ids')
   async findGyms(@Param('ids', ParseArrayPipe) gymIds: string[]) {
     const existedGyms = await this.workoutService.findGyms(gymIds);
-    console.log(existedGyms);
 
     return existedGyms;
   }
