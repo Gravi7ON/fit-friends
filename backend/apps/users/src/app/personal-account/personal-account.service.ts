@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
@@ -6,24 +7,23 @@ import {
 } from '@nestjs/common';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { UserRepository } from '../user/user.repository';
 import { UserFoodDiaryDto } from './dto/user-food-diary.dto';
-import {
-  RequestWithTokenPayload,
-  WeekFoodDiary,
-  WeekWorkoutDiary,
-} from '@backend/shared-types';
+import { WeekFoodDiary, WeekWorkoutDiary } from '@backend/shared-types';
 import { UserWorkoutDiaryDto } from './dto/user-workout-diary.dto';
-import { WeekWorkoutDiaryEntity } from './week-workout-diary.entity';
+import { WeekWorkoutDiaryEntity } from './entities/week-workout-diary.entity';
 import { PersonalAccountMessageException } from './personal-account.constant';
 import axios from 'axios';
 import { FavoriteGymsQuery } from './queries/favorite-gyms.query';
+import { PersonalAccountRepository } from './personal-account.repository';
+import { MyPurchaseQuery } from './queries/my-purchase.query';
 
 dayjs.extend(isoWeek);
 
 @Injectable()
 export class PersonalAccountService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly personalAccountRepository: PersonalAccountRepository
+  ) {}
 
   async saveFoodDiary(userId: string, dto: UserFoodDiaryDto) {
     const foodDiary: WeekFoodDiary = {
@@ -33,19 +33,23 @@ export class PersonalAccountService {
       weekOfYear: dayjs().isoWeek(),
     };
 
-    const currentWeekDiary = await this.userRepository.findFoodDiary({
-      userId,
-      year: foodDiary.year,
-      weekOfYear: foodDiary.weekOfYear,
-    });
+    const currentWeekDiary = await this.personalAccountRepository.findFoodDiary(
+      {
+        userId,
+        year: foodDiary.year,
+        weekOfYear: foodDiary.weekOfYear,
+      }
+    );
 
     if (!currentWeekDiary) {
-      const newFoodDiary = await this.userRepository.saveFoodDiary(foodDiary);
+      const newFoodDiary = await this.personalAccountRepository.saveFoodDiary(
+        foodDiary
+      );
 
       return newFoodDiary;
     }
 
-    return this.userRepository.updateFoodDiary(foodDiary);
+    return this.personalAccountRepository.updateFoodDiary(foodDiary);
   }
 
   async saveWorkoutDiary(
@@ -58,11 +62,12 @@ export class PersonalAccountService {
       weekOfYear: dayjs().isoWeek(),
     };
 
-    const currentWeekDiary = await this.userRepository.findWorkoutDiary({
-      userId,
-      year: workoutDiary.year,
-      weekOfYear: workoutDiary.weekOfYear,
-    });
+    const currentWeekDiary =
+      await this.personalAccountRepository.findWorkoutDiary({
+        userId,
+        year: workoutDiary.year,
+        weekOfYear: workoutDiary.weekOfYear,
+      });
 
     if (!currentWeekDiary) {
       const diaryEntity = new WeekWorkoutDiaryEntity({
@@ -72,10 +77,11 @@ export class PersonalAccountService {
         date,
       }).toObject();
 
-      const newWorkoutDiary = await this.userRepository.saveWorkoutDiary({
-        ...workoutDiary,
-        diary: diaryEntity,
-      });
+      const newWorkoutDiary =
+        await this.personalAccountRepository.saveWorkoutDiary({
+          ...workoutDiary,
+          diary: diaryEntity,
+        });
 
       return newWorkoutDiary;
     }
@@ -88,14 +94,14 @@ export class PersonalAccountService {
       diary: currentWeekDiary.diary,
     }).toObject();
 
-    return this.userRepository.updateWorkoutDiary({
+    return this.personalAccountRepository.updateWorkoutDiary({
       ...workoutDiary,
       diary: updateDiaryEntity,
     });
   }
 
   async findWorkoutDiary(userId: string) {
-    const weekDiary = await this.userRepository.findWorkoutDiary({
+    const weekDiary = await this.personalAccountRepository.findWorkoutDiary({
       userId,
       year: dayjs().year(),
       weekOfYear: dayjs().isoWeek(),
@@ -111,7 +117,7 @@ export class PersonalAccountService {
   }
 
   async findFoodDiary(userId: string) {
-    const weekDiary = await this.userRepository.findFoodDiary({
+    const weekDiary = await this.personalAccountRepository.findFoodDiary({
       userId,
       year: dayjs().year(),
       weekOfYear: dayjs().isoWeek(),
@@ -126,41 +132,41 @@ export class PersonalAccountService {
     return weekDiary;
   }
 
-  async addFavoriteGym(
-    userId: string,
-    gymId: number,
-    request: RequestWithTokenPayload
-  ) {
+  async addFavoriteGym(userId: string, gymId: number, authorization: string) {
     try {
       await axios.get(
-        `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts/gyms/${gymId}`,
+        `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts/gym/${gymId}`,
         {
           headers: {
-            Authorization: request.headers.authorization,
+            Authorization: authorization,
           },
         }
       );
     } catch (err) {
-      throw new NotFoundException(err.cause);
+      throw new NotFoundException(err.response.data.message);
     }
-    const existedFavorite = await this.userRepository.findFavoriteGym(gymId);
+    const existedFavorite =
+      await this.personalAccountRepository.findFavoriteGym(gymId);
 
     if (existedFavorite) {
       throw new ConflictException(
         PersonalAccountMessageException.FavoriteAlreadyAdded
       );
     }
-    const favoriteGym = await this.userRepository.addFavoriteGym(userId, gymId);
+    const favoriteGym = await this.personalAccountRepository.addFavoriteGym(
+      userId,
+      gymId
+    );
 
     return favoriteGym;
   }
 
   async findFavoriteGyms(
     userId: string,
-    request: RequestWithTokenPayload,
+    authorization: string,
     query: FavoriteGymsQuery
   ) {
-    const favoriteGyms = await this.userRepository.findFavoriteGyms(
+    const favoriteGyms = await this.personalAccountRepository.findFavoriteGyms(
       userId,
       query
     );
@@ -172,7 +178,7 @@ export class PersonalAccountService {
           `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts/gyms/${favoriteGymsIds}`,
           {
             headers: {
-              Authorization: request.headers.authorization,
+              Authorization: authorization,
             },
           }
         );
@@ -187,12 +193,163 @@ export class PersonalAccountService {
   }
 
   async removeFavoriteGym(gymId: number) {
-    const removedFavoriteGym = await this.userRepository.removeFavoriteGym(
-      gymId
-    );
+    const removedFavoriteGym =
+      await this.personalAccountRepository.removeFavoriteGym(gymId);
 
     if (!removedFavoriteGym) {
       Logger.error(PersonalAccountMessageException.NotFoundFavorite);
     }
+  }
+
+  async addPurchaseWorkout(
+    userId: string,
+    workoutId: number,
+    authorization: string
+  ) {
+    try {
+      await axios.get(
+        `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts/${workoutId}`,
+        {
+          headers: {
+            Authorization: authorization,
+          },
+        }
+      );
+    } catch (err) {
+      throw new NotFoundException(err.response.data.message);
+    }
+    const existedPurchases =
+      await this.personalAccountRepository.findMyPurchase(userId);
+
+    if (!existedPurchases) {
+      const newPurchase =
+        await this.personalAccountRepository.addPurchaseWorkout(
+          userId,
+          workoutId
+        );
+
+      return newPurchase;
+    }
+
+    const newPurchasedWorkoutIds = [
+      ...new Set([...existedPurchases.purchasedWorkoutIds, workoutId]),
+    ];
+    const updatedPurchase =
+      await this.personalAccountRepository.updateWorkoutPurchase(
+        userId,
+        newPurchasedWorkoutIds
+      );
+
+    return updatedPurchase;
+  }
+
+  async addPurchaseGym(userId: string, gymId: number, authorization: string) {
+    try {
+      await axios.get(
+        `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts/gym/${gymId}`,
+        {
+          headers: {
+            Authorization: authorization,
+          },
+        }
+      );
+    } catch (err) {
+      throw new NotFoundException(err.response.data.message);
+    }
+    const existedPurchases =
+      await this.personalAccountRepository.findMyPurchase(userId);
+
+    if (!existedPurchases) {
+      const newPurchase = await this.personalAccountRepository.addPurchaseGym(
+        userId,
+        gymId
+      );
+
+      return newPurchase;
+    }
+
+    const newPurchasedGymIds = [
+      ...new Set([...existedPurchases.purchasedGymIds, gymId]),
+    ];
+    const updatedPurchase =
+      await this.personalAccountRepository.updatePurchaseGym(
+        userId,
+        newPurchasedGymIds
+      );
+
+    return updatedPurchase;
+  }
+
+  async findMyPurchases(
+    userId: string,
+    authorization: string,
+    query: MyPurchaseQuery
+  ) {
+    const myExistedPurchases =
+      await this.personalAccountRepository.findMyPurchase(userId);
+
+    if (!myExistedPurchases) {
+      throw new NotFoundException(
+        PersonalAccountMessageException.NotFoundPurchase
+      );
+    }
+
+    // const workoutIds = myPurchases.purchasedWorkoutIds;
+    const gymIds = myExistedPurchases.purchasedGymIds;
+
+    try {
+      const purchases = await Promise.all([
+        axios.get(
+          `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts/gyms/${gymIds}`,
+          {
+            headers: {
+              Authorization: authorization,
+            },
+          }
+        ),
+      ]);
+
+      myExistedPurchases.purchasedGymIds = purchases[0].data;
+
+      return myExistedPurchases;
+    } catch (err) {
+      throw new BadRequestException(err.cause);
+    }
+  }
+
+  async removePurchaseWorkout(userId: string, workoutId: number) {
+    const existedPurchases =
+      await this.personalAccountRepository.findMyPurchase(userId);
+
+    if (!existedPurchases?.purchasedWorkoutIds.includes(workoutId)) {
+      throw new NotFoundException(
+        PersonalAccountMessageException.NotFoundPurchaseWorkout
+      );
+    }
+    const updatedPurchaseWorkout =
+      await this.personalAccountRepository.updateWorkoutPurchase(
+        userId,
+        existedPurchases.purchasedWorkoutIds.filter((id) => id !== workoutId)
+      );
+
+    return updatedPurchaseWorkout;
+  }
+
+  async removePurchaseGym(userId: string, gymId: number) {
+    const existedPurchases =
+      await this.personalAccountRepository.findMyPurchase(userId);
+
+    if (!existedPurchases?.purchasedGymIds.includes(gymId)) {
+      throw new NotFoundException(
+        PersonalAccountMessageException.NotFoundPurchaseGym
+      );
+    }
+    const updatedPurchaseWorkout =
+      await this.personalAccountRepository.updatePurchaseGym(
+        userId,
+        existedPurchases.purchasedGymIds.filter((id) => id !== gymId)
+      );
+
+    return updatedPurchaseWorkout;
   }
 }

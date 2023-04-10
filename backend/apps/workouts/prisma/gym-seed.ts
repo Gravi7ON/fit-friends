@@ -59,9 +59,7 @@ export async function fillDb() {
     ['бассейн', 'бесплатная парковка', 'детская комната', 'массаж'],
   ];
 
-  for (const iter of Array(MOCK_GYMS_AMOUNT)
-    .fill(1)
-    .map((_number, index) => (index += 1))) {
+  for (const iter of Array(MOCK_GYMS_AMOUNT)) {
     const randomImageNumber = randomInteger(RangeImage.Min, RangeImage.Max);
     await prisma.gym.upsert({
       where: { id: iter },

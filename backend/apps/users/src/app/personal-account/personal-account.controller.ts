@@ -25,6 +25,9 @@ import { PersonalAccountService } from './personal-account.service';
 import { FavoriteGymsQuery } from './queries/favorite-gyms.query';
 import { UserFavoriteGymRdo } from './rdo/user-favorite-gym.rdo';
 import { UserFavoriteGymsRdo } from './rdo/user-favorite-gyms.rdo';
+import { UserPurchaseRdo } from './rdo/user-purchase.rdo';
+import { UserPurchaseDataRdo } from './rdo/user-purchase-data.rdo';
+import { MyPurchaseQuery } from './queries/my-purchase.query';
 
 @Controller('personal-account')
 export class PersonalAccountController {
@@ -89,9 +92,10 @@ export class PersonalAccountController {
     @Query() query: FavoriteGymsQuery
   ) {
     const userId = request.user._id;
+    const authorization = request.headers.authorization;
     const favoriteGyms = await this.personalAccountService.findFavoriteGyms(
       userId,
-      request,
+      authorization,
       query
     );
 
@@ -105,10 +109,11 @@ export class PersonalAccountController {
     @Param('gymId', ParseIntPipe) gymId: number
   ) {
     const userId = request.user._id;
+    const authorization = request.headers.authorization;
     const favoriteGym = await this.personalAccountService.addFavoriteGym(
       userId,
       gymId,
-      request
+      authorization
     );
 
     return fillObject(UserFavoriteGymRdo, favoriteGym);
@@ -119,5 +124,86 @@ export class PersonalAccountController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeFavoriteGym(@Param('gymId', ParseIntPipe) gymId: number) {
     this.personalAccountService.removeFavoriteGym(gymId);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Post('/my-purchases/workouts/:workoutId')
+  async addPurchaseWorkout(
+    @Request() request: RequestWithTokenPayload,
+    @Param('workoutId', ParseIntPipe) workoutId: number
+  ) {
+    const userId = request.user._id;
+    const authorization = request.headers.authorization;
+    const purchases = await this.personalAccountService.addPurchaseWorkout(
+      userId,
+      workoutId,
+      authorization
+    );
+
+    return fillObject(UserPurchaseRdo, purchases);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Patch('/my-purchases/workouts/:workoutId')
+  async removePurchaseWorkout(
+    @Request() request: RequestWithTokenPayload,
+    @Param('workoutId', ParseIntPipe) workoutId: number
+  ) {
+    const userId = request.user._id;
+    const purchases = await this.personalAccountService.removePurchaseWorkout(
+      userId,
+      workoutId
+    );
+
+    return fillObject(UserPurchaseRdo, purchases);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Post('/my-purchases/gyms/:gymId')
+  async addPurchaseGym(
+    @Request() request: RequestWithTokenPayload,
+    @Param('gymId', ParseIntPipe) gymId: number
+  ) {
+    const userId = request.user._id;
+    const authorization = request.headers.authorization;
+    const purchases = await this.personalAccountService.addPurchaseGym(
+      userId,
+      gymId,
+      authorization
+    );
+
+    return fillObject(UserPurchaseRdo, purchases);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Patch('/my-purchases/gyms/:gymId')
+  async removePurchaseGym(
+    @Request() request: RequestWithTokenPayload,
+    @Param('gymId', ParseIntPipe) gymId: number
+  ) {
+    const userId = request.user._id;
+    const purchases = await this.personalAccountService.removePurchaseGym(
+      userId,
+      gymId
+    );
+
+    return fillObject(UserPurchaseRdo, purchases);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Get('/my-purchases')
+  async findMyPurchases(
+    @Request() request: RequestWithTokenPayload,
+    @Query() query: MyPurchaseQuery
+  ) {
+    const userId = request.user._id;
+    const authorization = request.headers.authorization;
+    const myPurchases = await this.personalAccountService.findMyPurchases(
+      userId,
+      authorization,
+      query
+    );
+
+    return fillObject(UserPurchaseDataRdo, myPurchases);
   }
 }

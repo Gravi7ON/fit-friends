@@ -1,13 +1,13 @@
 import { IsNumber, IsOptional, IsPositive, Min } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { DefaultFavoriteGymsQuery } from '../personal-account.constant';
+import { DefaultMyPurchaseQuery } from '../personal-account.constant';
 
-export class FavoriteGymsQuery {
+export class MyPurchaseQuery {
   @IsNumber()
   @Min(1)
-  @Transform(({ value }) => +value ?? DefaultFavoriteGymsQuery.Limit)
+  @Transform(({ value }) => +value ?? DefaultMyPurchaseQuery.Limit)
   @IsOptional()
-  public limit?: number = DefaultFavoriteGymsQuery.Limit;
+  public limit?: number = DefaultMyPurchaseQuery.Limit;
 
   @IsPositive()
   @Transform(({ value }) => +value)

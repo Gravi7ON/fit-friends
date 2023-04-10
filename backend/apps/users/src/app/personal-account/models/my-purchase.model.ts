@@ -8,12 +8,12 @@ export class MyPurchaseModel extends Document {
   @Prop({
     required: true,
   })
-  public purchasedWorkouts: object[];
+  public purchasedWorkoutIds: number[];
 
   @Prop({
     required: true,
   })
-  public purchasedGyms: object[];
+  public purchasedGymIds: number[];
 
   @Prop({
     required: true,

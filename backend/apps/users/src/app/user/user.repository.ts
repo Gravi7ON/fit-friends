@@ -1,14 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  User,
-  UserRole,
-  UserCoach,
-  UserCustomer,
-  WeekFoodDiary,
-  WeekWorkoutDiary,
-} from '@backend/shared-types';
+import { User, UserRole, UserCoach, UserCustomer } from '@backend/shared-types';
 import { UserCoachModel } from './models/user-coach.model';
 import { UserEntity } from './entities/user.entity';
 import { UserCustomerModel } from './models/user-customer.model';
@@ -18,10 +11,6 @@ import { UsersQuery } from './queries/users.query';
 import { COACH_COLLECTION_NAME } from './user.constant';
 import { MyFriendsModel } from './models/my-friends.model';
 import { MyFriendsQuery } from './queries/my-friends.query';
-import { FoodDiaryModel } from './models/food-diary.model';
-import { WorkoutDiaryModel } from './models/workout-diary.model';
-import { FavoriteGymsModel } from './models/favorite-gyms.model';
-import { FavoriteGymsQuery } from '../personal-account/queries/favorite-gyms.query';
 
 @Injectable()
 export class UserRepository {
@@ -31,13 +20,7 @@ export class UserRepository {
     @InjectModel(UserCustomerModel.name)
     private readonly userCustomerModel: Model<UserCustomerModel>,
     @InjectModel(MyFriendsModel.name)
-    private readonly myFriendsModel: Model<MyFriendsModel>,
-    @InjectModel(FoodDiaryModel.name)
-    private readonly foodDiaryModel: Model<FoodDiaryModel>,
-    @InjectModel(WorkoutDiaryModel.name)
-    private readonly workoutDiaryModel: Model<WorkoutDiaryModel>,
-    @InjectModel(FavoriteGymsModel.name)
-    private readonly favoriteGymsModel: Model<FavoriteGymsModel>
+    private readonly myFriendsModel: Model<MyFriendsModel>
   ) {}
 
   public async create(item: UserEntity): Promise<User> {
@@ -258,137 +241,6 @@ export class UserRepository {
       .findOneAndDelete({
         userId,
         friendId,
-      })
-      .exec();
-  }
-
-  public async saveFoodDiary(foodDiary: WeekFoodDiary): Promise<WeekFoodDiary> {
-    const currentWeekDiary = this.foodDiaryModel.create({ ...foodDiary });
-
-    return currentWeekDiary;
-  }
-
-  public async saveWorkoutDiary({
-    year,
-    userId,
-    weekOfYear,
-    diary,
-  }: WeekWorkoutDiary): Promise<WeekWorkoutDiary> {
-    const currentWeekDiary = this.workoutDiaryModel.create({
-      userId,
-      weekOfYear,
-      year,
-      diary,
-    });
-
-    return currentWeekDiary;
-  }
-
-  public async updateFoodDiary({
-    calories,
-    userId,
-    year,
-    weekOfYear,
-  }: WeekFoodDiary): Promise<WeekFoodDiary | null> {
-    const currentWeekDiary = this.foodDiaryModel.findOneAndUpdate(
-      {
-        userId: userId,
-        year: year,
-        weekOfYear: weekOfYear,
-      },
-      { calories: calories },
-      { new: true }
-    );
-
-    return currentWeekDiary;
-  }
-
-  public async updateWorkoutDiary({
-    year,
-    userId,
-    weekOfYear,
-    diary,
-  }: WeekWorkoutDiary): Promise<WeekWorkoutDiary | null> {
-    const currentWeekDiary = this.workoutDiaryModel.findOneAndUpdate(
-      {
-        userId: userId,
-        year: year,
-        weekOfYear: weekOfYear,
-      },
-      { diary: { ...diary } },
-      { new: true }
-    );
-
-    return currentWeekDiary;
-  }
-
-  public async findFoodDiary({
-    userId,
-    weekOfYear,
-    year,
-  }: WeekFoodDiary): Promise<WeekFoodDiary | null> {
-    const currentWeekDiary = this.foodDiaryModel
-      .findOne({
-        userId,
-        year,
-        weekOfYear,
-      })
-      .exec();
-
-    return currentWeekDiary;
-  }
-
-  public async findWorkoutDiary({
-    userId,
-    weekOfYear,
-    year,
-  }: WeekWorkoutDiary): Promise<WeekWorkoutDiary | null> {
-    const currentWeekDiary = this.workoutDiaryModel
-      .findOne({
-        userId,
-        year,
-        weekOfYear,
-      })
-      .exec();
-
-    return currentWeekDiary;
-  }
-
-  public async addFavoriteGym(
-    userId: string,
-    gymId: number
-  ): Promise<{ userId: string; favoriteGymId: number }> {
-    return this.favoriteGymsModel.create({
-      userId,
-      favoriteGymId: gymId,
-    });
-  }
-
-  public async findFavoriteGym(
-    gymId: number
-  ): Promise<{ userId: string; favoriteGymId: number }> {
-    return this.favoriteGymsModel.findOne({
-      favoriteGymId: gymId,
-    });
-  }
-
-  public async findFavoriteGyms(
-    userId: string,
-    { limit, page }: FavoriteGymsQuery
-  ): Promise<{ userId: string; favoriteGymId: number }[]> {
-    return this.favoriteGymsModel.aggregate([
-      { $match: { userId } },
-      { $skip: page > 0 ? limit * (page - 1) : 0 },
-      { $limit: limit },
-    ]);
-  }
-
-  public async removeFavoriteGym(
-    gymId: number
-  ): Promise<{ userId: string; favoriteGymId: number }> {
-    return this.favoriteGymsModel
-      .findOneAndDelete({
-        favoriteGymId: gymId,
       })
       .exec();
   }

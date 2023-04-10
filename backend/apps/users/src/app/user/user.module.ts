@@ -15,16 +15,6 @@ import {
   BlackListTokenSchema,
 } from './models/black-list-token.model';
 import { MyFriendsModel, MyFriendsSchema } from './models/my-friends.model';
-import { FoodDiaryModel, FoodDiarySchema } from './models/food-diary.model';
-import {
-  WorkoutDiaryModel,
-  WorkoutDiarySchema,
-} from './models/workout-diary.model';
-import {
-  FavoriteGymsModel,
-  FavoriteGymsSchema,
-} from './models/favorite-gyms.model';
-import { MyPurchaseModel, MyPurchaseSchema } from './models/my-purchase.model';
 
 @Module({
   imports: [
@@ -34,10 +24,6 @@ import { MyPurchaseModel, MyPurchaseSchema } from './models/my-purchase.model';
       { name: TokenModel.name, schema: TokenSchema },
       { name: BlackListTokenModel.name, schema: BlackListTokenSchema },
       { name: MyFriendsModel.name, schema: MyFriendsSchema },
-      { name: FoodDiaryModel.name, schema: FoodDiarySchema },
-      { name: WorkoutDiaryModel.name, schema: WorkoutDiarySchema },
-      { name: FavoriteGymsModel.name, schema: FavoriteGymsSchema },
-      { name: MyPurchaseModel.name, schema: MyPurchaseSchema },
     ]),
   ],
   providers: [UserRepository, UserService, TokenRepository],

@@ -103,7 +103,7 @@ export class WorkoutController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/gyms/:id')
+  @Get('/gym/:id')
   async findGym(@Param('id', ParseIntPipe) gymId: number) {
     const existedGym = await this.workoutService.findGym(gymId);
 
