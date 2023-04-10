@@ -6,6 +6,7 @@ export enum PersonalAccountMessageException {
   NotFoundPurchase = `You haven't any purchased yet`,
   NotFoundPurchaseWorkout = `Purchase workout with this id not found`,
   NotFoundPurchaseGym = `Purchase gym with this id not found`,
+  WorkoutsFailed = 'The workouts service failed to fetch, you can try later',
 }
 
 export enum DefaultFavoriteGymsQuery {

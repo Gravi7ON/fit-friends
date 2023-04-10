@@ -41,7 +41,7 @@ GET  http://localhost:3334/api/workouts/gym/24 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MTEwOTYxMiwiZXhwIjoxNjgxMTEwNTEyfQ.wsKhL8XwEqDde1IZ0wuh41LqJYJ20vYy-ca8GOwmOwg
 
 ### Find existed workouts
-GET  http://localhost:3334/api/workouts?limit=2&sortDirection=asc&page=2 HTTP/1.1
+GET  http://localhost:3334/api/workouts?limit=2&sortDirection=asc&workoutIds=3,4&page=1 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MTExOTgzNiwiZXhwIjoxNjgxMTIwNzM2fQ.8RhmZMOjwCQEgPKFu_ouyDDWuVJobcrAGZDoKRwO8eA
 
 ### Find existed gyms

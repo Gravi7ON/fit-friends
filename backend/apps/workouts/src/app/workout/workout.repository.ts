@@ -4,6 +4,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CoachOrdersQuery } from './queries/coach-orders.query';
 import { CoachWorkoutsQuery } from './queries/coach-workouts.query';
 import { WorkoutEntity } from './workout.entity';
+import { WorkoutsQuery } from './queries/workouts.query';
+import { GymsQuery } from './queries/gyms.query';
 
 @Injectable()
 export class WorkoutRepository {
@@ -60,8 +62,12 @@ export class WorkoutRepository {
     limit,
     page,
     sortDirection,
-  }: CoachWorkoutsQuery = {}): Promise<Workout[]> {
+    workoutIds,
+  }: WorkoutsQuery = {}): Promise<Workout[]> {
     return this.prisma.workout.findMany({
+      where: {
+        id: { in: workoutIds },
+      },
       take: limit,
       orderBy: [{ createdAt: sortDirection }],
       skip: page > 0 ? limit * (page - 1) : undefined,
@@ -148,11 +154,14 @@ export class WorkoutRepository {
     });
   }
 
-  public findGyms(gymIds: number[]) {
+  public findGyms(gymIds: number[], { limit, page, sortDirection }: GymsQuery) {
     return this.prisma.gym.findMany({
       where: {
         id: { in: gymIds },
       },
+      take: limit,
+      orderBy: [{ createdAt: sortDirection }],
+      skip: page > 0 ? limit * (page - 1) : undefined,
     });
   }
 }

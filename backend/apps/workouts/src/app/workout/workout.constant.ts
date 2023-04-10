@@ -18,7 +18,9 @@ export enum WorkoutMessageException {
   OnlyCoach = 'Users with role coach only create workout',
   OnlyOwnWorkout = 'You may edit own workout only',
   NotAnyWorkout = `You don't have any workout yet`,
+  NotConvertToNumber = 'Incorrect workout ids',
 }
+
 export enum SortingDirection {
   Asc = 'asc',
   Desc = 'desc',
@@ -30,6 +32,11 @@ export enum DefaultCoachQuery {
 }
 
 export enum DefaultWorkoutQuery {
+  Limit = 50,
+  SortDirection = 'desc',
+}
+
+export enum DefaultGymQuery {
   Limit = 50,
   SortDirection = 'desc',
 }

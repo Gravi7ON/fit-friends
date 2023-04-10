@@ -17,6 +17,8 @@ import {
 } from './workout.constant';
 import { WorkoutEntity } from './workout.entity';
 import { WorkoutRepository } from './workout.repository';
+import { WorkoutsQuery } from './queries/workouts.query';
+import { GymsQuery } from './queries/gyms.query';
 
 @Injectable()
 export class WorkoutService {
@@ -74,9 +76,14 @@ export class WorkoutService {
     return existedGym;
   }
 
-  async findGyms(gymIds: string[]) {
+  async findGyms(gymIds: string[], query: GymsQuery) {
+    if (!gymIds.every((id) => !Number.isNaN(+id))) {
+      throw new NotFoundException(WorkoutMessageException.NotConvertToNumber);
+    }
+
     const existedGyms = await this.workoutRepository.findGyms(
-      gymIds.map((id) => Number(id))
+      gymIds.map((id) => Number(id)),
+      query
     );
 
     return existedGyms;
@@ -91,7 +98,7 @@ export class WorkoutService {
     return existedWorkouts;
   }
 
-  async findWorkouts(query: CoachWorkoutsQuery) {
+  async findWorkouts(query: WorkoutsQuery) {
     const existedWorkouts = await this.workoutRepository.findMany(query);
 
     return existedWorkouts;

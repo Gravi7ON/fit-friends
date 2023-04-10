@@ -283,7 +283,7 @@ export class PersonalAccountService {
   async findMyPurchases(
     userId: string,
     authorization: string,
-    query: MyPurchaseQuery
+    { limit, page, purchaseType }: MyPurchaseQuery
   ) {
     const myExistedPurchases =
       await this.personalAccountRepository.findMyPurchase(userId);
@@ -294,13 +294,21 @@ export class PersonalAccountService {
       );
     }
 
-    // const workoutIds = myPurchases.purchasedWorkoutIds;
+    const workoutIds = myExistedPurchases.purchasedWorkoutIds;
     const gymIds = myExistedPurchases.purchasedGymIds;
 
     try {
       const purchases = await Promise.all([
         axios.get(
-          `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts/gyms/${gymIds}`,
+          `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts/gyms/${gymIds}?limit=${limit}&page=${page}`,
+          {
+            headers: {
+              Authorization: authorization,
+            },
+          }
+        ),
+        axios.get(
+          `http://localhost:${process.env.WORKOUTS_PORT}/api/workouts?workoutIds=${workoutIds}&limit=${limit}&page=${page}`,
           {
             headers: {
               Authorization: authorization,
@@ -309,11 +317,22 @@ export class PersonalAccountService {
         ),
       ]);
 
-      myExistedPurchases.purchasedGymIds = purchases[0].data;
-
-      return myExistedPurchases;
-    } catch (err) {
-      throw new BadRequestException(err.cause);
+      switch (purchaseType) {
+        case 'gyms':
+          myExistedPurchases.purchasedGymIds = purchases[0].data;
+          return myExistedPurchases;
+        case 'workouts':
+          myExistedPurchases.purchasedWorkoutIds = purchases[1].data;
+          return myExistedPurchases;
+        default:
+          myExistedPurchases.purchasedGymIds = purchases[0].data;
+          myExistedPurchases.purchasedWorkoutIds = purchases[1].data;
+          return myExistedPurchases;
+      }
+    } catch {
+      throw new BadRequestException(
+        PersonalAccountMessageException.WorkoutsFailed
+      );
     }
   }
 

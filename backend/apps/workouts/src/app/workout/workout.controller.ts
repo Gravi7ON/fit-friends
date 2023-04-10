@@ -22,6 +22,8 @@ import { CoachWorkoutsQuery } from './queries/coach-workouts.query';
 import { CoachWorkoutOrdersRdo } from './rdo/coach-workout-orders.rdo';
 import { CreatedWorkoutRdo } from './rdo/created-workout.rdo';
 import { WorkoutService } from './workout.service';
+import { WorkoutsQuery } from './queries/workouts.query';
+import { GymsQuery } from './queries/gyms.query';
 
 @Controller('workouts')
 export class WorkoutController {
@@ -81,7 +83,7 @@ export class WorkoutController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/')
-  async findMany(@Query() query: CoachWorkoutsQuery) {
+  async findMany(@Query() query: WorkoutsQuery) {
     const workouts = await this.workoutService.findWorkouts(query);
 
     return fillObject(CreatedWorkoutRdo, workouts);
@@ -104,8 +106,11 @@ export class WorkoutController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/gyms/:ids')
-  async findGyms(@Param('ids', ParseArrayPipe) gymIds: string[]) {
-    const existedGyms = await this.workoutService.findGyms(gymIds);
+  async findGyms(
+    @Param('ids', ParseArrayPipe) gymIds: string[],
+    @Query() query: GymsQuery
+  ) {
+    const existedGyms = await this.workoutService.findGyms(gymIds, query);
 
     return existedGyms;
   }

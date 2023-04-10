@@ -15,4 +15,8 @@ export class WorkoutsQuery {
   @IsOptional()
   @Transform(({ value }) => +value)
   public page?: number;
+
+  @IsOptional()
+  @Transform(({ value }) => value.split(',').map((id: string) => Number(id)))
+  public workoutIds?: number[];
 }
