@@ -28,7 +28,7 @@ export class WorkoutController {
   constructor(private readonly workoutService: WorkoutService) {}
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
-  @Post('/')
+  @Post('/coach')
   async create(
     @Body() dto: CreateWorkoutDto,
     @Request() request: RequestWithTokenPayload
@@ -40,7 +40,7 @@ export class WorkoutController {
   }
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
-  @Patch('/:id')
+  @Patch('/coach/:id')
   async update(
     @Param('id', ParseIntPipe) workoutId: number,
     @Body() dto: UpdateWorkoutDto,
@@ -56,19 +56,35 @@ export class WorkoutController {
     return fillObject(CreatedWorkoutRdo, newWorkout);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/coach/:id')
+  async find(@Param('id', ParseIntPipe) workoutId: number) {
+    const existedWorkout = await this.workoutService.findWorkout(workoutId);
+
+    return fillObject(CreatedWorkoutRdo, existedWorkout);
+  }
+
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
-  @Get('/')
-  async findMany(
+  @Get('/coach')
+  async findCoachWorkouts(
     @Request() request: RequestWithTokenPayload,
     @Query() query: CoachWorkoutsQuery
   ) {
     const coachId: string = request.user?._id;
-    const coachWorkouts = await this.workoutService.findWorkouts(
+    const coachWorkouts = await this.workoutService.findCoachWorkouts(
       coachId,
       query
     );
 
     return fillObject(CreatedWorkoutRdo, coachWorkouts);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/')
+  async findMany(@Query() query: CoachWorkoutsQuery) {
+    const workouts = await this.workoutService.findWorkouts(query);
+
+    return fillObject(CreatedWorkoutRdo, workouts);
   }
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
@@ -84,14 +100,6 @@ export class WorkoutController {
     );
 
     return fillObject(CoachWorkoutOrdersRdo, coachOrders);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('/:id')
-  async find(@Param('id', ParseIntPipe) workoutId: number) {
-    const existedWorkout = await this.workoutService.findWorkout(workoutId);
-
-    return fillObject(CreatedWorkoutRdo, existedWorkout);
   }
 
   @UseGuards(JwtAuthGuard)

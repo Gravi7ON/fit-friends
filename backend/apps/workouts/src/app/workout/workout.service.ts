@@ -82,11 +82,17 @@ export class WorkoutService {
     return existedGyms;
   }
 
-  async findWorkouts(coachId: string, query: CoachWorkoutsQuery) {
-    const existedWorkouts = await this.workoutRepository.findMany(
+  async findCoachWorkouts(coachId: string, query: CoachWorkoutsQuery) {
+    const existedWorkouts = await this.workoutRepository.findCoachMany(
       coachId,
       query
     );
+
+    return existedWorkouts;
+  }
+
+  async findWorkouts(query: CoachWorkoutsQuery) {
+    const existedWorkouts = await this.workoutRepository.findMany(query);
 
     return existedWorkouts;
   }
@@ -95,7 +101,9 @@ export class WorkoutService {
     coachId: string,
     query: CoachOrdersQuery
   ): Promise<Workout[]> {
-    const existedWorkouts = await this.workoutRepository.findAll(coachId);
+    const existedWorkouts = await this.workoutRepository.findAllCoachWorkout(
+      coachId
+    );
 
     if (!existedWorkouts.length) {
       throw new BadRequestException(WorkoutMessageException.NotAnyWorkout);

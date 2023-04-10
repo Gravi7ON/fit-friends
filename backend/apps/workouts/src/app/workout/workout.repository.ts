@@ -56,7 +56,19 @@ export class WorkoutRepository {
     });
   }
 
-  public findMany(
+  public findMany({
+    limit,
+    page,
+    sortDirection,
+  }: CoachWorkoutsQuery = {}): Promise<Workout[]> {
+    return this.prisma.workout.findMany({
+      take: limit,
+      orderBy: [{ createdAt: sortDirection }],
+      skip: page > 0 ? limit * (page - 1) : undefined,
+    });
+  }
+
+  public findCoachMany(
     coachId: string,
     {
       limit,
@@ -91,6 +103,14 @@ export class WorkoutRepository {
     });
   }
 
+  public findAllCoachWorkout(coachId: string): Promise<Workout[]> {
+    return this.prisma.workout.findMany({
+      where: {
+        coachId,
+      },
+    });
+  }
+
   public findOrders(
     coachId: string,
     coachWorkoutIds: number[],
@@ -117,14 +137,6 @@ export class WorkoutRepository {
       },
       take: limit,
       skip: page > 0 ? limit * (page - 1) : undefined,
-    });
-  }
-
-  public findAll(coachId: string): Promise<Workout[]> {
-    return this.prisma.workout.findMany({
-      where: {
-        coachId,
-      },
     });
   }
 

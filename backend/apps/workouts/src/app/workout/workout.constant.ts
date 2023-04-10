@@ -29,6 +29,11 @@ export enum DefaultCoachQuery {
   SortDirection = 'desc',
 }
 
+export enum DefaultWorkoutQuery {
+  Limit = 50,
+  SortDirection = 'desc',
+}
+
 export enum SortFiled {
   Sum = 'sum',
   AmountWorkout = 'amountWorkout',
