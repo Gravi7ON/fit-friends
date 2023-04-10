@@ -1,4 +1,4 @@
-import { Workout } from '@backend/shared-types';
+import { OrderWorkout, Workout } from '@backend/shared-types';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CoachOrdersQuery } from './queries/coach-orders.query';
@@ -162,6 +162,16 @@ export class WorkoutRepository {
       take: limit,
       orderBy: [{ createdAt: sortDirection }],
       skip: page > 0 ? limit * (page - 1) : undefined,
+    });
+  }
+
+  public async createOrderWorkout(
+    order: Omit<Required<OrderWorkout>, 'id' | 'createdAt'>
+  ) {
+    return this.prisma.orderWorkout.create({
+      data: {
+        ...order,
+      },
     });
   }
 }

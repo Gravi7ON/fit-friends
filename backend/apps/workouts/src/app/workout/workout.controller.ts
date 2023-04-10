@@ -24,6 +24,8 @@ import { CreatedWorkoutRdo } from './rdo/created-workout.rdo';
 import { WorkoutService } from './workout.service';
 import { WorkoutsQuery } from './queries/workouts.query';
 import { GymsQuery } from './queries/gyms.query';
+import { CreateWorkoutOrderDto } from './dto/create-workout-order.dto';
+import { RoleCustomerGuard } from './guards/role.customer.guard';
 
 @Controller('workouts')
 export class WorkoutController {
@@ -59,7 +61,7 @@ export class WorkoutController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/coach/:id')
+  @Get('/:id')
   async find(@Param('id', ParseIntPipe) workoutId: number) {
     const existedWorkout = await this.workoutService.findWorkout(workoutId);
 
@@ -102,6 +104,23 @@ export class WorkoutController {
     );
 
     return fillObject(CoachWorkoutOrdersRdo, coachOrders);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Post('/orders-workout')
+  async createOrderWorkout(
+    @Body() dto: CreateWorkoutOrderDto,
+    @Request() request: RequestWithTokenPayload
+  ) {
+    const userId = request.user?._id;
+    const authorization = request.headers.authorization;
+    const newOrder = await this.workoutService.createOrderWorkout(
+      dto,
+      userId,
+      authorization
+    );
+
+    return newOrder;
   }
 
   @UseGuards(JwtAuthGuard)

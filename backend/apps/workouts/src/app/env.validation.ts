@@ -17,6 +17,11 @@ class EnvironmentsConfig {
     message: EnvValidationMessage.PortRequired,
   })
   public PORT: string;
+
+  @IsString({
+    message: EnvValidationMessage.PortUsersRequired,
+  })
+  public USERS_PORT: string;
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {

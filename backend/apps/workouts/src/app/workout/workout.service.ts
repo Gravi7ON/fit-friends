@@ -19,6 +19,8 @@ import { WorkoutEntity } from './workout.entity';
 import { WorkoutRepository } from './workout.repository';
 import { WorkoutsQuery } from './queries/workouts.query';
 import { GymsQuery } from './queries/gyms.query';
+import { CreateWorkoutOrderDto } from './dto/create-workout-order.dto';
+import axios from 'axios';
 
 @Injectable()
 export class WorkoutService {
@@ -167,5 +169,38 @@ export class WorkoutService {
       default:
         return transformOrders;
     }
+  }
+
+  async createOrderWorkout(
+    dto: CreateWorkoutOrderDto,
+    userId: string,
+    authorization: string
+  ): Promise<OrderWorkout> {
+    const newOrder = {
+      ...dto,
+      customerId: userId,
+      sum: dto.amountWorkout * dto.cost,
+    };
+
+    await this.findWorkout(dto.workoutId);
+    const newWorkoutOrder = await this.workoutRepository.createOrderWorkout(
+      newOrder
+    );
+
+    try {
+      await axios.post(
+        `http://localhost:${process.env.USERS_PORT}/api/personal-account/my-purchases/workouts/${dto.workoutId}`,
+        {},
+        {
+          headers: {
+            Authorization: authorization,
+          },
+        }
+      );
+    } catch (err) {
+      throw new NotFoundException(err.cause);
+    }
+
+    return newWorkoutOrder;
   }
 }

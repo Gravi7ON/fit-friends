@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { UserLocation } from '../../../libs/shared-types/src/lib/user-location.enum';
+import { UserLocation } from '@backend/shared-types';
 
 const MOCK_GYMS_AMOUNT = 5;
 

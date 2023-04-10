@@ -16,6 +16,7 @@ export enum WorkoutMessageException {
   NotFound = 'Workout with this id not found',
   NotFoundGym = 'Gym with this id not found',
   OnlyCoach = 'Users with role coach only create workout',
+  OnlyCustomer = 'Users with role customer only create order',
   OnlyOwnWorkout = 'You may edit own workout only',
   NotAnyWorkout = `You don't have any workout yet`,
   NotConvertToNumber = 'Incorrect workout ids',
