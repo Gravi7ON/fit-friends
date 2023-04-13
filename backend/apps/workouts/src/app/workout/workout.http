@@ -1,7 +1,7 @@
 ### Create a new workout
 POST http://localhost:3334/api/workouts/coach HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDI0MDg0YjcxZGZjMzY2ODM3ZWMiLCJlbWFpbCI6Im1lQGdtYWlsLmNvbSIsInJvbGUiOiLRgtGA0LXQvdC10YAiLCJuYW1lIjoiSGF3ayBDaGlwIiwiaWF0IjoxNjgxMzEzMDQwLCJleHAiOjE2ODEzMTM5NDB9.mBLz1XpvP2lctpoMp2Nf8wGptNDp07TJXffgtGKK9SI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDI0MDg0YjcxZGZjMzY2ODM3ZWMiLCJlbWFpbCI6Im1lQGdtYWlsLmNvbSIsInJvbGUiOiLRgtGA0LXQvdC10YAiLCJuYW1lIjoiSGF3ayBDaGlwIiwiaWF0IjoxNjgxMzk0MjIyLCJleHAiOjE2ODEzOTUxMjJ9.MDI5jnxoyLCBqjgEdwsQCFFebgJQ8gyxtJwS6sI-ONE
 
 {
   "title": "Amet dolore.",

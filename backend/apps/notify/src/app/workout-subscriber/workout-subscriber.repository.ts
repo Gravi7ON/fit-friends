@@ -24,6 +24,12 @@ export class WorkoutSubscriberRepository {
     return this.workoutSubscriberModel.find({ email }).exec();
   }
 
+  public async findCoachSubscribers(coachId: string): Promise<Subscriber[]> {
+    return this.workoutSubscriberModel
+      .find({ subscribeCoachId: coachId })
+      .exec();
+  }
+
   public async findByEmailAndCoachId(
     email: string,
     subscribeCoachId: string

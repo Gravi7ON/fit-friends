@@ -24,7 +24,8 @@ import { GymsQuery } from './queries/gyms.query';
 import { CreateWorkoutOrderDto } from './dto/create-workout-order.dto';
 import axios from 'axios';
 import { ClientProxy } from '@nestjs/microservices';
-import { createEvent } from '@backend/core';
+import { createEvent, fillObject } from '@backend/core';
+import { WorkoutPayloadRdo } from './rdo/workout-payload.dto';
 
 @Injectable()
 export class WorkoutService {
@@ -45,7 +46,10 @@ export class WorkoutService {
 
     const workout = await this.workoutRepository.create(workoutEntity);
 
-    this.rabbitClient.emit(createEvent(CommandEvent.SendWorkout), workout);
+    this.rabbitClient.emit(
+      createEvent(CommandEvent.SendWorkout),
+      fillObject(WorkoutPayloadRdo, workout)
+    );
 
     return workout;
   }

@@ -5,32 +5,28 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { WorkoutSubscriberService } from './workout-subscriber.service';
 import { CreateSubscribeDto } from './dto/create-subscribe.dto';
-import { createEvent, fillObject } from '@backend/core';
+import { fillObject } from '@backend/core';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { CommandEvent, RequestWithTokenPayload } from '@backend/shared-types';
-import { CreatedSibscribeRdo } from './rdo/created-sibscribe';
 import {
-  ClientProxy,
-  Ctx,
-  MessagePattern,
-  Payload,
-  RmqContext,
-} from '@nestjs/microservices';
-import { RABBITMQ_SERVICE } from './workout.subscriber.constant';
+  CommandEvent,
+  RequestWithTokenPayload,
+  WorkoutPayload,
+} from '@backend/shared-types';
+import { CreatedSibscribeRdo } from './rdo/created-sibscribe';
+import { EventPattern } from '@nestjs/microservices';
+import { RedisService } from './redis.service';
 
 @Controller('workout-subscriber')
 export class WorkoutSubscriberController {
-  count = 0;
   constructor(
     private readonly subscribeService: WorkoutSubscriberService,
-    @Inject(RABBITMQ_SERVICE) private readonly rabbitClient: ClientProxy
+    private readonly redisService: RedisService
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -58,17 +54,15 @@ export class WorkoutSubscriberController {
     this.subscribeService.unSubscribe(userSubscriberEmail);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('send-notify')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async sendNewWorkouts() {
-    this.rabbitClient.emit(createEvent(CommandEvent.SendWorkout), 'start');
+    this.subscribeService.sendNotifications();
   }
 
-  @MessagePattern({ cmd: CommandEvent.SendWorkout })
-  async sendNotifications(@Payload() data, @Ctx() context: RmqContext) {
-    const channel = context.getChannelRef();
-    const originalMsg = context.getMessage();
-    channel.ack(originalMsg);
-
-    console.log(data);
+  @EventPattern({ cmd: CommandEvent.SendWorkout })
+  async sendNotifications(workout: WorkoutPayload) {
+    this.subscribeService.setWorkoutToRedisStore(workout);
   }
 }

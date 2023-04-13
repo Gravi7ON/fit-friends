@@ -12,9 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getJwtConfig } from '../../config/jwt.config';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { ClientsModule } from '@nestjs/microservices';
-import { getRabbitMqWorkoutsQueueConfig } from '../../config/rabbitmq.config';
-import { RABBITMQ_SERVICE } from './workout.subscriber.constant';
+import { RedisService } from './redis.service';
 
 @Module({
   imports: [
@@ -23,13 +21,6 @@ import { RABBITMQ_SERVICE } from './workout.subscriber.constant';
       inject: [ConfigService],
       useFactory: getJwtConfig,
     }),
-    ClientsModule.registerAsync([
-      {
-        name: RABBITMQ_SERVICE,
-        useFactory: getRabbitMqWorkoutsQueueConfig,
-        inject: [ConfigService],
-      },
-    ]),
     MongooseModule.forFeature([
       { name: WorkoutSubscriberModel.name, schema: WorkoutSubscriberSchema },
     ]),
@@ -40,6 +31,7 @@ import { RABBITMQ_SERVICE } from './workout.subscriber.constant';
     WorkoutSubscriberService,
     WorkoutSubscriberRepository,
     JwtStrategy,
+    RedisService,
   ],
 })
 export class WorkoutSubscriberModule {}

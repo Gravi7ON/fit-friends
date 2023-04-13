@@ -23,7 +23,7 @@ export function getRabbitMqWorkoutsQueueConfig(
       urls: [url],
       queue,
       persistent: true,
-      noAck: false,
+      noAck: true,
       queueOptions: {
         durable: true,
       },
