@@ -6,6 +6,7 @@ import { validateEnvironments } from './env.validation';
 import { PrismaModule } from './prisma/prisma.module';
 import { WorkoutModule } from './workout/workout.module';
 import { FileModule } from './file/file.module';
+import { rabbitMqOptions } from '../config/rabbitmq.config';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { FileModule } from './file/file.module';
       cache: true,
       isGlobal: true,
       envFilePath: ENV_FILE_PATH,
-      load: [jwtOptions],
+      load: [jwtOptions, rabbitMqOptions],
       validate: validateEnvironments,
     }),
     WorkoutModule,

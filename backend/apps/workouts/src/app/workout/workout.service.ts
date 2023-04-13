@@ -1,7 +1,8 @@
-import { OrderWorkout, Workout } from '@backend/shared-types';
+import { CommandEvent, OrderWorkout, Workout } from '@backend/shared-types';
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { CoachOrdersQuery } from './queries/coach-orders.query';
 import { CoachWorkoutsQuery } from './queries/coach-workouts.query';
 import {
+  RABBITMQ_SERVICE,
   RANDOM_STATIC_IMAGE_PATH,
   SortFiled,
   SortingDirection,
@@ -21,10 +23,15 @@ import { WorkoutsQuery } from './queries/workouts.query';
 import { GymsQuery } from './queries/gyms.query';
 import { CreateWorkoutOrderDto } from './dto/create-workout-order.dto';
 import axios from 'axios';
+import { ClientProxy } from '@nestjs/microservices';
+import { createEvent } from '@backend/core';
 
 @Injectable()
 export class WorkoutService {
-  constructor(private readonly workoutRepository: WorkoutRepository) {}
+  constructor(
+    private readonly workoutRepository: WorkoutRepository,
+    @Inject(RABBITMQ_SERVICE) private readonly rabbitClient: ClientProxy
+  ) {}
 
   async createWorkout(
     dto: CreateWorkoutDto,
@@ -36,7 +43,11 @@ export class WorkoutService {
       coachId,
     });
 
-    return this.workoutRepository.create(workoutEntity);
+    const workout = await this.workoutRepository.create(workoutEntity);
+
+    this.rabbitClient.emit(createEvent(CommandEvent.SendWorkout), workout);
+
+    return workout;
   }
 
   async updateWorkout(

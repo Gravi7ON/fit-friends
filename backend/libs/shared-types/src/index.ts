@@ -16,3 +16,5 @@ export * from './lib/user-sex-for-workout.enum';
 export * from './lib/order-workout.interface';
 export * from './lib/week-food-diary.interface';
 export * from './lib/week-workout-diary.interface';
+export * from './lib/subscriber.interface';
+export * from './lib/command-message.enum';

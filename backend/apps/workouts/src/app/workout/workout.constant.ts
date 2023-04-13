@@ -46,3 +46,5 @@ export enum SortFiled {
   Sum = 'sum',
   AmountWorkout = 'amountWorkout',
 }
+
+export const RABBITMQ_SERVICE = Symbol('RABBITMQ_SERVICE');
