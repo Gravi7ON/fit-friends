@@ -19,3 +19,4 @@ export * from './lib/week-workout-diary.interface';
 export * from './lib/subscriber.interface';
 export * from './lib/command-message.enum';
 export * from './lib/workout-payload.interface';
+export * from './lib/personal-training-status.enum';

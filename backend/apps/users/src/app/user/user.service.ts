@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
@@ -15,6 +16,7 @@ import { UsersQuery } from './queries/users.query';
 import { MyFriendsQuery } from './queries/my-friends.query';
 import { InjectModel } from '@nestjs/mongoose';
 import { MyFriendsModel } from './models/my-friends.model';
+import { UpdatePersonalTrainingRequestDto } from './dto/update-personal-training-request.dto';
 
 @Injectable()
 export class UserService {
@@ -103,5 +105,58 @@ export class UserService {
     const updatedUser = await this.userRepository.update(id, userEntity);
 
     return updatedUser;
+  }
+
+  async createPersonalTrainingRequest(fromUserId: string, toUserId: string) {
+    if (fromUserId === toUserId) {
+      throw new ConflictException(UserMessageException);
+    }
+
+    if (!(await this.findUser(toUserId))) {
+      throw new NotFoundException(UserMessageException.NotFound);
+    }
+
+    if (
+      await this.userRepository.findPersonalTrainingRequestConsideration(
+        fromUserId,
+        toUserId
+      )
+    ) {
+      throw new ConflictException(
+        UserMessageException.PersonalRequestToUserExists
+      );
+    }
+
+    return this.userRepository.createPersonalTrainingRequest(
+      fromUserId,
+      toUserId
+    );
+  }
+
+  async updateStatusPersonalTrainingRequest(
+    fromUserId: string,
+    { requestId, requestStatus }: UpdatePersonalTrainingRequestDto
+  ) {
+    const personalRequest =
+      await this.userRepository.findPersonalTrainingRequest(requestId);
+
+    if (!personalRequest) {
+      throw new NotFoundException(UserMessageException.PersonalRequestNotFound);
+    }
+
+    if (requestStatus === personalRequest.requestStatus) {
+      throw new BadRequestException(
+        UserMessageException.PersonalRequestBadStatus
+      );
+    }
+
+    if (fromUserId !== personalRequest.toUserId) {
+      throw new ConflictException(UserMessageException.OnlyLinkedRequest);
+    }
+
+    return this.userRepository.updateStatusPersonalTrainingRequest({
+      requestId,
+      requestStatus,
+    });
   }
 }

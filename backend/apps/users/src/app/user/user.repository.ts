@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserRole, UserCoach, UserCustomer } from '@backend/shared-types';
+import {
+  User,
+  UserRole,
+  UserCoach,
+  UserCustomer,
+  PersonalTrainingStatus,
+} from '@backend/shared-types';
 import { UserCoachModel } from './models/user-coach.model';
 import { UserEntity } from './entities/user.entity';
 import { UserCustomerModel } from './models/user-customer.model';
@@ -11,6 +17,8 @@ import { UsersQuery } from './queries/users.query';
 import { COACH_COLLECTION_NAME } from './user.constant';
 import { MyFriendsModel } from './models/my-friends.model';
 import { MyFriendsQuery } from './queries/my-friends.query';
+import { PersonalTrainingRequestModel } from './models/personal-training-request.model';
+import { UpdatePersonalTrainingRequestDto } from './dto/update-personal-training-request.dto';
 
 @Injectable()
 export class UserRepository {
@@ -20,7 +28,9 @@ export class UserRepository {
     @InjectModel(UserCustomerModel.name)
     private readonly userCustomerModel: Model<UserCustomerModel>,
     @InjectModel(MyFriendsModel.name)
-    private readonly myFriendsModel: Model<MyFriendsModel>
+    private readonly myFriendsModel: Model<MyFriendsModel>,
+    @InjectModel(PersonalTrainingRequestModel.name)
+    private readonly personalTrainingRequestModel: Model<PersonalTrainingRequestModel>
   ) {}
 
   public async create(item: UserEntity): Promise<User> {
@@ -243,5 +253,43 @@ export class UserRepository {
         friendId,
       })
       .exec();
+  }
+
+  public async createPersonalTrainingRequest(
+    fromUserId: string,
+    toUserId: string
+  ) {
+    return this.personalTrainingRequestModel.create({
+      fromUserId,
+      toUserId,
+    });
+  }
+
+  public async findPersonalTrainingRequestConsideration(
+    fromUserId: string,
+    toUserId: string
+  ) {
+    return this.personalTrainingRequestModel.findOne({
+      fromUserId,
+      toUserId,
+      requestStatus: PersonalTrainingStatus.Consideration,
+    });
+  }
+
+  public async findPersonalTrainingRequest(requestId: string) {
+    return this.personalTrainingRequestModel.findOne({
+      _id: requestId,
+    });
+  }
+
+  public async updateStatusPersonalTrainingRequest({
+    requestId,
+    requestStatus,
+  }: UpdatePersonalTrainingRequestDto) {
+    return this.personalTrainingRequestModel.findByIdAndUpdate(
+      { _id: requestId },
+      { requestStatus },
+      { new: true }
+    );
   }
 }

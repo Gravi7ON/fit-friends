@@ -15,6 +15,8 @@ import {
   BlackListTokenSchema,
 } from './models/black-list-token.model';
 import { MyFriendsModel, MyFriendsSchema } from './models/my-friends.model';
+import { PersonalTrainingRequestModel } from './models/personal-training-request.model';
+import { PersonalTrainingRequestSchema } from './models/personal-training-request.model';
 
 @Module({
   imports: [
@@ -24,6 +26,10 @@ import { MyFriendsModel, MyFriendsSchema } from './models/my-friends.model';
       { name: TokenModel.name, schema: TokenSchema },
       { name: BlackListTokenModel.name, schema: BlackListTokenSchema },
       { name: MyFriendsModel.name, schema: MyFriendsSchema },
+      {
+        name: PersonalTrainingRequestModel.name,
+        schema: PersonalTrainingRequestSchema,
+      },
     ]),
   ],
   providers: [UserRepository, UserService, TokenRepository],

@@ -25,6 +25,9 @@ import { RoleCoachGuard } from '../common-guards/role-coach.guard';
 import { MyFriendsQuery } from './queries/my-friends.query';
 import { RoleCustomerGuard } from '../common-guards/role-customer.guard';
 import { UserFriendRdo } from './rdo/user-friend.rdo';
+import { CreatePersonalTrainingRequestDto } from './dto/create-personal-training-request.dto';
+import { PersonalTrainingRequestRdo } from './rdo/personal-training-request.rdo';
+import { UpdatePersonalTrainingRequestDto } from './dto/update-personal-training-request.dto';
 
 @Controller('users')
 export class UserController {
@@ -95,5 +98,37 @@ export class UserController {
     return existedUser.role === UserRole.Coach
       ? fillObject(UserCoachRdo, existedUser)
       : fillObject(UserCustomerRdo, existedUser);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Post('/personal-training')
+  async createPersonalTrainigRequest(
+    @Request() request: RequestWithTokenPayload,
+    @Body() { toUserId }: CreatePersonalTrainingRequestDto
+  ) {
+    const fromUserId = request.user._id;
+    const personalTraining =
+      await this.userService.createPersonalTrainingRequest(
+        fromUserId,
+        toUserId
+      );
+
+    return fillObject(PersonalTrainingRequestRdo, personalTraining);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Patch('/personal-training')
+  async updateStatusPersonalTrainigRequest(
+    @Request() request: RequestWithTokenPayload,
+    @Body() dto: UpdatePersonalTrainingRequestDto
+  ) {
+    const fromUserId = request.user._id;
+    const personalTraining =
+      await this.userService.updateStatusPersonalTrainingRequest(
+        fromUserId,
+        dto
+      );
+
+    return fillObject(PersonalTrainingRequestRdo, personalTraining);
   }
 }
