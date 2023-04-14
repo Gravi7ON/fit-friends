@@ -2,7 +2,11 @@
 <ul>
   {{#each workouts}}
     <li>
-      тренер с id: {{@key}} - {{this.[length]}} новые(ая) тренировки(а)
+      тренер с id:
+      {{@key}}
+      -
+      {{this.length}}
+      новые(ая) тренировки(а)
     </li>
   {{/each}}
 </ul>

@@ -7,6 +7,8 @@ import { WorkoutDiaryModel } from './models/workout-diary.model';
 import { FavoriteGymsModel } from './models/favorite-gyms.model';
 import { FavoriteGymsQuery } from './queries/favorite-gyms.query';
 import { MyPurchaseModel } from './models/my-purchase.model';
+import { MyNotifiesQuery } from './queries/my-notifies.query';
+import { MyNotifyModel } from './models/my-notify.model';
 
 @Injectable()
 export class PersonalAccountRepository {
@@ -18,7 +20,9 @@ export class PersonalAccountRepository {
     @InjectModel(FavoriteGymsModel.name)
     private readonly favoriteGymsModel: Model<FavoriteGymsModel>,
     @InjectModel(MyPurchaseModel.name)
-    private readonly myPurchaseModel: Model<MyPurchaseModel>
+    private readonly myPurchaseModel: Model<MyPurchaseModel>,
+    @InjectModel(MyNotifyModel.name)
+    private readonly myNotifyModel: Model<MyNotifyModel>
   ) {}
 
   public async saveFoodDiary(foodDiary: WeekFoodDiary): Promise<WeekFoodDiary> {
@@ -230,5 +234,25 @@ export class PersonalAccountRepository {
     return this.myPurchaseModel.findOne({
       userId,
     });
+  }
+
+  public async findMyNotifies(
+    userId: string,
+    { limit, page }: MyNotifiesQuery
+  ): Promise<{ userId: string; textNotify: number }[]> {
+    return this.myNotifyModel.aggregate([
+      { $match: { userId } },
+      { $skip: page > 0 ? limit * (page - 1) : 0 },
+      { $limit: limit },
+    ]);
+  }
+
+  public async removeMyNotify(notifyId: string, userId: string) {
+    return this.myNotifyModel
+      .findOneAndDelete({
+        _id: notifyId,
+        userId,
+      })
+      .exec();
   }
 }

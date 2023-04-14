@@ -16,6 +16,7 @@ import axios from 'axios';
 import { FavoriteGymsQuery } from './queries/favorite-gyms.query';
 import { PersonalAccountRepository } from './personal-account.repository';
 import { MyPurchaseQuery } from './queries/my-purchase.query';
+import { MyNotifiesQuery } from './queries/my-notifies.query';
 
 dayjs.extend(isoWeek);
 
@@ -370,5 +371,23 @@ export class PersonalAccountService {
       );
 
     return updatedPurchaseWorkout;
+  }
+
+  async findMyNotifies(userId: string, query: MyNotifiesQuery) {
+    const myExistedNotifies =
+      await this.personalAccountRepository.findMyNotifies(userId, query);
+
+    return myExistedNotifies;
+  }
+
+  async removeMyNotify(notifyId: string, userId: string) {
+    const removedMyNotify = await this.personalAccountRepository.removeMyNotify(
+      notifyId,
+      userId
+    );
+
+    if (!removedMyNotify) {
+      Logger.error(PersonalAccountMessageException.NotFoundNotify);
+    }
   }
 }

@@ -28,6 +28,8 @@ import { UserFavoriteGymsRdo } from './rdo/user-favorite-gyms.rdo';
 import { UserPurchaseRdo } from './rdo/user-purchase.rdo';
 import { UserPurchaseDataRdo } from './rdo/user-purchase-data.rdo';
 import { MyPurchaseQuery } from './queries/my-purchase.query';
+import { MyNotifiesQuery } from './queries/my-notifies.query';
+import { UserNotifyRdo } from './rdo/user-notify.rdo';
 
 @Controller('personal-account')
 export class PersonalAccountController {
@@ -205,5 +207,31 @@ export class PersonalAccountController {
     );
 
     return fillObject(UserPurchaseDataRdo, myPurchases);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Get('/my-notifies')
+  async findUserNotifies(
+    @Request() request: RequestWithTokenPayload,
+    @Query() query: MyNotifiesQuery
+  ) {
+    const userId = request.user._id;
+    const myNotifies = await this.personalAccountService.findMyNotifies(
+      userId,
+      query
+    );
+
+    return fillObject(UserNotifyRdo, myNotifies);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Delete('/my-notifies/:notifyId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeUserNotify(
+    @Param('notifyId') notifyId: string,
+    @Request() request: RequestWithTokenPayload
+  ) {
+    const userId = request.user._id;
+    this.personalAccountService.removeMyNotify(notifyId, userId);
   }
 }

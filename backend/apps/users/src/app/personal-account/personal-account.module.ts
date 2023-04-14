@@ -14,6 +14,7 @@ import {
 } from './models/favorite-gyms.model';
 import { MyPurchaseModel, MyPurchaseSchema } from './models/my-purchase.model';
 import { PersonalAccountRepository } from './personal-account.repository';
+import { MyNotifyModel, MyNotifySchema } from './models/my-notify.model';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PersonalAccountRepository } from './personal-account.repository';
       { name: WorkoutDiaryModel.name, schema: WorkoutDiarySchema },
       { name: FavoriteGymsModel.name, schema: FavoriteGymsSchema },
       { name: MyPurchaseModel.name, schema: MyPurchaseSchema },
+      { name: MyNotifyModel.name, schema: MyNotifySchema },
     ]),
   ],
   controllers: [PersonalAccountController],
