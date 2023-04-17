@@ -54,12 +54,15 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: test
       ME_CONFIG_MONGODB_URL: mongodb://admin:test@mongodb:27017/
 
-  redis-cache:
+  redis-db:
     image: redis:7.0.10-alpine
     container_name: fitfriends.notify.redis
     restart: always
     ports:
       - 6379:6379
+    command: redis-server --save 300 1
+    volumes:
+      - ./redis-db:/data
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping"]
       interval: 10s

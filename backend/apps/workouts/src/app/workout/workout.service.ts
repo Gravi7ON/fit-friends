@@ -1,4 +1,9 @@
-import { CommandEvent, OrderWorkout, Workout } from '@backend/shared-types';
+import {
+  CommandEvent,
+  OrderWorkout,
+  Review,
+  Workout,
+} from '@backend/shared-types';
 import {
   BadRequestException,
   ForbiddenException,
@@ -26,6 +31,8 @@ import axios from 'axios';
 import { ClientProxy } from '@nestjs/microservices';
 import { createEvent, fillObject } from '@backend/core';
 import { WorkoutPayloadRdo } from './rdo/workout-payload.dto';
+import { CreateWorkoutReviewDto } from './dto/create-workout-review.dto';
+import { WorkoutReviewsQuery } from './queries/workout-reviews.query';
 
 @Injectable()
 export class WorkoutService {
@@ -217,5 +224,38 @@ export class WorkoutService {
     }
 
     return newWorkoutOrder;
+  }
+
+  async createReviewWorkout(
+    dto: CreateWorkoutReviewDto,
+    userId: string
+  ): Promise<Review> {
+    const newReview = {
+      ...dto,
+      customerId: userId,
+    };
+
+    const existedWorkout = await this.findWorkout(dto.workoutId);
+    const newWorkoutReview = await this.workoutRepository.createReviewWorkout(
+      newReview
+    );
+
+    const workoutEntity = new WorkoutEntity({
+      ...existedWorkout,
+    });
+    workoutEntity.updateRatingEntity(dto.rating);
+
+    await this.workoutRepository.update(workoutEntity, dto.workoutId);
+
+    return newWorkoutReview;
+  }
+
+  async findReviewsWorkout(workoutId: number, query: WorkoutReviewsQuery) {
+    const existedReviews = await this.workoutRepository.findManyReviews(
+      workoutId,
+      query
+    );
+
+    return existedReviews.reviews;
   }
 }

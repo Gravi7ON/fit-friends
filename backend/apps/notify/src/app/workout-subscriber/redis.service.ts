@@ -2,7 +2,9 @@ import { Logger } from '@nestjs/common';
 import { createClient } from 'redis';
 
 export class RedisService {
-  private readonly client = createClient();
+  private readonly client = createClient({
+    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  });
 
   constructor() {
     this.bootstrap();
@@ -17,6 +19,7 @@ export class RedisService {
   }
 
   public async finalization() {
+    await this.client.shutdown();
     await this.client.disconnect();
     Logger.log('Redis service is turn off');
   }

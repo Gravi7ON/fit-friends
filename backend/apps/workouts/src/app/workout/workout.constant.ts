@@ -37,6 +37,11 @@ export enum DefaultWorkoutQuery {
   SortDirection = 'desc',
 }
 
+export enum DefaultWorkoutReviewsQuery {
+  Limit = 50,
+  SortDirection = 'desc',
+}
+
 export enum DefaultGymQuery {
   Limit = 50,
   SortDirection = 'desc',

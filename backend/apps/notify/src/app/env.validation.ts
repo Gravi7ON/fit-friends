@@ -98,6 +98,16 @@ class EnvironmentsConfig {
     message: EnvValidationMessage.AccessJWTExpiresRequired,
   })
   public JWT_AT_EXPIRES_IN: string;
+
+  @IsString({
+    message: EnvValidationMessage.AccessJWTRequired,
+  })
+  public REDIS_HOST: string;
+
+  @IsString({
+    message: EnvValidationMessage.AccessJWTExpiresRequired,
+  })
+  public REDIS_PORT: string;
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {

@@ -9,6 +9,7 @@ import { WorkoutSubscriberModule } from './workout-subscriber/workout-subscriber
 import { mailOptions } from '../config/mail.config';
 import { MailModule } from './mail/mail.module';
 import { jwtOptions } from '../config/jwt.config';
+import { redisOptions } from '../config/redis.config';
 
 @Module({
   imports: [
@@ -16,7 +17,13 @@ import { jwtOptions } from '../config/jwt.config';
       cache: true,
       isGlobal: true,
       envFilePath: NOTIFY_SERVICE_ENV_PATH,
-      load: [rabbitMqOptions, mongoDbOptions, mailOptions, jwtOptions],
+      load: [
+        rabbitMqOptions,
+        mongoDbOptions,
+        mailOptions,
+        jwtOptions,
+        redisOptions,
+      ],
       validate: validateEnvironments,
     }),
     MongooseModule.forRootAsync(getMongoDbConfig()),

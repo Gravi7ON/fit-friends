@@ -29,8 +29,8 @@ export class WorkoutEntity implements Entity<WorkoutEntity>, Workout {
   public reviews?: Review[];
   public orders?: OrderWorkout[];
 
-  constructor(task: Workout) {
-    this.fillEntity(task);
+  constructor(workout: Workout) {
+    this.fillEntity(workout);
   }
 
   public fillEntity(entity: Workout) {
@@ -49,7 +49,7 @@ export class WorkoutEntity implements Entity<WorkoutEntity>, Workout {
     this.coachId = entity.coachId;
     this.isSpecialOffer = entity.isSpecialOffer;
     this.createdAt = entity.createdAt;
-    this.reviews = [];
+    this.reviews = entity.reviews ?? [];
     this.orders = [];
   }
 
@@ -63,6 +63,14 @@ export class WorkoutEntity implements Entity<WorkoutEntity>, Workout {
     this.sex = entity.sex;
     this.workoutVideo = entity.workoutVideo;
     this.isSpecialOffer = entity.isSpecialOffer;
+  }
+
+  public updateRatingEntity(rating: number) {
+    this.rating = Math.round(
+      (this.reviews.reduce((prev, review) => (prev += review.rating), 0) +
+        rating) /
+        (this.reviews.length + 1)
+    );
   }
 
   public toObject(): WorkoutEntity {

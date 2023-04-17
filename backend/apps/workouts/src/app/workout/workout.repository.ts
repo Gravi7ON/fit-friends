@@ -1,4 +1,4 @@
-import { OrderWorkout, Workout } from '@backend/shared-types';
+import { OrderWorkout, Review, Workout } from '@backend/shared-types';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CoachOrdersQuery } from './queries/coach-orders.query';
@@ -6,6 +6,7 @@ import { CoachWorkoutsQuery } from './queries/coach-workouts.query';
 import { WorkoutEntity } from './workout.entity';
 import { WorkoutsQuery } from './queries/workouts.query';
 import { GymsQuery } from './queries/gyms.query';
+import { WorkoutReviewsQuery } from './queries/workout-reviews.query';
 
 @Injectable()
 export class WorkoutRepository {
@@ -171,6 +172,32 @@ export class WorkoutRepository {
     return this.prisma.orderWorkout.create({
       data: {
         ...order,
+      },
+    });
+  }
+
+  public async createReviewWorkout(review: Review) {
+    return this.prisma.review.create({
+      data: {
+        ...review,
+      },
+    });
+  }
+
+  public findManyReviews(
+    workoutId: number,
+    { limit, page, sortDirection }: WorkoutReviewsQuery
+  ) {
+    return this.prisma.workout.findFirst({
+      where: {
+        id: workoutId,
+      },
+      include: {
+        reviews: {
+          take: limit,
+          orderBy: [{ createdAt: sortDirection }],
+          skip: page > 0 ? limit * (page - 1) : undefined,
+        },
       },
     });
   }

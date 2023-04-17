@@ -26,6 +26,8 @@ import { WorkoutsQuery } from './queries/workouts.query';
 import { GymsQuery } from './queries/gyms.query';
 import { CreateWorkoutOrderDto } from './dto/create-workout-order.dto';
 import { RoleCustomerGuard } from './guards/role.customer.guard';
+import { CreateWorkoutReviewDto } from './dto/create-workout-review.dto';
+import { WorkoutReviewsQuery } from './queries/workout-reviews.query';
 
 @Controller('workouts')
 export class WorkoutController {
@@ -107,7 +109,7 @@ export class WorkoutController {
   }
 
   @UseGuards(JwtAuthGuard, RoleCustomerGuard)
-  @Post('/orders-workout')
+  @Post('/orders')
   async createOrderWorkout(
     @Body() dto: CreateWorkoutOrderDto,
     @Request() request: RequestWithTokenPayload
@@ -140,5 +142,34 @@ export class WorkoutController {
     const existedGym = await this.workoutService.findGym(gymId);
 
     return existedGym;
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Post('/reviews')
+  async createReviewWorkout(
+    @Body() dto: CreateWorkoutReviewDto,
+    @Request() request: RequestWithTokenPayload
+  ) {
+    const userId = request.user?._id;
+    const newReview = await this.workoutService.createReviewWorkout(
+      dto,
+      userId
+    );
+
+    return newReview;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/reviews/:workoutId')
+  async findReviewsWorkout(
+    @Param('workoutId', ParseIntPipe) workoutId: number,
+    @Query() query: WorkoutReviewsQuery
+  ) {
+    const existedReviews = await this.workoutService.findReviewsWorkout(
+      workoutId,
+      query
+    );
+
+    return existedReviews;
   }
 }

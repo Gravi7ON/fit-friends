@@ -18,4 +18,6 @@ export enum EnvValidationMessage {
   MailServerPortRequired = 'SMTP Server port is required',
   AccessJWTRequired = 'Access JWT secret is required',
   AccessJWTExpiresRequired = 'Access JWT expires is required',
+  RedisHostRequired = 'Redis host is required',
+  RedisPortRequired = 'Redis port is required',
 }
