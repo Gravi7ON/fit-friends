@@ -49,7 +49,7 @@ GET  http://localhost:3334/api/workouts/gyms/16,17 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MTExMTQyMCwiZXhwIjoxNjgxMTEyMzIwfQ.wMgsk-9HZPJ16yyODLS0FqUUGE2mXA0dscQFWBmc97Y
 
 ### Find existed coach's workouts
-GET  http://localhost:3334/api/workouts?limit=6&page=1&rating=3&costs=1400,2000&calories=1300,2900&trainingTimes=больше 80 мин HTTP/1.1
+GET  http://localhost:3334/api/workouts/coach?limit=6&page=1&rating=3&costs=1400,2000&calories=1300,2900&trainingTimes=больше 80 мин HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDI0MDg0YjcxZGZjMzY2ODM3ZWMiLCJlbWFpbCI6Im1lQGdtYWlsLmNvbSIsInJvbGUiOiLRgtGA0LXQvdC10YAiLCJuYW1lIjoiSGF3ayBDaGlwIiwiaWF0IjoxNjc5NDEwNTMxLCJleHAiOjE2Nzk0MTE0MzF9.qqae2P0yBAVDePuByxHmXYDTSrQedaWxUmXMCHFpx_A
 
 ### Find coach's orders

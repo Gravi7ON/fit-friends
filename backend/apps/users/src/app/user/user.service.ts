@@ -109,7 +109,7 @@ export class UserService {
 
   async createPersonalTrainingRequest(fromUserId: string, toUserId: string) {
     if (fromUserId === toUserId) {
-      throw new ConflictException(UserMessageException);
+      throw new ConflictException(UserMessageException.PersonalRequestConflict);
     }
 
     if (!(await this.findUser(toUserId))) {

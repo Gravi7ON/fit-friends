@@ -12,6 +12,8 @@ tags:
     description: Действия с тренировками.
   - name: users
     description: Действия с пользователем.
+  - name: notify
+    description: Действия с уведомлениями.
 
 paths:
   /api/auth/register:
@@ -460,8 +462,8 @@ paths:
         - users
       security:
         - ApiKeyAuth: []
-      summary: Дополнительная информация
-      description: Добавляет дополнительную информацию о пользователях при регистрации.
+      summary: Информация о пользователе
+      description: Возвращает объект пользователя.
 
       parameters:
         - in: header
@@ -948,6 +950,326 @@ paths:
                       type: boolean
                       example: true
 
+  /api/users/my-friends/{friendId}:
+    post:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Добавить в друзья
+      description: Возвращает объект map друга.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: friendId
+          schema:
+            type: string
+            example: 6329c3d6a04ab1061c6425ea
+          required: true
+
+      responses:
+        "200":
+          description: Объект маппинга пользователя и друга.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+                  userId:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+                  friendId:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+
+        "404":
+          description: Пользователь не нейден.
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 404
+
+                    messages:
+                      type: string
+                      example: User not found
+
+                    error:
+                      type: string
+                      example: Not Found
+
+        "409":
+          description: Пользователь с таким id уже в друзьях.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 409
+
+                  message:
+                    type: string
+                    example: User's friend with this id already exists
+
+                  error:
+                    type: string
+                    example: Conflict
+
+    delete:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Удалить из друзей.
+      description: Удаление из друзей пользователя.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+        - in: path
+          name: friendId
+          schema:
+            type: string
+            example: 6329c3d6a04ab1061c6425ea
+          required: true
+
+      responses:
+        "204":
+          description: No content.
+
+  /api/users/personal-training:
+    post:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Заявка на персональную тренировку
+      description: Возвращает объект заявки.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      requestBody:
+        description: Id пользователя кому адресована заявка.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                toUserId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+        required: true
+
+      responses:
+        "200":
+          description: Объект заявки персональной тренировки.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+                  fromUserId:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+                  toUserId:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+                  requestStatus:
+                    type: string
+                    example: на рассмотрении
+                  createdAt:
+                    type: string
+                    example: '2023-04-20T10:56:15.168Z'
+                  updatedAt:
+                    type: string
+                    example: '2023-04-20T10:56:15.168Z'
+
+        "404":
+          description: Пользователь не нейден.
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 404
+
+                    messages:
+                      type: string
+                      example: User not found
+
+                    error:
+                      type: string
+                      example: Not Found
+
+        "409":
+          description: Конфликт данных.
+          content:
+            application/json:
+              examples:
+                notOwn:
+                  summary: Not own
+                  value:
+                    statusCode: 409
+
+                    message: User can't create personal training request to own
+
+                    error: Conflict
+
+                alreadySend:
+                  summary: Already send
+                  value:
+                    statusCode: 409
+
+                    message: Your request to this user already exists and has consideration status
+
+                    error: Conflict
+
+    patch:
+      tags:
+        - users
+      security:
+        - ApiKeyAuth: []
+      summary: Заявка на персональную тренировку
+      description: Возвращает объект заявки.
+
+      parameters:
+        - in: header
+          name: Autorization
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      requestBody:
+        description: Информация для редактирования персональной заявки пользователя.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                requestId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+                requestStatus:
+                  type: string
+                  example: принят
+        required: true
+
+      responses:
+        "200":
+          description: Объект заявки персональной тренировки.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+                  fromUserId:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+                  toUserId:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+                  requestStatus:
+                    type: string
+                    example: принят
+                  createdAt:
+                    type: string
+                    example: '2023-04-20T10:56:15.168Z'
+                  updatedAt:
+                    type: string
+                    example: '2023-04-20T10:56:15.168Z'
+
+        "400":
+          description: Только разные статусы заявки.
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 400
+
+                    messages:
+                      type: string
+                      example: User can't update request with the same status
+
+                    error:
+                      type: string
+                      example: Bad request
+
+        "404":
+          description: Заявка не найдена.
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 404
+
+                    messages:
+                      type: string
+                      example: Personal request with this id not found
+
+                    error:
+                      type: string
+                      example: Not Found
+
+        "409":
+          description: Только адресант.
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 409
+
+                    messages:
+                      type: string
+                      example: User - addressee can update incomming request only
+
+                    error:
+                      type: string
+                      example: Conflict
+
   /api/workouts/{workoutId}:
     get:
       tags:
@@ -1305,6 +1627,161 @@ paths:
                   messages:
                     type: string
                     example: You don't have any workout yet
+
+                  error:
+                    type: string
+                    example: Not Found
+
+  /api/workout-subscriber/subscribe:
+    post:
+      tags:
+        - notify
+      security:
+        - ApiKeyAuth: []
+      summary: Подписка пользователя.
+      description: Подписка пользователя на уведомления новых тренировок.
+
+      parameters:
+        - in: header
+          name: Autorization
+          description: Авторизация пользователя.
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      requestBody:
+        description: Объект, содержащий id тренера на которого подписывается пользователь.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subscribeCoachId:
+                  type: string
+                  example: 6329c3d6a04ab1061c6425ea
+        required: true
+
+      responses:
+        "200":
+          description: Ok.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+
+                  name:
+                    type: string
+                    example: John Doe
+
+                  email:
+                    type: string
+                    example: me@email.com
+
+                  subscribeCoachId:
+                    type: string
+                    example: 6329c3d6a04ab1061c6425ea
+
+
+        "404":
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 404
+
+                  messages:
+                    type: string
+                    example: User not found
+
+                  error:
+                    type: string
+                    example: Not Found
+
+        "409":
+          description: Подписка на текущего тренера существует.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 409
+
+                  messages:
+                    type: string
+                    example: The subscribe for this coach's workout already exists
+
+                  error:
+                    type: string
+                    example: Conflict
+
+    delete:
+      tags:
+        - notify
+      security:
+        - ApiKeyAuth: []
+      summary: Отписка пользователя.
+      description: Отписаться от уведомлений.
+
+      parameters:
+        - in: header
+          name: Autorization
+          description: Авторизация пользователя.
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      responses:
+        "204":
+          description: No content.
+
+  /api/workout-subscriber/send-notify:
+    get:
+      tags:
+        - notify
+      security:
+        - ApiKeyAuth: []
+      summary: Отправка уведомлений всем пользователям.
+      description: Отписаться от уведомлений.
+
+      parameters:
+        - in: header
+          name: Autorization
+          description: Авторизация пользователя.
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required: true
+
+      responses:
+        "200":
+          description: Ok.
+
+        "404":
+          description: Не найден ни один подписчик.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 404
+
+                  messages:
+                    type: string
+                    example: There haven't any subscribes yet
 
                   error:
                     type: string

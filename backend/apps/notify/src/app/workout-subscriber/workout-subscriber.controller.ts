@@ -20,14 +20,10 @@ import {
 } from '@backend/shared-types';
 import { CreatedSibscribeRdo } from './rdo/created-sibscribe';
 import { EventPattern } from '@nestjs/microservices';
-import { RedisService } from './redis.service';
 
 @Controller('workout-subscriber')
 export class WorkoutSubscriberController {
-  constructor(
-    private readonly subscribeService: WorkoutSubscriberService,
-    private readonly redisService: RedisService
-  ) {}
+  constructor(private readonly subscribeService: WorkoutSubscriberService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('subscribe')
