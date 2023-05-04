@@ -5,38 +5,59 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/rspack:rspack",
+      "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "target": "web",
-        "outputPath": "dist/frontend",
-        "main": "src/main.tsx",
-        "tsConfig": "tsconfig.app.json",
-        "rspackConfig": "rspack.config.js",
-        "assets": ["src/favicon.ico", "src/assets", "src/public"]
+        "outputPath": "dist/frontend"
       },
       "configurations": {
         "development": {
           "mode": "development"
         },
         "production": {
-          "mode": "production",
-          "optimization": true,
-          "sourceMap": false
+          "mode": "production"
         }
       }
     },
     "serve": {
-      "executor": "@nx/rspack:dev-server",
+      "executor": "@nx/vite:dev-server",
+      "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "frontend:build:development"
+        "buildTarget": "frontend:build"
       },
       "configurations": {
-        "development": {},
+        "development": {
+          "buildTarget": "frontend:build:development",
+          "hmr": true
+        },
+        "production": {
+          "buildTarget": "frontend:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "preview": {
+      "executor": "@nx/vite:preview-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "frontend:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "frontend:build:development"
+        },
         "production": {
           "buildTarget": "frontend:build:production"
         }
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["coverage/frontend"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "coverage/frontend"
       }
     },
     "lint": {
@@ -50,20 +71,6 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "frontend:build"
-      }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectName}"],
-      "options": {
-        "jestConfig": "jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
       }
     }
   },

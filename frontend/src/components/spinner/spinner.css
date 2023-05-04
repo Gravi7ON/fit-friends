@@ -1,0 +1,20 @@
+.spinner-button {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+  border: 3px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-button .75s linear infinite;
+}
+
+.spinner-button::after {
+  box-sizing: border-box;
+}
+
+@keyframes spinner-button {
+  to {
+    transform: rotate(360deg);
+  }
+}
