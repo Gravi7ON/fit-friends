@@ -177,10 +177,7 @@ export class AuthService {
     ]);
 
     if (existedToken) {
-      await Promise.all([
-        this.tokenRepository.destroyToken(existedToken.refreshToken),
-        this.tokenRepository.saveRevokedToken(existedToken.refreshToken),
-      ]);
+      await this.tokenRepository.destroyToken(existedToken.refreshToken);
     }
     await this.tokenRepository.saveToken(user._id, refreshToken);
 
@@ -191,7 +188,7 @@ export class AuthService {
   }
 
   async refreshAccess(request: RequestWithUser | RequestWithTokenPayload) {
-    const validRefreshToken = request.headers.authorization.replace(
+    const userSentRefreshToken = request.headers.authorization.replace(
       AUTHORIZATION_SCHEMA,
       ''
     );
@@ -204,11 +201,25 @@ export class AuthService {
       name: user.name,
     };
 
-    const accessToken = await this.jwtService.signAsync(payload);
+    const [accessToken, refreshToken, existedToken] = await Promise.all([
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload, {
+        secret: this.jwtConfig.refreshTokenSecret,
+        expiresIn: this.jwtConfig.refreshTokenExpiresIn,
+      }),
+      this.tokenRepository.findToken(request.user._id),
+    ]);
+
+    if (existedToken.refreshToken === userSentRefreshToken) {
+      await this.tokenRepository.destroyToken(existedToken.refreshToken);
+    } else {
+      throw new UnauthorizedException(AuthUserMessageException.BadRefreshToken);
+    }
+    await this.tokenRepository.saveToken(user._id, refreshToken);
 
     return {
       accessToken,
-      refreshToken: validRefreshToken,
+      refreshToken,
     };
   }
 

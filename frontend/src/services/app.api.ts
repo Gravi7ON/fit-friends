@@ -1,5 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
-import { getToken } from './token.stotage';
+import {
+  ACCESS_TOKEN_KEY_NAME,
+  REFRESH_TOKEN_KEY_NAME,
+  getToken,
+  saveToken,
+} from './token.stotage';
+import { APIRoute } from 'src/constant';
 
 const BackendUrl = {
   Auth: 'http://localhost:3333/api/auth',
@@ -24,7 +30,7 @@ export const createUserAPI = (direction: RESTService): AxiosInstance => {
   });
 
   api.interceptors.request.use((config) => {
-    const token = getToken();
+    const token = getToken(ACCESS_TOKEN_KEY_NAME);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -32,6 +38,42 @@ export const createUserAPI = (direction: RESTService): AxiosInstance => {
 
     return config;
   });
+
+  api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalConfig = error.config;
+
+      if (
+        originalConfig.url !== `${BackendUrl.Auth}/${APIRoute.SignIn}` &&
+        error.response
+      ) {
+        if (error.response.status === 401 && !originalConfig._retry) {
+          originalConfig._retry = true;
+
+          try {
+            const refreshToken = getToken(REFRESH_TOKEN_KEY_NAME);
+            const { data } = await axios
+              .create({
+                baseURL: BackendUrl.Auth,
+                timeout: REQUEST_TIMEOUT,
+              })
+              .post(
+                APIRoute.RefreshToken,
+                {},
+                { headers: { Authorization: `Bearer ${refreshToken}` } }
+              );
+            saveToken(ACCESS_TOKEN_KEY_NAME, data.accessToken);
+            saveToken(REFRESH_TOKEN_KEY_NAME, data.refreshToken);
+            return api(originalConfig);
+          } catch (error) {
+            return Promise.reject(error);
+          }
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
 
   return api;
 };

@@ -1,8 +1,12 @@
 export enum AppRoute {
   Intro = '/',
+  Main = '/main',
   SignIn = '/login',
   SignUp = '/register',
   LogOut = '/logout',
+  PersonalCoach = '/personal-coach',
+  QuestionnaireCoach = '/questionnaire-coach',
+  QuestionnaireCustomer = '/questionnaire-customer',
 }
 
 export enum NameSpaceStore {
@@ -19,4 +23,5 @@ export enum AuthorizationStatus {
 export enum APIRoute {
   SignUp = '/register',
   SignIn = '/login',
+  RefreshToken = '/refresh-token',
 }
