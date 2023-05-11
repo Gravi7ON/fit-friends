@@ -1,6 +1,10 @@
-import LoginForm from 'src/components/login-form/login-form';
+type SignOnBackgroundProps = {
+  children: JSX.Element;
+};
 
-export default function SignIn(): JSX.Element {
+export default function SignOnBackground({
+  children,
+}: SignOnBackgroundProps): JSX.Element {
   return (
     <div className="wrapper">
       <main>
@@ -22,18 +26,7 @@ export default function SignIn(): JSX.Element {
             <use xlinkHref="#icon-logotype"></use>
           </svg>
         </div>
-        <div className="popup-form popup-form--sign-in">
-          <div className="popup-form__wrapper">
-            <div className="popup-form__content">
-              <div className="popup-form__title-wrapper">
-                <h1 className="popup-form__title">Вход</h1>
-              </div>
-              <div className="popup-form__form">
-                <LoginForm />
-              </div>
-            </div>
-          </div>
-        </div>
+        {children}
       </main>
     </div>
   );

@@ -24,4 +24,5 @@ export enum APIRoute {
   SignUp = '/register',
   SignIn = '/login',
   RefreshToken = '/refresh-token',
+  AdditionalInfo = '/additional-info',
 }

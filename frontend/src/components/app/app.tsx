@@ -1,20 +1,20 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from 'src/constant';
 import Intro from 'src/pages/intro/intro';
-import Main from 'src/pages/main/main';
-import PersonalCoach from 'src/pages/personal-coach/personal-coach';
-import SignIn from 'src/pages/sign-in/sign-in';
-import SignUp from 'src/pages/sign-up/sign-up';
+import Main from 'src/pages/personal-customer-account/main/main';
+import PersonalCoach from 'src/pages/personal-coach-account/personal-coach/personal-coach';
+import SignIn from 'src/pages/sign-on/sign-in/sign-in';
+import SignUp from 'src/pages/sign-on/sign-up/sign-up';
 import { useAppSelector } from 'src/hooks/store.hooks';
 import {
   getAuthorizationStatus,
   getUserRole,
 } from 'src/store/user-proccess/selectors';
-import PrivateCustomerRoute from '../private-routes/private-customer-route';
-import PrivateCoachRoute from '../private-routes/private-coach-route';
+import PrivateCustomerRoute from '../ui-helpers/private-routes/private-customer-route';
+import PrivateCoachRoute from '../ui-helpers/private-routes/private-coach-route';
 import { UserRole } from 'src/types/user';
-import QuestionnaireCoach from 'src/pages/questionnaire-coach/questionnaire-coach';
-import QuestionnaireCustomer from 'src/pages/questionnaire-customer/questionnaire-customer';
+import QuestionnaireCoach from 'src/pages/sign-on/questionnaire-coach/questionnaire-coach';
+import QuestionnaireCustomer from 'src/pages/sign-on/questionnaire-customer/questionnaire-customer';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);

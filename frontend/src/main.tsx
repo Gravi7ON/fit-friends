@@ -5,7 +5,7 @@ import App from './components/app/app';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import browserHistory from './browser-history';
-import HistoryRouter from './components/history-router/history-router';
+import HistoryRouter from './components/ui-helpers/history-router/history-router';
 import { checkUserAuth } from './store/user-proccess/user-proccess';
 import { checkAuthOnRefresh } from './utils/helpers';
 

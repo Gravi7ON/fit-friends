@@ -6,3 +6,6 @@ export const getAuthorizationStatus = (state: State): AuthorizationStatus =>
 
 export const getUserRole = (state: State): string =>
   state[NameSpaceStore.User].role;
+
+export const getUserId = (state: State): string =>
+  state[NameSpaceStore.User].id;

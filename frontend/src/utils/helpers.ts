@@ -1,6 +1,11 @@
 import jwt_decode from 'jwt-decode';
 import { AuthorizationStatus } from 'src/constant';
-import { REFRESH_TOKEN_KEY_NAME, getToken } from 'src/services/token.stotage';
+import {
+  ACCESS_TOKEN_KEY_NAME,
+  REFRESH_TOKEN_KEY_NAME,
+  dropToken,
+  getToken,
+} from 'src/services/token.stotage';
 import { TokenPayload } from 'src/types/token';
 
 export function checkAuthOnRefresh() {
@@ -16,6 +21,9 @@ export function checkAuthOnRefresh() {
 
     if (!isTokenExpires) {
       return { ...decodedToken, authorizationStatus: AuthorizationStatus.Auth };
+    } else {
+      dropToken(ACCESS_TOKEN_KEY_NAME);
+      dropToken(REFRESH_TOKEN_KEY_NAME);
     }
   }
 

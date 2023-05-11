@@ -23,7 +23,7 @@ export enum RESTService {
 
 const REQUEST_TIMEOUT = 5000;
 
-export const createUserAPI = (direction: RESTService): AxiosInstance => {
+export const createAppApi = (direction: RESTService): AxiosInstance => {
   const api = axios.create({
     baseURL: BackendUrl[direction],
     timeout: REQUEST_TIMEOUT,

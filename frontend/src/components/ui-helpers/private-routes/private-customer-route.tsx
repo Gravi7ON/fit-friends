@@ -1,5 +1,5 @@
 import { UserRole } from 'src/types/user';
-import { AppRoute, AuthorizationStatus } from '../../constant';
+import { AppRoute, AuthorizationStatus } from '../../../constant';
 import { Navigate } from 'react-router-dom';
 
 type PrivateCustomerRouteProps = {
