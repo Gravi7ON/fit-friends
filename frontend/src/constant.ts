@@ -9,6 +9,11 @@ export enum AppRoute {
   QuestionnaireCustomer = '/questionnaire-customer',
 }
 
+export enum PersonalCoachNavBarRoute {
+  Friends = '/personal-coach/friends',
+  Account = '/personal-coach/account',
+}
+
 export enum NameSpaceStore {
   Workout = 'WORKOUT',
   User = 'USER',

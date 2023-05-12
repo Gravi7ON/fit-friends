@@ -1,8 +1,12 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from 'src/constant';
+import {
+  AppRoute,
+  AuthorizationStatus,
+  PersonalCoachNavBarRoute,
+} from 'src/constant';
 import Intro from 'src/pages/intro/intro';
-import Main from 'src/pages/personal-customer-account/main/main';
-import PersonalCoach from 'src/pages/personal-coach-account/personal-coach/personal-coach';
+import Main from 'src/pages/personal-customer-account/main';
+import PersonalCoach from 'src/pages/personal-coach-account/personal-coach';
 import SignIn from 'src/pages/sign-on/sign-in/sign-in';
 import SignUp from 'src/pages/sign-on/sign-up/sign-up';
 import { useAppSelector } from 'src/hooks/store.hooks';
@@ -15,6 +19,8 @@ import PrivateCoachRoute from '../ui-helpers/private-routes/private-coach-route'
 import { UserRole } from 'src/types/user';
 import QuestionnaireCoach from 'src/pages/sign-on/questionnaire-coach/questionnaire-coach';
 import QuestionnaireCustomer from 'src/pages/sign-on/questionnaire-customer/questionnaire-customer';
+import CoachAccountMain from '../personal-account-coach/coach-account-main/coach-account-main';
+import CoachAccountFriends from '../personal-account-coach/coach-account-friends/coach-account-friends';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -52,15 +58,15 @@ export default function App(): JSX.Element {
       <Route
         path={AppRoute.Intro}
         element={<Intro />}
-      ></Route>
+      />
       <Route
         path={AppRoute.SignIn}
         element={redirectInOrderRole(authorizationStatus, userRole, <SignIn />)}
-      ></Route>
+      />
       <Route
         path={AppRoute.SignUp}
         element={redirectInOrderRole(authorizationStatus, userRole, <SignUp />)}
-      ></Route>
+      />
       <Route
         path={AppRoute.Main}
         element={
@@ -82,7 +88,41 @@ export default function App(): JSX.Element {
             <PersonalCoach />
           </PrivateCoachRoute>
         }
-      ></Route>
+      >
+        <Route
+          index
+          element={
+            <PrivateCoachRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CoachAccountMain />
+            </PrivateCoachRoute>
+          }
+        />
+        <Route
+          path={PersonalCoachNavBarRoute.Account}
+          element={
+            <PrivateCoachRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CoachAccountMain />
+            </PrivateCoachRoute>
+          }
+        />
+        <Route
+          path={PersonalCoachNavBarRoute.Friends}
+          element={
+            <PrivateCoachRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CoachAccountFriends />
+            </PrivateCoachRoute>
+          }
+        />
+      </Route>
       <Route
         path={AppRoute.QuestionnaireCoach}
         element={

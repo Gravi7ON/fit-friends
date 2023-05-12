@@ -33,6 +33,7 @@ const specializations = [
 const levels = ['Новичок', 'Любитель', 'Профессионал'];
 
 export default function QuestionnaireCoachForm(): JSX.Element {
+  const userRole = useAppSelector(getUserRole);
   const navigate = useNavigate();
 
   const [isFormToSending, setIsFormToSending] = useState(false);
@@ -44,8 +45,6 @@ export default function QuestionnaireCoachForm(): JSX.Element {
   } = useForm<Inputs>({
     mode: 'onChange',
   });
-
-  const userRole = useAppSelector(getUserRole);
 
   const onSubmit: SubmitHandler<Inputs> = async ({
     specializations,

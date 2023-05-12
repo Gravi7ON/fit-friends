@@ -5,6 +5,12 @@ import { useAppSelector } from 'src/hooks/store.hooks';
 import { getUserRole } from 'src/store/user-proccess/selectors';
 import './questionnaire-customer.css';
 import Spinner from 'src/components/ui-helpers/spinner/spinner';
+import { RESTService, createAppApi } from 'src/services/app.api';
+import { APIRoute, AppRoute } from 'src/constant';
+import { store } from 'src/store/store';
+import { UserRole } from 'src/types/user';
+import { AxiosError, AxiosResponse } from 'axios';
+import { ErrorResponse } from 'src/types/error-response';
 
 type Inputs = {
   specializations: string[];
@@ -30,6 +36,7 @@ const levels = ['Новичок', 'Любитель', 'Профессионал'
 const trainingTimes = ['10-30 мин', '30-50 мин', '50-80 мин', 'больше 80 мин'];
 
 export default function QuestionnaireCustomerForm(): JSX.Element {
+  const userRole = useAppSelector(getUserRole);
   const navigate = useNavigate();
 
   const [isFormToSending, setIsFormToSending] = useState(false);
@@ -42,9 +49,45 @@ export default function QuestionnaireCustomerForm(): JSX.Element {
     mode: 'onChange',
   });
 
-  const userRole = useAppSelector(getUserRole);
+  const onSubmit: SubmitHandler<Inputs> = async ({
+    specializations,
+    time,
+    level,
+    caloriesLose,
+    caloriesWaste,
+  }) => {
+    const additionalCustomerInfoAdapter = {
+      specializations: specializations.map((specialization) =>
+        specialization.toLowerCase()
+      ),
+      experience: level.toLowerCase(),
+      trainingTime: time,
+      targetDeclineСalories: Number(caloriesLose),
+      dayDeclineCalories: Number(caloriesWaste),
+    };
+    console.log(additionalCustomerInfoAdapter);
+    try {
+      const api = createAppApi(RESTService.Auth);
+      setIsFormToSending(true);
+      await api.patch(
+        `${APIRoute.AdditionalInfo}/${store.getState().USER.id}`,
+        additionalCustomerInfoAdapter
+      );
+      userRole === UserRole.Customer
+        ? navigate(AppRoute.Main)
+        : navigate(AppRoute.PersonalCoach);
+    } catch (err) {
+      const errorResponse = (err as AxiosError)
+        .response as AxiosResponse<ErrorResponse>;
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => console.log(data);
+      setError('caloriesWaste', {
+        type: 'server',
+        message: errorResponse.data.message,
+      });
+
+      setIsFormToSending(false);
+    }
+  };
 
   return (
     <div className="popup-form popup-form--questionnaire-user">
