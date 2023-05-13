@@ -1,0 +1,55 @@
+.skeleton {
+  opacity: 0.7;
+  border: none;
+  animation: skeleton-loading 1s infinite alternate;
+}
+
+.spinner-refresh {
+  animation: spinner-button .75s linear infinite;
+}
+
+.input-update__error {
+  margin: 11px 5px 0 auto;
+  position: absolute;
+  right: 0;
+  bottom: -20px;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 15px;
+
+  color: #eb5555;
+}
+
+.input-update__warn {
+  margin: 11px 5px 0 auto;
+  position: absolute;
+  right: 0;
+  bottom: -20px;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 15px;
+
+  color: orange;
+}
+
+.custom-select__list__selected {
+  visibility: visible;
+  opacity: 1;
+  cursor: pointer;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(0, 0%, 100%);
+  }
+
+  100% {
+    background-color: hsl(0, 0%, 88%);
+  }
+}
+
+@keyframes spinner-refresh {
+  to {
+    transform: rotate(360deg);
+  }
+}

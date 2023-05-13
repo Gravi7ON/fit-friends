@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'src/hooks/store.hooks';
 import { getUserRole } from 'src/store/user-proccess/selectors';
 import { UserRole } from 'src/types/user';
+import { LEVELS, SPECIALIZATIONS } from 'src/components/constant-components';
 
 type Inputs = {
   specializations: string[];
@@ -18,19 +19,6 @@ type Inputs = {
   description: string;
   individualTraining: string;
 };
-
-const specializations = [
-  'Йога',
-  'Бег',
-  'Силовые',
-  'Аэробика',
-  'Кроссфит',
-  'Бокс',
-  'Пилатес',
-  'Стрейчинг',
-];
-
-const levels = ['Новичок', 'Любитель', 'Профессионал'];
 
 export default function QuestionnaireCoachForm(): JSX.Element {
   const userRole = useAppSelector(getUserRole);
@@ -101,7 +89,7 @@ export default function QuestionnaireCoachForm(): JSX.Element {
                       Ваша специализация (тип) тренировок
                     </span>
                     <div className="specialization-checkbox questionnaire-coach__specializations">
-                      {specializations.map((specialization) => (
+                      {SPECIALIZATIONS.map((specialization) => (
                         <div
                           key={specialization}
                           className="btn-checkbox"
@@ -145,7 +133,7 @@ export default function QuestionnaireCoachForm(): JSX.Element {
                       Ваш уровень
                     </span>
                     <div className="custom-toggle-radio custom-toggle-radio--big questionnaire-coach__radio">
-                      {levels.map((level) => (
+                      {LEVELS.map((level) => (
                         <div
                           key={level}
                           className="custom-toggle-radio__block"

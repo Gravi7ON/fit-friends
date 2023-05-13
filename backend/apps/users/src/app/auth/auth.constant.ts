@@ -6,7 +6,7 @@ export enum AuthUserMessageException {
   ForbiddenAddInfo = 'The user registration proccess is complete, you can update only',
   RevokedToken = 'This token has been revoked',
   MissingToken = 'Missing authorization token',
-  BadRefreshToken = 'Refresh token is not math with yours',
+  BadRefreshToken = 'Refresh token is not match with yours',
   AlreadyRegisterAndAuth = 'You already register and authorized, if you have to a new profile, you should send request without autorization header',
 }
 

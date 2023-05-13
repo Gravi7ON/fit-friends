@@ -10,14 +10,7 @@ import { AppRoute } from 'src/constant';
 import { UserRole } from 'src/types/user';
 import { store } from 'src/store/store';
 import { useNavigate } from 'react-router-dom';
-
-const LOCATIONS = [
-  'ст. м. Пионерская',
-  'ст. м. Петроградская',
-  'ст. м. Удельная',
-  'ст. м. Звёздная',
-  'ст. м. Спортивная',
-] as const;
+import { LOCATIONS } from 'src/components/constant-components';
 
 type Inputs = {
   name: string;

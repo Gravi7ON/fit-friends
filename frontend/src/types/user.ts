@@ -9,7 +9,7 @@ export type CreateUser = {
   location: string;
 };
 
-export type User = {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -20,7 +20,15 @@ export type User = {
   role: string;
   location: string;
   about?: string;
-};
+  experience: string;
+  specializations: string[];
+}
+
+export interface Coach extends User {
+  achievement: string;
+  certificates: string[];
+  isIndividualTraining: boolean;
+}
 
 export type LoginUser = {
   email: string;

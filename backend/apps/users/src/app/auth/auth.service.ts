@@ -177,7 +177,7 @@ export class AuthService {
     ]);
 
     if (existedToken) {
-      await this.tokenRepository.destroyToken(existedToken.refreshToken);
+      await this.tokenRepository.destroyToken(request.user._id);
     }
     await this.tokenRepository.saveToken(user._id, refreshToken);
 
@@ -210,8 +210,8 @@ export class AuthService {
       this.tokenRepository.findToken(request.user._id),
     ]);
 
-    if (existedToken.refreshToken === userSentRefreshToken) {
-      await this.tokenRepository.destroyToken(existedToken.refreshToken);
+    if (existedToken?.refreshToken === userSentRefreshToken) {
+      await this.tokenRepository.destroyToken(request.user._id);
     } else {
       throw new UnauthorizedException(AuthUserMessageException.BadRefreshToken);
     }
@@ -231,7 +231,7 @@ export class AuthService {
     }
 
     await Promise.all([
-      this.tokenRepository.destroyToken(existedToken.refreshToken),
+      this.tokenRepository.destroyToken(request.user._id),
       this.tokenRepository.saveRevokedToken(existedToken.refreshToken),
     ]);
   }

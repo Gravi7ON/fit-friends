@@ -32,7 +32,7 @@ export class TokenRepository {
     this.tokenModel.create({ userId, refreshToken });
   }
 
-  public async destroyToken(refreshToken: string): Promise<void> {
-    this.tokenModel.deleteOne({ refreshToken }).exec();
+  public async destroyToken(userId: string): Promise<void> {
+    this.tokenModel.findOneAndDelete({ userId }).exec();
   }
 }

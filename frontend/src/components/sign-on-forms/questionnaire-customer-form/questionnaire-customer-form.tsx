@@ -11,6 +11,11 @@ import { store } from 'src/store/store';
 import { UserRole } from 'src/types/user';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResponse } from 'src/types/error-response';
+import {
+  LEVELS,
+  SPECIALIZATIONS,
+  TRAINING_TIMES,
+} from 'src/components/constant-components';
 
 type Inputs = {
   specializations: string[];
@@ -19,21 +24,6 @@ type Inputs = {
   caloriesLose: string;
   caloriesWaste: string;
 };
-
-const specializations = [
-  'Йога',
-  'Бег',
-  'Силовые',
-  'Аэробика',
-  'Кроссфит',
-  'Бокс',
-  'Пилатес',
-  'Стрейчинг',
-];
-
-const levels = ['Новичок', 'Любитель', 'Профессионал'];
-
-const trainingTimes = ['10-30 мин', '30-50 мин', '50-80 мин', 'больше 80 мин'];
 
 export default function QuestionnaireCustomerForm(): JSX.Element {
   const userRole = useAppSelector(getUserRole);
@@ -106,7 +96,7 @@ export default function QuestionnaireCustomerForm(): JSX.Element {
                       Ваша специализация (тип) тренировок
                     </span>
                     <div className="specialization-checkbox questionnaire-user__specializations">
-                      {specializations.map((specialization) => (
+                      {SPECIALIZATIONS.map((specialization) => (
                         <div
                           key={specialization}
                           className="btn-checkbox"
@@ -150,7 +140,7 @@ export default function QuestionnaireCustomerForm(): JSX.Element {
                       Сколько времени вы готовы уделять на тренировку в день
                     </span>
                     <div className="custom-toggle-radio custom-toggle-radio--big questionnaire-user__radio">
-                      {trainingTimes.map((range) => (
+                      {TRAINING_TIMES.map((range) => (
                         <div
                           key={range}
                           className="custom-toggle-radio__block"
@@ -185,7 +175,7 @@ export default function QuestionnaireCustomerForm(): JSX.Element {
                       Ваш уровень
                     </span>
                     <div className="custom-toggle-radio custom-toggle-radio--big questionnaire-user__radio">
-                      {levels.map((level) => (
+                      {LEVELS.map((level) => (
                         <div
                           key={level}
                           className="custom-toggle-radio__block"

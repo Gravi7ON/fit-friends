@@ -22,6 +22,7 @@ export enum RESTService {
 }
 
 const REQUEST_TIMEOUT = 5000;
+const UNAUTHORIZED_HTTP_CODE = 401;
 
 export const createAppApi = (direction: RESTService): AxiosInstance => {
   const api = axios.create({
@@ -48,7 +49,10 @@ export const createAppApi = (direction: RESTService): AxiosInstance => {
         originalConfig.url !== `${BackendUrl.Auth}/${APIRoute.SignIn}` &&
         error.response
       ) {
-        if (error.response.status === 401 && !originalConfig._retry) {
+        if (
+          error.response.status === UNAUTHORIZED_HTTP_CODE &&
+          !originalConfig._retry
+        ) {
           originalConfig._retry = true;
 
           try {
