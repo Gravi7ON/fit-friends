@@ -235,6 +235,12 @@ export class UserRepository {
 
     return this.userCustomerModel.aggregate([
       { $match: { _id: { $in: userFiendsIds } } },
+      {
+        $unionWith: {
+          coll: COACH_COLLECTION_NAME,
+          pipeline: [{ $match: { _id: { $in: userFiendsIds } } }],
+        },
+      },
       { $skip: page > 0 ? limit * (page - 1) : 0 },
       { $limit: limit },
       { $sort: { createdAt: sortDirection } },

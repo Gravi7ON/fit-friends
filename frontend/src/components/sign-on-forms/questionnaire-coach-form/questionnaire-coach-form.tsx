@@ -9,7 +9,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResponse } from 'src/types/error-response';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'src/hooks/store.hooks';
-import { getUserRole } from 'src/store/user-proccess/selectors';
+import { getUserId, getUserRole } from 'src/store/user-proccess/selectors';
 import { UserRole } from 'src/types/user';
 import { LEVELS, SPECIALIZATIONS } from 'src/components/constant-components';
 
@@ -22,9 +22,11 @@ type Inputs = {
 
 export default function QuestionnaireCoachForm(): JSX.Element {
   const userRole = useAppSelector(getUserRole);
+  const userId = useAppSelector(getUserId);
   const navigate = useNavigate();
 
   const [isFormToSending, setIsFormToSending] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -53,20 +55,27 @@ export default function QuestionnaireCoachForm(): JSX.Element {
       const api = createAppApi(RESTService.Auth);
       setIsFormToSending(true);
       await api.patch(
-        `${APIRoute.AdditionalInfo}/${store.getState().USER.id}`,
+        `${APIRoute.AdditionalInfo}/${userId}`,
         additionalCoachInfoAdapter
       );
       userRole === UserRole.Customer
         ? navigate(AppRoute.Main)
         : navigate(AppRoute.PersonalCoach);
     } catch (err) {
-      const errorResponse = (err as AxiosError)
-        .response as AxiosResponse<ErrorResponse>;
+      const error = err as AxiosError;
+      const errorResponse = error?.response as AxiosResponse<ErrorResponse>;
 
-      setError('description', {
-        type: 'server',
-        message: errorResponse.data.message,
-      });
+      if (errorResponse) {
+        setError('description', {
+          type: 'server',
+          message: errorResponse.data.message,
+        });
+      } else {
+        setError('description', {
+          type: 'server',
+          message: error.message,
+        });
+      }
 
       setIsFormToSending(false);
     }

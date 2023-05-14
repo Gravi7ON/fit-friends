@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
-import { AppRoute, PersonalCoachNavBarRoute } from 'src/constant';
+import { AppRoute, PersonalCoachRoute } from 'src/constant';
 
 export default function NavBar(): JSX.Element {
   return (
@@ -28,7 +28,7 @@ export default function NavBar(): JSX.Element {
             className={({ isActive }) =>
               isActive ? 'main-nav__link is-active' : 'main-nav__link'
             }
-            to={PersonalCoachNavBarRoute.Account}
+            to={PersonalCoachRoute.Account}
             aria-label="Личный кабинет"
           >
             <svg
@@ -45,7 +45,7 @@ export default function NavBar(): JSX.Element {
             className={({ isActive }) =>
               isActive ? 'main-nav__link is-active' : 'main-nav__link'
             }
-            to={PersonalCoachNavBarRoute.Friends}
+            to={PersonalCoachRoute.Friends}
             aria-label="Друзья"
           >
             <svg

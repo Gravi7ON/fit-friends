@@ -9,6 +9,22 @@
   animation: spinner-button .75s linear infinite;
 }
 
+.spinner-screen {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  vertical-align: text-bottom;
+  border: 7px solid #c5ec2a;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-button .75s linear infinite;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  margin-top: -60px;
+  margin-left: -60px;
+}
+
 .spinner-button::after {
   box-sizing: border-box;
 }

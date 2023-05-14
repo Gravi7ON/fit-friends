@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'src/hooks/store.hooks';
-import { getUserRole } from 'src/store/user-proccess/selectors';
+import { getUserId, getUserRole } from 'src/store/user-proccess/selectors';
 import './questionnaire-customer.css';
 import Spinner from 'src/components/ui-helpers/spinner/spinner';
 import { RESTService, createAppApi } from 'src/services/app.api';
@@ -27,6 +27,7 @@ type Inputs = {
 
 export default function QuestionnaireCustomerForm(): JSX.Element {
   const userRole = useAppSelector(getUserRole);
+  const userId = useAppSelector(getUserId);
   const navigate = useNavigate();
 
   const [isFormToSending, setIsFormToSending] = useState(false);
@@ -60,20 +61,27 @@ export default function QuestionnaireCustomerForm(): JSX.Element {
       const api = createAppApi(RESTService.Auth);
       setIsFormToSending(true);
       await api.patch(
-        `${APIRoute.AdditionalInfo}/${store.getState().USER.id}`,
+        `${APIRoute.AdditionalInfo}/${userId}`,
         additionalCustomerInfoAdapter
       );
       userRole === UserRole.Customer
         ? navigate(AppRoute.Main)
         : navigate(AppRoute.PersonalCoach);
     } catch (err) {
-      const errorResponse = (err as AxiosError)
-        .response as AxiosResponse<ErrorResponse>;
+      const error = err as AxiosError;
+      const errorResponse = error?.response as AxiosResponse<ErrorResponse>;
 
-      setError('caloriesWaste', {
-        type: 'server',
-        message: errorResponse.data.message,
-      });
+      if (errorResponse) {
+        setError('caloriesWaste', {
+          type: 'server',
+          message: errorResponse.data.message,
+        });
+      } else {
+        setError('caloriesWaste', {
+          type: 'server',
+          message: error.message,
+        });
+      }
 
       setIsFormToSending(false);
     }

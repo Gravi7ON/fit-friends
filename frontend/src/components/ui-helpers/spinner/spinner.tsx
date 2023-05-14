@@ -1,5 +1,11 @@
 import './spinner.css';
 
-export default function Spinner(): JSX.Element {
-  return <div className="spinner-button"></div>;
+type SpinnerProps = {
+  spinnerScreen?: boolean;
+};
+
+export default function Spinner({ spinnerScreen }: SpinnerProps): JSX.Element {
+  return (
+    <div className={spinnerScreen ? 'spinner-screen' : 'spinner-button'}></div>
+  );
 }

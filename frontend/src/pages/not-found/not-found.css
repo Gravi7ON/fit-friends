@@ -1,0 +1,27 @@
+.btn {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  row-gap: 20px;
+  padding: 25px 20px;
+  width: 100%;
+  color: #181818;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 16px;
+  background-color: #c5ec2a;
+  border: 2px solid transparent;
+  border-radius: 80px;
+  cursor: pointer;
+  -webkit-transition: color .3s ease,background-color .3s ease,border .3s ease,-webkit-box-shadow .3s ease;
+  -o-transition: color .3s ease,background-color .3s ease,border .3s ease,box-shadow .3s ease;
+  transition: color .3s ease,background-color .3s ease,border .3s ease,box-shadow .3s ease;
+  transition: color .3s ease,background-color .3s ease,border .3s ease,box-shadow .3s ease,-webkit-box-shadow .3s ease;
+}

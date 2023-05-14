@@ -30,6 +30,13 @@ export interface Coach extends User {
   isIndividualTraining: boolean;
 }
 
+export interface Customer extends User {
+  trainingTime: string;
+  certitargetDeclineСaloriesficates: number;
+  dayDeclineCalories: number;
+  isReadyTraining: boolean;
+}
+
 export type LoginUser = {
   email: string;
   password: string;

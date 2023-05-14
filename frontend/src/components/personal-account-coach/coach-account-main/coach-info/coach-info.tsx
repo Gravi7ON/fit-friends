@@ -21,7 +21,7 @@ type Inputs = {
   location: string;
   about: string;
   isReadyTraining: boolean;
-  specializations: string;
+  specializations: string[];
   level: string;
 };
 
@@ -32,14 +32,13 @@ const enum AdditionalCustomListCssClass {
 }
 
 export default function CoachInfo(): JSX.Element {
-  console.log('+++');
-
   const [isEdit, setIsEdit] = useState(false);
   const [coach, setCoach] = useState<Coach | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<null | string>(null);
   const [selectedSex, setSelectedSex] = useState<null | string>(null);
   const [selectedLevel, setSelectedLevel] = useState<null | string>(null);
   const [serverError, setServerError] = useState<null | string>(null);
+  const [isFormToSending, setIsFormToSending] = useState(false);
   const userId = useAppSelector(getUserId);
 
   const {
@@ -47,7 +46,7 @@ export default function CoachInfo(): JSX.Element {
     handleSubmit,
     setValue,
     watch,
-    reset,
+    clearErrors,
     formState: { errors },
   } = useForm<Inputs>({
     mode: 'onChange',
@@ -64,14 +63,23 @@ export default function CoachInfo(): JSX.Element {
         setSelectedLevel(coach.experience);
         setSelectedLocation(`ст. м. ${coach.location}`);
         setSelectedSex(coach.sex);
+        setValue('isReadyTraining', coach.isIndividualTraining);
+        setValue('about', coach.about);
+        setValue('name', coach.name);
+        setValue('specializations', coach.specializations);
       } catch (err) {
-        const errorResponse = (err as AxiosError)
-          .response as AxiosResponse<ErrorResponse>;
-        setServerError(errorResponse.data.message);
+        const error = err as AxiosError;
+        const errorResponse = error?.response as AxiosResponse<ErrorResponse>;
+
+        if (errorResponse) {
+          setServerError(errorResponse.data.message);
+        } else {
+          setServerError(error.message);
+        }
       }
     };
     getCoach();
-  }, [userId]);
+  }, [setValue, userId, isEdit]);
 
   useEffect(() => {
     setValue('location', selectedLocation as string);
@@ -79,7 +87,41 @@ export default function CoachInfo(): JSX.Element {
     setValue('level', selectedLevel as string);
   }, [selectedLevel, selectedLocation, selectedSex, setValue]);
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async ({
+    specializations,
+    name,
+    isReadyTraining,
+    level,
+    about,
+  }) => {
+    const updateCoachInfoAdapter = {
+      specializations: specializations.map((specialization) =>
+        specialization.toLowerCase()
+      ),
+      name,
+      about,
+      experience: level.toLowerCase(),
+      isIndividualTraining: Boolean(isReadyTraining),
+    };
+
+    try {
+      const api = createAppApi(RESTService.Users);
+      setIsFormToSending(true);
+      await api.patch('', updateCoachInfoAdapter);
+      setIsFormToSending(false);
+    } catch (err) {
+      const error = err as AxiosError;
+      const errorResponse = error?.response as AxiosResponse<ErrorResponse>;
+
+      if (errorResponse) {
+        setServerError(errorResponse.data.message);
+      } else {
+        setServerError(error.message);
+      }
+
+      setIsFormToSending(false);
+    }
+  };
 
   return (
     <section className={`user-info-edit ${coach ? null : 'skeleton'}`}>
@@ -93,7 +135,7 @@ export default function CoachInfo(): JSX.Element {
                   type="file"
                   name="user-photo-1"
                   accept="image/png, image/jpeg"
-                  disabled={!isEdit}
+                  disabled={!isEdit || isFormToSending}
                 />
                 <span className="input-load-avatar__avatar">
                   <img
@@ -109,7 +151,9 @@ export default function CoachInfo(): JSX.Element {
             {isEdit && (
               <div className="user-info-edit__controls">
                 <button
-                  className="user-info-edit__control-btn"
+                  className={`user-info-edit__control-btn ${
+                    isFormToSending ? 'spinner-refresh' : null
+                  }`}
                   aria-label="обновить"
                   onClick={() => {
                     const form = document.querySelector(
@@ -121,6 +165,10 @@ export default function CoachInfo(): JSX.Element {
                     });
                     form?.dispatchEvent(event);
                   }}
+                  disabled={isFormToSending}
+                  style={
+                    serverError ? { color: 'red', borderColor: 'red' } : {}
+                  }
                 >
                   <svg
                     width="16"
@@ -152,24 +200,16 @@ export default function CoachInfo(): JSX.Element {
             <button
               className="btn-flat btn-flat--underlined user-info-edit__save-button"
               type="submit"
-              aria-label="Сохранить"
+              aria-label={isEdit ? 'Сохранить' : 'Редактировать'}
               onClick={(evt) => {
                 evt.preventDefault();
-                setIsEdit((prev) => !prev);
                 if (isEdit) {
-                  reset({
-                    name: coach.name,
-                    about: coach.about,
-                    sex: coach.sex,
-                    location: coach.location,
-                    level: coach.experience,
-                  });
-                  setSelectedLevel(coach.experience);
-                  setSelectedLocation(`ст. м. ${coach.location}`);
-                  setValue('location', `ст. м. ${coach.location}`);
-                  setSelectedSex(coach.sex);
+                  clearErrors();
+                  setServerError(null);
                 }
+                setIsEdit((prev) => !prev);
               }}
+              disabled={isFormToSending}
             >
               <svg
                 width="12"
@@ -189,7 +229,7 @@ export default function CoachInfo(): JSX.Element {
                     <input
                       type="text"
                       defaultValue={coach.name}
-                      readOnly={!isEdit}
+                      readOnly={!isEdit || isFormToSending}
                       {...register('name', {
                         required: 'name is required',
                         maxLength: {
@@ -202,7 +242,7 @@ export default function CoachInfo(): JSX.Element {
                         },
                       })}
                       onClick={(evt) => {
-                        if (!isEdit) {
+                        if (!isEdit || isFormToSending) {
                           evt.currentTarget.blur();
                         }
                       }}
@@ -217,7 +257,7 @@ export default function CoachInfo(): JSX.Element {
                 <label>
                   <span className="custom-textarea__label">Описание</span>
                   <textarea
-                    readOnly={!isEdit}
+                    readOnly={!isEdit || !isFormToSending}
                     defaultValue={coach.about}
                     {...register('about', {
                       minLength: {
@@ -230,7 +270,7 @@ export default function CoachInfo(): JSX.Element {
                       },
                     })}
                     onClick={(evt) => {
-                      if (!isEdit) {
+                      if (!isEdit || isFormToSending) {
                         evt.currentTarget.blur();
                       }
                     }}
@@ -242,7 +282,7 @@ export default function CoachInfo(): JSX.Element {
               </div>
             </div>
             <fieldset
-              disabled={!isEdit}
+              disabled={!isEdit || isFormToSending}
               style={{ margin: 0, border: 'none', padding: 0 }}
             >
               <div className="user-info-edit__section user-info-edit__section--status">
@@ -291,7 +331,7 @@ export default function CoachInfo(): JSX.Element {
                           defaultChecked={coach.specializations.includes(
                             specialization.toLowerCase()
                           )}
-                          value={specialization}
+                          value={specialization.toLowerCase()}
                           {...register('specializations', {
                             required: 'specialization is required',
                             validate: (value) =>

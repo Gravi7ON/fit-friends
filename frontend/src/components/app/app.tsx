@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import {
   AppRoute,
   AuthorizationStatus,
-  PersonalCoachNavBarRoute,
+  PersonalCoachRoute,
 } from 'src/constant';
 import Intro from 'src/pages/intro/intro';
 import Main from 'src/pages/personal-customer-account/main';
@@ -21,6 +21,7 @@ import QuestionnaireCoach from 'src/pages/sign-on/questionnaire-coach/questionna
 import QuestionnaireCustomer from 'src/pages/sign-on/questionnaire-customer/questionnaire-customer';
 import CoachAccountMain from '../personal-account-coach/coach-account-main/coach-account-main';
 import CoachAccountFriends from '../personal-account-coach/coach-account-friends/coach-account-friends';
+import NotFound from 'src/pages/not-found/not-found';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -101,7 +102,7 @@ export default function App(): JSX.Element {
           }
         />
         <Route
-          path={PersonalCoachNavBarRoute.Account}
+          path={PersonalCoachRoute.Account}
           element={
             <PrivateCoachRoute
               authorizationStatus={authorizationStatus}
@@ -112,7 +113,7 @@ export default function App(): JSX.Element {
           }
         />
         <Route
-          path={PersonalCoachNavBarRoute.Friends}
+          path={PersonalCoachRoute.Friends}
           element={
             <PrivateCoachRoute
               authorizationStatus={authorizationStatus}
@@ -144,6 +145,10 @@ export default function App(): JSX.Element {
             <QuestionnaireCustomer />
           </PrivateCustomerRoute>
         }
+      />
+      <Route
+        path={'*'}
+        element={<NotFound />}
       />
     </Routes>
   );
