@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import './register-form.css';
 import { useAppDispatch } from 'src/hooks/store.hooks';
 import { userRegisterAction } from 'src/store/api-actions';
-import Spinner from '../../ui-helpers/spinner/spinner';
+import Spinner from '../../animate-ui/spinner/spinner';
 import { AxiosResponse } from 'axios';
 import { ErrorResponse } from 'src/types/error-response';
 import { AppRoute } from 'src/constant';
@@ -39,6 +39,10 @@ export default function RegisterForm(): JSX.Element {
   } = useForm<Inputs>({
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    setValue('location', selectedLocation as string);
+  }, [selectedLocation, setValue]);
 
   const onSubmit: SubmitHandler<Inputs> = async ({
     name,
@@ -76,10 +80,6 @@ export default function RegisterForm(): JSX.Element {
         : navigate(AppRoute.QuestionnaireCoach);
     }
   };
-
-  useEffect(() => {
-    setValue('location', selectedLocation as string);
-  }, [selectedLocation, setValue]);
 
   return (
     <div className="popup-form popup-form--sign-up">

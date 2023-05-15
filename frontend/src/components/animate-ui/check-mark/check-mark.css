@@ -1,0 +1,42 @@
+.check-mark__button-animate {
+  width: 16px;
+  height: 16px;
+}
+
+.check-mark__button-animate path {
+  stroke-dasharray: 99.47578430175781;
+  stroke-dashoffset: -99.47578430175781;
+  fill: transparent;
+}
+
+.check-mark__button-animate path {
+  animation: 1.7s ease forwards draw;
+  opacity:1;
+}
+
+@keyframes draw {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: -99.47578430175781;
+    fill: transparent;
+    transform: translateY(0);
+  }
+  
+  35% {
+    stroke-dashoffset: 0;
+    fill: transparent;
+  }
+  
+  60% {
+    fill: #181818;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  100% {
+    fill: #181818;
+    stroke-dashoffset: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}

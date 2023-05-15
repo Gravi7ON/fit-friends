@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Spinner from 'src/components/ui-helpers/spinner/spinner';
+import Spinner from 'src/components/animate-ui/spinner/spinner';
 import './login-form.css';
 import { useAppDispatch } from 'src/hooks/store.hooks';
 import { userLoginAction } from 'src/store/api-actions';

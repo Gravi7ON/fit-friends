@@ -14,14 +14,15 @@ import {
   getAuthorizationStatus,
   getUserRole,
 } from 'src/store/user-proccess/selectors';
-import PrivateCustomerRoute from '../ui-helpers/private-routes/private-customer-route';
-import PrivateCoachRoute from '../ui-helpers/private-routes/private-coach-route';
+import PrivateCustomerRoute from '../helpers/private-routes/private-customer-route';
+import PrivateCoachRoute from '../helpers/private-routes/private-coach-route';
 import { UserRole } from 'src/types/user';
 import QuestionnaireCoach from 'src/pages/sign-on/questionnaire-coach/questionnaire-coach';
 import QuestionnaireCustomer from 'src/pages/sign-on/questionnaire-customer/questionnaire-customer';
 import CoachAccountMain from '../personal-account-coach/coach-account-main/coach-account-main';
 import CoachAccountFriends from '../personal-account-coach/coach-account-friends/coach-account-friends';
 import NotFound from 'src/pages/not-found/not-found';
+import CoachAccountCreateTraining from '../personal-account-coach/coach-account-create-training/coach-account-create-training';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -120,6 +121,17 @@ export default function App(): JSX.Element {
               role={userRole}
             >
               <CoachAccountFriends />
+            </PrivateCoachRoute>
+          }
+        />
+        <Route
+          path={PersonalCoachRoute.CreateTraining}
+          element={
+            <PrivateCoachRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CoachAccountCreateTraining />
             </PrivateCoachRoute>
           }
         />

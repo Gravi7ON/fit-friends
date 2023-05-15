@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 type CoachFriendCardProps = {
   name: string;
   location: string;
@@ -5,7 +7,7 @@ type CoachFriendCardProps = {
   isReadyTraining: boolean;
 };
 
-export default function CoachFriendCard({
+export default memo(function CoachFriendCard({
   name,
   location,
   specializations,
@@ -91,4 +93,4 @@ export default function CoachFriendCard({
       </div>
     </li>
   );
-}
+});

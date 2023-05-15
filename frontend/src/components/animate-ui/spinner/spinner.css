@@ -17,7 +17,7 @@
   border: 7px solid #c5ec2a;
   border-right-color: transparent;
   border-radius: 50%;
-  animation: spinner-button .75s linear infinite;
+  animation: spinner-button 0.75s linear infinite;
   position: fixed;
   left: 50%;
   top: 50%;
