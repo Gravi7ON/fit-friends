@@ -1,14 +1,22 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AppRoute, PersonalCoachRoute } from 'src/constant';
 
 export default function NavBar(): JSX.Element {
+  const location = useLocation();
+
   return (
     <nav className="main-nav">
       <ul className="main-nav__list">
         <li className="main-nav__item">
           <NavLink
             className={({ isActive }) =>
-              isActive ? 'main-nav__link is-active' : 'main-nav__link'
+              isActive
+                ? 'main-nav__link is-active'
+                : location.pathname === PersonalCoachRoute.CreateTraining ||
+                  location.pathname === PersonalCoachRoute.Trainings ||
+                  location.pathname === PersonalCoachRoute.Orders
+                ? 'main-nav__link is-active'
+                : 'main-nav__link'
             }
             to={AppRoute.PersonalCoach}
             aria-label="На главную"

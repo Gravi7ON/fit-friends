@@ -52,4 +52,10 @@ export class CreatedWorkoutRdo {
 
   @Expose()
   public reviews: Review[];
+
+  @Expose()
+  public _max?: Record<string, number>;
+
+  @Expose()
+  public _min?: Record<string, number>;
 }

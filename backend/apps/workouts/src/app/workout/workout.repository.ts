@@ -85,12 +85,30 @@ export class WorkoutRepository {
       calories,
       rating,
       trainingTimes,
+      minMaxPrice,
     }: CoachWorkoutsQuery = {}
-  ): Promise<Workout[]> {
+  ): Promise<Workout[] | Record<string, unknown>> {
+    if (minMaxPrice) {
+      return this.prisma.workout.aggregate({
+        where: {
+          coachId,
+        },
+        _max: {
+          cost: true,
+        },
+        _min: {
+          cost: true,
+        },
+      });
+    }
+
     return this.prisma.workout.findMany({
       where: {
         coachId,
-        rating,
+        rating: {
+          gte: rating?.at(0),
+          lte: rating?.at(1),
+        },
         trainingTime: { in: trainingTimes },
         cost: {
           gte: costs?.at(0),

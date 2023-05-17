@@ -7,8 +7,14 @@ import {
 import './coach-account-create-training.css';
 import CustomSelectText from '../coach-account-main/coach-info/custom-selected-text';
 import CheckMark from 'src/components/animate-ui/check-mark/check-mark';
+import { LEVELS } from 'src/components/constant-components';
+import { RESTService, createAppApi } from 'src/services/app.api';
+import { APIRoute } from 'src/constant';
+import { AxiosError, AxiosResponse } from 'axios';
+import { ErrorResponse } from 'src/types/error-response';
+import Spinner from 'src/components/animate-ui/spinner/spinner';
 
-export type InputsCreateTraining = {
+type Inputs = {
   trainingName: string;
   price: string;
   calories: string;
@@ -16,8 +22,10 @@ export type InputsCreateTraining = {
   description: string;
   specialization: string;
   trainingTime: string;
-  location: string;
 };
+
+const CHECK_MARK_ANIMATION_TIME = 1700;
+const SHOW_ERROR_TIME = 600;
 
 export default function CoachAccountCreateTraining(): JSX.Element {
   const [selectedSpecialization, setSelectedSpecialization] = useState<
@@ -27,13 +35,15 @@ export default function CoachAccountCreateTraining(): JSX.Element {
     null | string
   >(null);
   const [isFormToSending, setIsFormToSending] = useState(false);
+  const [isSendingSuccess, setIsSendingSuccess] = useState(false);
+  const [isServerError, setIsServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<InputsCreateTraining>({
+  } = useForm<Inputs>({
     mode: 'onChange',
   });
 
@@ -42,8 +52,61 @@ export default function CoachAccountCreateTraining(): JSX.Element {
     setValue('trainingTime', selectedTrainingTime as string);
   }, [selectedSpecialization, selectedTrainingTime, setValue]);
 
-  const onSubmit: SubmitHandler<InputsCreateTraining> = async (data) =>
-    console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async ({
+    trainingName,
+    price,
+    calories,
+    gender,
+    description,
+    specialization,
+    trainingTime,
+  }) => {
+    const creatTrainingAdapter = {
+      title: trainingName,
+      specialization: specialization.toLowerCase(),
+      trainingTime,
+      cost: Number(price),
+      calories: Number(calories),
+      description,
+      sex: gender,
+      experience:
+        LEVELS[Math.floor(Math.random() * LEVELS.length)].toLowerCase(),
+    };
+
+    try {
+      const api = createAppApi(RESTService.Workouts);
+      setIsFormToSending(true);
+      await api.post(APIRoute.Coach, creatTrainingAdapter);
+      setIsFormToSending(false);
+      setIsSendingSuccess(true);
+      setIsServerError(null);
+    } catch (err) {
+      const error = err as AxiosError;
+      const errorResponse = error?.response as AxiosResponse<ErrorResponse>;
+
+      if (errorResponse) {
+        setIsServerError(errorResponse.data.message);
+      } else {
+        setIsServerError(error.message);
+      }
+
+      setIsFormToSending(false);
+      setIsSendingSuccess(false);
+    }
+  };
+
+  useEffect(() => {
+    const timerId = setTimeout(
+      () => setIsSendingSuccess(false),
+      CHECK_MARK_ANIMATION_TIME
+    );
+    return () => clearTimeout(timerId);
+  }, [isSendingSuccess]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => setIsServerError(null), SHOW_ERROR_TIME);
+    return () => clearTimeout(timerId);
+  }, [isServerError]);
 
   return (
     <div
@@ -326,10 +389,21 @@ export default function CoachAccountCreateTraining(): JSX.Element {
                   </div>
                 </div>
                 <button
-                  className="btn create-training__button"
+                  className={
+                    isServerError
+                      ? 'button-send--error'
+                      : 'btn create-training__button'
+                  }
                   type="submit"
+                  disabled={isFormToSending}
                 >
-                  {selectedSpecialization ? <CheckMark /> : 'Опубликовать'}
+                  {isFormToSending ? (
+                    <Spinner />
+                  ) : isSendingSuccess ? (
+                    <CheckMark />
+                  ) : (
+                    'Опубликовать'
+                  )}
                 </button>
               </div>
             </form>

@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'src/hooks/store.hooks';
-import { getUserId, getUserRole } from 'src/store/user-proccess/selectors';
+import { getUserId } from 'src/store/user-proccess/selectors';
 import './questionnaire-customer.css';
 import Spinner from 'src/components/animate-ui/spinner/spinner';
 import { RESTService, createAppApi } from 'src/services/app.api';
 import { APIRoute, AppRoute } from 'src/constant';
-import { UserRole } from 'src/types/user';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResponse } from 'src/types/error-response';
 import {
@@ -25,7 +24,6 @@ type Inputs = {
 };
 
 export default function QuestionnaireCustomerForm(): JSX.Element {
-  const userRole = useAppSelector(getUserRole);
   const userId = useAppSelector(getUserId);
   const navigate = useNavigate();
 
@@ -55,7 +53,7 @@ export default function QuestionnaireCustomerForm(): JSX.Element {
       targetDeclineСalories: Number(caloriesLose),
       dayDeclineCalories: Number(caloriesWaste),
     };
-    console.log(additionalCustomerInfoAdapter);
+
     try {
       const api = createAppApi(RESTService.Auth);
       setIsFormToSending(true);
@@ -63,9 +61,8 @@ export default function QuestionnaireCustomerForm(): JSX.Element {
         `${APIRoute.AdditionalInfo}/${userId}`,
         additionalCustomerInfoAdapter
       );
-      userRole === UserRole.Customer
-        ? navigate(AppRoute.Main)
-        : navigate(AppRoute.PersonalCoach);
+
+      navigate(AppRoute.Main);
     } catch (err) {
       const error = err as AxiosError;
       const errorResponse = error?.response as AxiosResponse<ErrorResponse>;

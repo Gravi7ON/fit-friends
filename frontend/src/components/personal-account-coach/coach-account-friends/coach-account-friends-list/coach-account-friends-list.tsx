@@ -109,7 +109,6 @@ export default function CoachAccountFriendsList(): JSX.Element {
     const scroll = throttle(() => {
       if (window.scrollY > 1000) {
         setIsShowButtonScrollUp(true);
-        window.removeEventListener('scroll', scroll);
       }
     }, 300);
 
@@ -163,7 +162,11 @@ export default function CoachAccountFriendsList(): JSX.Element {
         <button
           className="btn show-more__button show-more__button--to-top"
           type="button"
-          style={isShowButtonScrollUp ? {} : { display: 'none' }}
+          style={
+            isShowButtonScrollUp
+              ? { display: 'inline-flex' }
+              : { display: 'none' }
+          }
           onClick={() =>
             window.scrollTo({
               top: 0,

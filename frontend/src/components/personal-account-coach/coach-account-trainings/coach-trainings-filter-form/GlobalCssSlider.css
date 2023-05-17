@@ -1,0 +1,35 @@
+.MuiSlider-track {
+  width: 312px;
+  height: 1px;
+  color: #333;
+  border: none;
+}
+
+.MuiSlider-rail {
+  width: 312px;
+  height: 1px;
+  background-color: #aeaeae;
+  opacity: 1;
+}
+
+.MuiSlider-thumb {
+  color: #333;
+  width: 16px;
+  height: 16px;
+  transition: all 0.3s;
+  border: none;
+}
+
+.MuiSlider-dragging,
+.MuiSlider-thumb:hover,
+.MuiSlider-thumb:focus-within {
+  color: #adadad;
+  box-shadow: none;
+  transition: all 0.3s;
+}
+
+.MuiSlider-thumb:active {
+  transition: all 0.3s;
+  -webkit-box-shadow: 0 0 2px 2px #c5ec2a;
+  box-shadow: 0 0 2px 2px #c5ec2a;
+}

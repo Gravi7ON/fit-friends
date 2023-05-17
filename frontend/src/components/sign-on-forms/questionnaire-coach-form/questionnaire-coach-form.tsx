@@ -8,8 +8,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResponse } from 'src/types/error-response';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'src/hooks/store.hooks';
-import { getUserId, getUserRole } from 'src/store/user-proccess/selectors';
-import { UserRole } from 'src/types/user';
+import { getUserId } from 'src/store/user-proccess/selectors';
 import { LEVELS, SPECIALIZATIONS } from 'src/components/constant-components';
 
 type Inputs = {
@@ -20,7 +19,6 @@ type Inputs = {
 };
 
 export default function QuestionnaireCoachForm(): JSX.Element {
-  const userRole = useAppSelector(getUserRole);
   const userId = useAppSelector(getUserId);
   const navigate = useNavigate();
 
@@ -57,9 +55,8 @@ export default function QuestionnaireCoachForm(): JSX.Element {
         `${APIRoute.AdditionalInfo}/${userId}`,
         additionalCoachInfoAdapter
       );
-      userRole === UserRole.Customer
-        ? navigate(AppRoute.Main)
-        : navigate(AppRoute.PersonalCoach);
+
+      navigate(AppRoute.PersonalCoach);
     } catch (err) {
       const error = err as AxiosError;
       const errorResponse = error?.response as AxiosResponse<ErrorResponse>;

@@ -15,10 +15,12 @@ export enum PersonalCoachRoute {
   Trainings = '/personal-coach/trainings',
   Orders = '/personal-coach/orders',
   CreateTraining = '/personal-coach/create-training',
+  Workout = '/personal-coach/workout',
 }
 
 export enum NameSpaceStore {
-  Workout = 'WORKOUT',
+  WorkoutFilter = 'WORKOUT_FILTER',
+  Workouts = 'WORKOUTS',
   User = 'USER',
 }
 
@@ -34,4 +36,5 @@ export enum APIRoute {
   RefreshToken = '/refresh-token',
   AdditionalInfo = '/additional-info',
   MyFriends = '/my-friends',
+  Coach = '/coach',
 }

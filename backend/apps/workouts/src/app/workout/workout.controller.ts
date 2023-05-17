@@ -46,6 +46,21 @@ export class WorkoutController {
   }
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
+  @Get('/coach')
+  async findCoachWorkouts(
+    @Request() request: RequestWithTokenPayload,
+    @Query() query: CoachWorkoutsQuery
+  ) {
+    const coachId: string = request.user?._id;
+    const coachWorkouts = await this.workoutService.findCoachWorkouts(
+      coachId,
+      query
+    );
+
+    return fillObject(CreatedWorkoutRdo, coachWorkouts);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Patch('/coach/:id')
   async update(
     @Param('id', ParseIntPipe) workoutId: number,
@@ -68,21 +83,6 @@ export class WorkoutController {
     const existedWorkout = await this.workoutService.findWorkout(workoutId);
 
     return fillObject(CreatedWorkoutRdo, existedWorkout);
-  }
-
-  @UseGuards(JwtAuthGuard, RoleCoachGuard)
-  @Get('/coach')
-  async findCoachWorkouts(
-    @Request() request: RequestWithTokenPayload,
-    @Query() query: CoachWorkoutsQuery
-  ) {
-    const coachId: string = request.user?._id;
-    const coachWorkouts = await this.workoutService.findCoachWorkouts(
-      coachId,
-      query
-    );
-
-    return fillObject(CreatedWorkoutRdo, coachWorkouts);
   }
 
   @UseGuards(JwtAuthGuard)

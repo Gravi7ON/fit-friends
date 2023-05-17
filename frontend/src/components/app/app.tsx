@@ -23,6 +23,7 @@ import CoachAccountMain from '../personal-account-coach/coach-account-main/coach
 import CoachAccountFriends from '../personal-account-coach/coach-account-friends/coach-account-friends';
 import NotFound from 'src/pages/not-found/not-found';
 import CoachAccountCreateTraining from '../personal-account-coach/coach-account-create-training/coach-account-create-training';
+import CoachAccountTrainings from '../personal-account-coach/coach-account-trainings/coach-account-trainings';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -132,6 +133,17 @@ export default function App(): JSX.Element {
               role={userRole}
             >
               <CoachAccountCreateTraining />
+            </PrivateCoachRoute>
+          }
+        />
+        <Route
+          path={PersonalCoachRoute.Trainings}
+          element={
+            <PrivateCoachRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CoachAccountTrainings />
             </PrivateCoachRoute>
           }
         />

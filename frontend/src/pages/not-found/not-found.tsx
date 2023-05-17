@@ -1,4 +1,3 @@
-import Logo from 'src/components/common-ui/personal-account-header/logo/logo';
 import NavBar from 'src/components/common-ui/personal-account-header/nav-bar/nav-bar';
 import SearchBar from 'src/components/common-ui/personal-account-header/search-bar/search-bar';
 import './not-found.css';
@@ -47,7 +46,7 @@ export default function NotFound(): JSX.Element {
           >
             <h1>Sorry, page not found</h1>
             <button
-              className="btn"
+              className="btn-return-back"
               style={{ marginTop: '20px' }}
               onClick={() => navigate(-1)}
             >

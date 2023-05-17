@@ -48,12 +48,20 @@ export class CoachWorkoutsQuery {
   @IsOptional()
   public calories?: number[];
 
-  @IsInt()
-  @Min(1)
-  @Max(5)
-  @Transform(({ value }) => +value)
+  @Min(0, {
+    each: true,
+  })
+  @Max(5, {
+    each: true,
+  })
+  @IsInt({
+    each: true,
+  })
+  @Transform(({ value }) =>
+    value.split(',').map((item: string) => Number(item))
+  )
   @IsOptional()
-  public rating?: number;
+  public rating?: number[];
 
   @IsEnum(TrainingTime, {
     each: true,
@@ -65,4 +73,7 @@ export class CoachWorkoutsQuery {
   @IsOptional()
   @Transform(({ value }) => +value)
   public page?: number;
+
+  @IsOptional()
+  public minMaxPrice?: boolean;
 }
