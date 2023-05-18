@@ -4,8 +4,9 @@ import { WorkoutFilterValue } from 'src/types/state';
 
 const initialState: WorkoutFilterValue = {
   costs: [],
-  rating: [],
+  ratings: [],
   calories: [],
+  trainingTimes: [],
 };
 
 export const workoutFilter = createSlice({
@@ -15,7 +16,8 @@ export const workoutFilter = createSlice({
     changeWorkoutFilterValue(state, action) {
       state.calories = action.payload.calories;
       state.costs = action.payload.costs;
-      state.rating = action.payload.rating;
+      state.ratings = action.payload.ratings;
+      state.trainingTimes = action.payload.trainingTimes;
     },
   },
 });

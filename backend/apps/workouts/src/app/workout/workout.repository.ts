@@ -69,9 +69,9 @@ export class WorkoutRepository {
       where: {
         id: { in: workoutIds },
       },
-      take: limit,
       orderBy: [{ createdAt: sortDirection }],
       skip: page > 0 ? limit * (page - 1) : undefined,
+      take: limit,
     });
   }
 
@@ -105,11 +105,6 @@ export class WorkoutRepository {
     return this.prisma.workout.findMany({
       where: {
         coachId,
-        rating: {
-          gte: rating?.at(0),
-          lte: rating?.at(1),
-        },
-        trainingTime: { in: trainingTimes },
         cost: {
           gte: costs?.at(0),
           lte: costs?.at(1),
@@ -118,13 +113,18 @@ export class WorkoutRepository {
           gte: calories?.at(0),
           lte: calories?.at(1),
         },
+        rating: {
+          gte: rating?.at(0),
+          lte: rating?.at(1),
+        },
+        trainingTime: { in: trainingTimes },
       },
-      take: limit,
       include: {
         reviews: true,
       },
       orderBy: [{ createdAt: sortDirection }],
       skip: page > 0 ? limit * (page - 1) : undefined,
+      take: limit,
     });
   }
 
@@ -160,8 +160,8 @@ export class WorkoutRepository {
           },
         },
       },
-      take: limit,
       skip: page > 0 ? limit * (page - 1) : undefined,
+      take: limit,
     });
   }
 
@@ -178,9 +178,9 @@ export class WorkoutRepository {
       where: {
         id: { in: gymIds },
       },
-      take: limit,
       orderBy: [{ createdAt: sortDirection }],
       skip: page > 0 ? limit * (page - 1) : undefined,
+      take: limit,
     });
   }
 
@@ -212,9 +212,9 @@ export class WorkoutRepository {
       },
       include: {
         reviews: {
-          take: limit,
           orderBy: [{ createdAt: sortDirection }],
           skip: page > 0 ? limit * (page - 1) : undefined,
+          take: limit,
         },
       },
     });

@@ -1,15 +1,22 @@
-import { useContext, useEffect, useState } from 'react';
-import { Slider } from '@mui/material';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Slider, debounce } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material';
+import { throttle } from 'lodash';
+import { useForm } from 'react-hook-form';
+import { AxiosError, AxiosResponse } from 'axios';
 import './GlobalCssSlider.css';
 import { TRAINING_TIMES } from 'src/components/constant-components';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { RESTService, createAppApi } from 'src/services/app.api';
 import { APIRoute } from 'src/constant';
 import { useAppDispatch } from 'src/hooks/store.hooks';
 import { changeWorkoutFilterValue } from 'src/store/workout-filter/workout-filter';
-import { setStateWorkouts } from 'src/store/workouts/workouts';
-// import { FilterValueContext } from '../coach-account-trainings';
+import {
+  setStateErrorServer,
+  setStateLoadingServer,
+  setStatePageNumber,
+  setStateWorkouts,
+} from 'src/store/workouts/workouts';
+import { ErrorResponse } from 'src/types/error-response';
 
 type Inputs = {
   priceMin: string;
@@ -18,25 +25,31 @@ type Inputs = {
   caloriesMax: string;
   ratingMin: string;
   ratingMax: string;
-  trainingTime: string;
+  trainingTime: string[];
 };
 
 const MIN_RATING = 0;
 const MAX_RATING = 5;
-let MIN_PRICE = 0;
-let MAX_PRICE = 0;
 const MIN_CALORIES = 1000;
 const MAX_CALORIES = 5000;
+let minPrice = 0;
+let maxPrice = 0;
 
 export default function CoachTrainingFilterForm(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const [valuePrice, setValuePrice] = useState([MIN_PRICE, MAX_PRICE]);
+  const [valuePrice, setValuePrice] = useState<number[]>([minPrice, maxPrice]);
   const [valueCalories, setValueCalories] = useState([
     MIN_CALORIES,
     MAX_CALORIES,
   ]);
   const [valueRating, setValueRating] = useState([MIN_RATING, MAX_RATING]);
+  const [valueTimeTraining, setValueTimeTraining] = useState({
+    '10-30 мин': false,
+    '30-50 мин': false,
+    '50-80 мин': false,
+    'больше 80 мин': false,
+  });
 
   const { register, setValue, watch } = useForm<Inputs>({
     mode: 'onChange',
@@ -51,16 +64,27 @@ export default function CoachTrainingFilterForm(): JSX.Element {
         const { data: price } = await api.get(
           `${APIRoute.Coach}?minMaxPrice=true`
         );
-        MIN_PRICE = price._min.cost;
-        MAX_PRICE = price._max.cost;
-        setValuePrice([MIN_PRICE, MAX_PRICE]);
-      } catch {
-        MIN_PRICE = 0;
-        MAX_PRICE = 0;
+        minPrice = price._min.cost;
+        maxPrice = price._max.cost;
+        dispatch(setStateLoadingServer(false));
+        setValuePrice([minPrice, maxPrice]);
+      } catch (err) {
+        const error = err as AxiosError;
+        const errorResponse = error?.response as AxiosResponse<ErrorResponse>;
+
+        if (errorResponse) {
+          dispatch(setStateErrorServer(errorResponse.data.message));
+        }
+
+        if (!errorResponse) {
+          dispatch(setStateErrorServer(error.message));
+        }
+
+        dispatch(setStateLoadingServer(false));
       }
     };
     getMinMaxPrice();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setValue('priceMin', valuePrice[0].toString());
@@ -69,45 +93,61 @@ export default function CoachTrainingFilterForm(): JSX.Element {
     setValue('caloriesMax', valueCalories[1].toString());
     setValue('ratingMin', valueRating[0].toString());
     setValue('ratingMax', valueRating[1].toString());
+
+    dispatch(setStateWorkouts([]));
+    dispatch(setStateLoadingServer(true));
+    dispatch(setStatePageNumber(1));
+    dispatch(setStateErrorServer(null));
+
     dispatch(
       changeWorkoutFilterValue({
         costs: valuePrice,
         calories: valueCalories,
-        rating: valueRating,
+        ratings: valueRating,
+        trainingTimes: Object.entries(valueTimeTraining)
+          .map((keyValue) => {
+            if (keyValue[1]) {
+              return keyValue[0];
+            }
+            return null;
+          })
+          .filter((value) => Boolean(value)),
       })
     );
-    dispatch(setStateWorkouts([]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    setValue,
-    valueCalories,
-    valuePrice,
-    valueRating,
-    formWatcher.ratingMax,
-    formWatcher.ratingMin,
-  ]);
+  }, [setValue, valueCalories, valuePrice, valueRating, valueTimeTraining]);
 
-  const handlePriceSliderChange = (
-    event: Event,
-    newValue: number | number[]
-  ) => {
-    setValuePrice(newValue as number[]);
-  };
+  const handlePriceSliderChange = throttle(
+    (_event: Event, newValue: number | number[]) =>
+      setValuePrice(newValue as number[]),
+    150
+  );
 
-  const handleCaloriesSliderChange = (
-    event: Event,
-    newValue: number | number[]
-  ) => {
-    setValueCalories(newValue as number[]);
-  };
+  const handleCaloriesSliderChange = throttle(
+    (_event: Event, newValue: number | number[]) => {
+      setValueCalories(newValue as number[]);
+    },
+    150,
+    { leading: false, trailing: true }
+  );
 
   const handleRatingSliderChange = (
-    event: Event,
+    _event: Event,
     newValue: number | number[],
-    activeThumb: number
+    _activeThumb: number
   ) => {
     setValueRating(newValue as number[]);
   };
+
+  const handleTrainingTimeChange = debounce(
+    (evt: ChangeEvent<HTMLInputElement>) => {
+      setValueTimeTraining({
+        ...valueTimeTraining,
+        [evt.target.name]: evt.target.checked,
+      });
+    },
+    300
+  );
 
   return (
     <form className="my-training-form__form">
@@ -137,9 +177,9 @@ export default function CoachTrainingFilterForm(): JSX.Element {
                 setValuePrice((prev) => [
                   Math.sign(minFormPrice) === -1 &&
                   Number.isInteger(minFormPrice)
-                    ? MIN_PRICE
-                    : minFormPrice > MAX_PRICE || minFormPrice > maxFormPrice
-                    ? MIN_PRICE
+                    ? minPrice
+                    : minFormPrice > maxPrice || minFormPrice > maxFormPrice
+                    ? minPrice
                     : minFormPrice,
                   prev[1],
                 ]);
@@ -171,9 +211,9 @@ export default function CoachTrainingFilterForm(): JSX.Element {
                   prev[0],
                   Math.sign(maxFormPrice) === -1 &&
                   Number.isInteger(maxFormPrice)
-                    ? MAX_PRICE
-                    : maxFormPrice > MAX_PRICE || maxFormPrice < minFormPrice
-                    ? MAX_PRICE
+                    ? maxPrice
+                    : maxFormPrice > maxPrice || maxFormPrice < minFormPrice
+                    ? maxPrice
                     : maxFormPrice,
                 ]);
               }}
@@ -183,9 +223,9 @@ export default function CoachTrainingFilterForm(): JSX.Element {
         </div>
         <StyledEngineProvider injectFirst>
           <Slider
-            min={MIN_PRICE}
-            max={MAX_PRICE}
-            step={50}
+            min={minPrice}
+            max={maxPrice}
+            step={100}
             value={valuePrice}
             valueLabelDisplay="auto"
             onChange={handlePriceSliderChange}
@@ -267,7 +307,7 @@ export default function CoachTrainingFilterForm(): JSX.Element {
           <Slider
             min={1000}
             max={5000}
-            step={50}
+            step={100}
             value={valueCalories}
             valueLabelDisplay="auto"
             onChange={handleCaloriesSliderChange}
@@ -299,8 +339,9 @@ export default function CoachTrainingFilterForm(): JSX.Element {
                 <label>
                   <input
                     type="checkbox"
-                    value={time}
-                    {...register('trainingTime')}
+                    value="duration-1"
+                    name={time}
+                    onChange={handleTrainingTimeChange}
                   />
                   <span className="custom-toggle__icon">
                     <svg

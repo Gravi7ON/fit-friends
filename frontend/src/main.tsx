@@ -16,11 +16,11 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  // <StrictMode>
-  <Provider store={store}>
-    <HistoryRouter history={browserHistory}>
-      <App />
-    </HistoryRouter>
-  </Provider>
-  // </StrictMode>
+  <StrictMode>
+    <Provider store={store}>
+      <HistoryRouter history={browserHistory}>
+        <App />
+      </HistoryRouter>
+    </Provider>
+  </StrictMode>
 );

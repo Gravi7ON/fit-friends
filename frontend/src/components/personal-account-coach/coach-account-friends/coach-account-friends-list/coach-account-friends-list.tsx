@@ -25,16 +25,12 @@ export default function CoachAccountFriendsList(): JSX.Element {
   const [friends, setFriends] = useState<(Customer & Coach)[]>([]);
   const [buttonClickCount, setButtonClickCount] = useState(0);
 
-  const isHideButtonMore = () => {
+  const hideButtonMoreByCondition = () => {
     if (
       friends.length < CARDS_FOR_PAGE ||
       friends.length % CARDS_FOR_PAGE !== 0
     ) {
       return { display: 'none' };
-    }
-
-    if (pageNumber > 1 && friends.length % CARDS_FOR_PAGE === 0) {
-      return {};
     }
   };
 
@@ -143,7 +139,7 @@ export default function CoachAccountFriendsList(): JSX.Element {
               : 'btn show-more__button show-more__button--more'
           }
           type="button"
-          style={isHideButtonMore()}
+          style={hideButtonMoreByCondition()}
           disabled={isLoadingServer}
           onClick={async () => {
             setButtonClickCount((prev) => (prev += 1));

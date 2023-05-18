@@ -1,19 +1,27 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { throttle } from 'lodash';
-import {
-  useEffect,
-  useInsertionEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import { isEqual, throttle } from 'lodash';
+import { useEffect, useState } from 'react';
 import Spinner from 'src/components/animate-ui/spinner/spinner';
 import WorkoutCard from 'src/components/common-ui/workout/workout-card';
+import { TRAINING_TIMES } from 'src/components/constant-components';
 import { APIRoute } from 'src/constant';
 import { useAppDispatch, useAppSelector } from 'src/hooks/store.hooks';
 import { RESTService, createAppApi } from 'src/services/app.api';
 import { getWorkoutFilterValue } from 'src/store/workout-filter/selectors';
-import { getWorkouts } from 'src/store/workouts/selectors';
-import { setStateWorkouts } from 'src/store/workouts/workouts';
+import {
+  getPageNumber,
+  getServerErrorStatus,
+  getServerLoadingStatus,
+  getWorkouts,
+} from 'src/store/workouts/selectors';
+import {
+  setStateErrorServer,
+  setStateLoadingServer,
+} from 'src/store/workouts/workouts';
+import {
+  setStatePageNumber,
+  setStateWorkouts,
+} from 'src/store/workouts/workouts';
 import { ErrorResponse } from 'src/types/error-response';
 
 const CARDS_FOR_PAGE = 6;
@@ -24,29 +32,23 @@ export default function CoachTrainingList(): JSX.Element {
 
   const filterValue = useAppSelector(getWorkoutFilterValue);
   const workouts = useAppSelector(getWorkouts);
+  const pageNumber = useAppSelector(getPageNumber);
+  const isFirstLoadingServer = useAppSelector(getServerLoadingStatus);
+  const isFirstServerError = useAppSelector(getServerErrorStatus);
 
-  const [isFirstLoadingServer, setIsFirstLoadingServer] = useState(true);
   const [isLoadingServer, setIsLoadingServer] = useState(false);
-  const [isFirstServerError, setIsFirstServerError] = useState<null | string>(
-    null
-  );
   const [isShowButtonScrollUp, setIsShowButtonScrollUp] = useState(false);
   const [isServerError, setIsServerError] = useState<null | string>(null);
-  const [pageNumber, setPageNumber] = useState(1);
   const [successPageNumber, setSuccessPageNumber] = useState(pageNumber);
   const [errorPageNumber, setErrorPageNumber] = useState(0);
   const [buttonClickCount, setButtonClickCount] = useState(0);
 
-  const isHideButtonMore = () => {
+  const hideButtonMoreByCondition = () => {
     if (
       workouts.length < CARDS_FOR_PAGE ||
       workouts.length % CARDS_FOR_PAGE !== 0
     ) {
       return { display: 'none' };
-    }
-
-    if (pageNumber > 1 && workouts.length % CARDS_FOR_PAGE !== 0) {
-      return {};
     }
   };
 
@@ -63,24 +65,36 @@ export default function CoachTrainingList(): JSX.Element {
       },
     };
 
-    for (const filter of Object.entries(filterValue)) {
-      if (
-        !filter[1].length ||
-        (filter[0] === 'costs' && filter[1].includes(0))
-      ) {
-        return;
-      }
+    if (
+      isEqual(filterValue, {
+        costs: [],
+        ratings: [],
+        calories: [],
+        trainingTimes: [],
+      })
+    ) {
+      return;
     }
 
     const getFriends = async () => {
       try {
         const api = createAppApi(RESTService.Workouts);
         const { data: partWorkouts } = await api.get(
-          `${APIRoute.Coach}?limit=${CARDS_FOR_PAGE}&page=${pageNumber}&rating=${filterValue?.rating}&costs=${filterValue?.costs}&calories=${filterValue?.calories}`
+          `${
+            APIRoute.Coach
+          }?limit=${CARDS_FOR_PAGE}&page=${pageNumber}&rating=${
+            filterValue?.ratings
+          }&costs=${filterValue?.costs}&calories=${
+            filterValue?.calories
+          }&trainingTimes=${
+            filterValue?.trainingTimes.length === 0
+              ? TRAINING_TIMES
+              : filterValue?.trainingTimes
+          }`
         );
         dispatch(setStateWorkouts([...workouts, ...partWorkouts]));
         setSuccessPageNumber(pageNumber);
-        setIsFirstLoadingServer(false);
+        dispatch(setStateLoadingServer(false));
         setIsLoadingServer(false);
         setIsServerError(null);
       } catch (err) {
@@ -88,7 +102,7 @@ export default function CoachTrainingList(): JSX.Element {
         const errorResponse = error?.response as AxiosResponse<ErrorResponse>;
 
         if (errorResponse && isFirstLoadingServer) {
-          setIsFirstServerError(errorResponse.data.message);
+          dispatch(setStateErrorServer(errorResponse.data.message));
         }
 
         if (errorResponse && isLoadingServer) {
@@ -96,7 +110,7 @@ export default function CoachTrainingList(): JSX.Element {
         }
 
         if (!errorResponse && isFirstLoadingServer) {
-          setIsFirstServerError(error.message);
+          dispatch(setStateErrorServer(error.message));
         }
 
         if (!errorResponse && isLoadingServer) {
@@ -104,7 +118,7 @@ export default function CoachTrainingList(): JSX.Element {
         }
 
         setErrorPageNumber(pageNumber);
-        setIsFirstLoadingServer(false);
+        dispatch(setStateLoadingServer(false));
         setIsLoadingServer(false);
 
         timerError.setTimer();
@@ -116,11 +130,6 @@ export default function CoachTrainingList(): JSX.Element {
     return () => {
       if (timerError.timerId) {
         clearTimeout(timerError.timerId);
-      }
-      console.log(pageNumber);
-
-      if (workouts.length === 0) {
-        setPageNumber(() => 1);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -173,18 +182,18 @@ export default function CoachTrainingList(): JSX.Element {
                   : 'btn show-more__button show-more__button--more'
               }
               type="button"
-              style={isHideButtonMore()}
+              style={hideButtonMoreByCondition()}
               disabled={isLoadingServer}
               onClick={async () => {
                 setButtonClickCount((prev) => (prev += 1));
                 setIsLoadingServer(true);
 
                 if (errorPageNumber > successPageNumber) {
-                  setPageNumber(errorPageNumber);
+                  dispatch(setStatePageNumber(errorPageNumber));
                   return;
                 }
 
-                setPageNumber((prev) => (prev += 1));
+                dispatch(setStatePageNumber(pageNumber + 1));
               }}
             >
               {isLoadingServer ? <Spinner /> : 'Показать еще'}

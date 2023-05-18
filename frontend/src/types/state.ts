@@ -12,12 +12,16 @@ export type UserProcess = {
 
 export type WorkoutFilterValue = {
   costs: number[];
-  rating: number[];
+  ratings: number[];
   calories: number[];
+  trainingTimes: string[];
 };
 
 export type WorkoutState = {
   workouts: Workout[];
+  pageNumber: number;
+  isFirstLoadingServer: boolean;
+  isFirstServerError: null | string;
 };
 
 export type State = ReturnType<typeof store.getState>;
