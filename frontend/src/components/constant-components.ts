@@ -27,3 +27,6 @@ export const TRAINING_TIMES = [
   '50-80 мин',
   'больше 80 мин',
 ];
+
+export const CARDS_FOR_PAGE = 6;
+export const SHOW_ERROR_TIME = 600;

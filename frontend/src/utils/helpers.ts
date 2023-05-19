@@ -29,3 +29,15 @@ export function checkAuthOnRefresh() {
 
   return { authorizationStatus: AuthorizationStatus.NoAuth };
 }
+
+export function hideButtonMoreByCondition(
+  listLengthPart: number,
+  amountCardPerOne: number
+) {
+  if (
+    listLengthPart < amountCardPerOne ||
+    listLengthPart % amountCardPerOne !== 0
+  ) {
+    return { display: 'none' };
+  }
+}

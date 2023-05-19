@@ -17,7 +17,7 @@ import { CoachOrdersQuery } from './queries/coach-orders.query';
 import { CoachWorkoutsQuery } from './queries/coach-workouts.query';
 import {
   RABBITMQ_SERVICE,
-  RANDOM_STATIC_IMAGE_PATH,
+  RangeImages,
   SortFiled,
   SortingDirection,
   WorkoutMessageException,
@@ -29,7 +29,11 @@ import { GymsQuery } from './queries/gyms.query';
 import { CreateWorkoutOrderDto } from './dto/create-workout-order.dto';
 import axios from 'axios';
 import { ClientProxy } from '@nestjs/microservices';
-import { createEvent, fillObject } from '@backend/core';
+import {
+  createEvent,
+  fillObject,
+  getRandomPositiveInteger,
+} from '@backend/core';
 import { WorkoutPayloadRdo } from './rdo/workout-payload.dto';
 import { CreateWorkoutReviewDto } from './dto/create-workout-review.dto';
 import { WorkoutReviewsQuery } from './queries/workout-reviews.query';
@@ -47,7 +51,12 @@ export class WorkoutService {
   ): Promise<Workout> {
     const workoutEntity = new WorkoutEntity({
       ...dto,
-      backgroundImage: RANDOM_STATIC_IMAGE_PATH,
+      backgroundImage: `http://localhost:${
+        process.env.PORT
+      }/api/files/workouts/training-${getRandomPositiveInteger(
+        RangeImages.Min,
+        RangeImages.Max
+      )}.jpg`,
       coachId,
     });
 

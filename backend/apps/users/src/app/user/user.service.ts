@@ -159,4 +159,11 @@ export class UserService {
       requestStatus,
     });
   }
+
+  async findAllPersonalTrainingRequests(coachId: string) {
+    const personalTrainingRequests =
+      await this.userRepository.findPersonalTrainingRequests(coachId);
+
+    return personalTrainingRequests;
+  }
 }

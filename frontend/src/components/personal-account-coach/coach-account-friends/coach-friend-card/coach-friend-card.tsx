@@ -5,6 +5,7 @@ type CoachFriendCardProps = {
   location: string;
   specializations: string[];
   isReadyTraining: boolean;
+  isPersonalRequest: boolean;
 };
 
 export default memo(function CoachFriendCard({
@@ -12,6 +13,7 @@ export default memo(function CoachFriendCard({
   location,
   specializations,
   isReadyTraining,
+  isPersonalRequest,
 }: CoachFriendCardProps): JSX.Element {
   return (
     <li className="friends-list__item">
@@ -32,7 +34,7 @@ export default memo(function CoachFriendCard({
                   alt=""
                 />
               </picture>
-              {/* <div className="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div> */}
+              <div className="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div>
             </div>
           </div>
           <div className="thumbnail-friend__header">
@@ -71,25 +73,27 @@ export default memo(function CoachFriendCard({
             </div>
           </div>
         </div>
-        {/* <div className="thumbnail-friend__request-status thumbnail-friend__request-status--role-user">
-          <p className="thumbnail-friend__request-text">
-            Запрос на&nbsp;персональную тренировку
-          </p>
-          <div className="thumbnail-friend__button-wrapper">
-            <button
-              className="btn btn--medium btn--dark-bg thumbnail-friend__button"
-              type="button"
-            >
-              Принять
-            </button>
-            <button
-              className="btn btn--medium btn--outlined btn--dark-bg thumbnail-friend__button"
-              type="button"
-            >
-              Отклонить
-            </button>
+        {isPersonalRequest && (
+          <div className="thumbnail-friend__request-status thumbnail-friend__request-status--role-user">
+            <p className="thumbnail-friend__request-text">
+              Запрос на&nbsp;персональную тренировку
+            </p>
+            <div className="thumbnail-friend__button-wrapper">
+              <button
+                className="btn btn--medium btn--dark-bg thumbnail-friend__button"
+                type="button"
+              >
+                Принять
+              </button>
+              <button
+                className="btn btn--medium btn--outlined btn--dark-bg thumbnail-friend__button"
+                type="button"
+              >
+                Отклонить
+              </button>
+            </div>
           </div>
-        </div> */}
+        )}
       </div>
     </li>
   );

@@ -298,4 +298,13 @@ export class UserRepository {
       { new: true }
     );
   }
+
+  public async findPersonalTrainingRequests(coachId: string) {
+    return this.personalTrainingRequestModel
+      .find({
+        toUserId: coachId,
+        requestStatus: PersonalTrainingStatus.Consideration,
+      })
+      .exec();
+  }
 }

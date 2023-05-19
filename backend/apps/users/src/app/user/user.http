@@ -51,3 +51,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDEyMDBiY
   "requestId": "64396db1c8f80ebae8fb26cf",
   "requestStatus": "отклонен"
 }
+
+### Find personal training requests for coach
+GET http://localhost:3333/api/users/personal-training HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDI0MDg0YjcxZGZjMzY2ODM3ZWMiLCJlbWFpbCI6Im1lQGdtYWlsLmNvbSIsInJvbGUiOiLRgtGA0LXQvdC10YAiLCJuYW1lIjoiSGF3ayBDaGlwIiwiaWF0IjoxNjg0NTAyMTEzLCJleHAiOjE2ODQ1MDMwMTN9.-ZvW0bi2TXPiWsDXlnbsMQl6r0BrehHPBcutv5r-ueM

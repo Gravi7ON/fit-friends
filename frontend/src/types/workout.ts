@@ -14,4 +14,5 @@ export type Workout = {
   coachId: string;
   isSpecialOffer: boolean;
   reviews: Record<string, unknown>[];
+  orders?: Record<string, number>;
 };

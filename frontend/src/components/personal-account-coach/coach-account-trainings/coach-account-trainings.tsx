@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import CoachTrainingFilterForm from './coach-trainings-filter-form/coach-trainings-filter-form';
 import CoachTrainingList from './coach-trainings-list/coach-training-list';
+import './coach-account-training.css';
 
 export default function CoachAccountTrainings(): JSX.Element {
   const navigate = useNavigate();

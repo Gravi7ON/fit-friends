@@ -34,6 +34,21 @@ export class WorkoutController {
   constructor(private readonly workoutService: WorkoutService) {}
 
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
+  @Get('/coach-orders')
+  async findCoachOrders(
+    @Request() request: RequestWithTokenPayload,
+    @Query() query: CoachOrdersQuery
+  ) {
+    const coachId: string = request?.user._id;
+    const coachOrders = await this.workoutService.findCoachOrders(
+      coachId,
+      query
+    );
+
+    return fillObject(CoachWorkoutOrdersRdo, coachOrders);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Post('/coach')
   async create(
     @Body() dto: CreateWorkoutDto,
@@ -91,21 +106,6 @@ export class WorkoutController {
     const workouts = await this.workoutService.findWorkouts(query);
 
     return fillObject(CreatedWorkoutRdo, workouts);
-  }
-
-  @UseGuards(JwtAuthGuard, RoleCoachGuard)
-  @Get('/coach-orders')
-  async findCoachOrders(
-    @Request() request: RequestWithTokenPayload,
-    @Query() query: CoachOrdersQuery
-  ) {
-    const coachId: string = request?.user._id;
-    const coachOrders = await this.workoutService.findCoachOrders(
-      coachId,
-      query
-    );
-
-    return fillObject(CoachWorkoutOrdersRdo, coachOrders);
   }
 
   @UseGuards(JwtAuthGuard, RoleCustomerGuard)

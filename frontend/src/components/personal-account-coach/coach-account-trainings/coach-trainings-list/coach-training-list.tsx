@@ -1,9 +1,14 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { isEqual, throttle } from 'lodash';
+import { isEqual } from 'lodash';
 import { useEffect, useState } from 'react';
 import Spinner from 'src/components/animate-ui/spinner/spinner';
+import ButtonMoveUp from 'src/components/common-ui/button-move-up/button-move-up';
 import WorkoutCard from 'src/components/common-ui/workout/workout-card';
-import { TRAINING_TIMES } from 'src/components/constant-components';
+import {
+  CARDS_FOR_PAGE,
+  SHOW_ERROR_TIME,
+  TRAINING_TIMES,
+} from 'src/components/constant-components';
 import { APIRoute } from 'src/constant';
 import { useAppDispatch, useAppSelector } from 'src/hooks/store.hooks';
 import { RESTService, createAppApi } from 'src/services/app.api';
@@ -23,9 +28,9 @@ import {
   setStateWorkouts,
 } from 'src/store/workouts/workouts';
 import { ErrorResponse } from 'src/types/error-response';
+import { hideButtonMoreByCondition } from 'src/utils/helpers';
 
-const CARDS_FOR_PAGE = 6;
-const SHOW_ERROR_TIME = 600;
+const ABORT_SIGNAL_MESSAGE = 'canceled';
 
 export default function CoachTrainingList(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -43,16 +48,9 @@ export default function CoachTrainingList(): JSX.Element {
   const [errorPageNumber, setErrorPageNumber] = useState(0);
   const [buttonClickCount, setButtonClickCount] = useState(0);
 
-  const hideButtonMoreByCondition = () => {
-    if (
-      workouts.length < CARDS_FOR_PAGE ||
-      workouts.length % CARDS_FOR_PAGE !== 0
-    ) {
-      return { display: 'none' };
-    }
-  };
-
   useEffect(() => {
+    const controller = new AbortController();
+
     const timerError: {
       timerId: null | NodeJS.Timeout;
       setTimer: () => void;
@@ -90,7 +88,10 @@ export default function CoachTrainingList(): JSX.Element {
             filterValue?.trainingTimes.length === 0
               ? TRAINING_TIMES
               : filterValue?.trainingTimes
-          }`
+          }`,
+          {
+            signal: controller.signal,
+          }
         );
         dispatch(setStateWorkouts([...workouts, ...partWorkouts]));
         setSuccessPageNumber(pageNumber);
@@ -102,7 +103,13 @@ export default function CoachTrainingList(): JSX.Element {
         const errorResponse = error?.response as AxiosResponse<ErrorResponse>;
 
         if (errorResponse && isFirstLoadingServer) {
-          dispatch(setStateErrorServer(errorResponse.data.message));
+          dispatch(
+            setStateErrorServer(
+              errorResponse.data.message === ABORT_SIGNAL_MESSAGE
+                ? ''
+                : errorResponse.data.message
+            )
+          );
         }
 
         if (errorResponse && isLoadingServer) {
@@ -110,7 +117,11 @@ export default function CoachTrainingList(): JSX.Element {
         }
 
         if (!errorResponse && isFirstLoadingServer) {
-          dispatch(setStateErrorServer(error.message));
+          dispatch(
+            setStateErrorServer(
+              error.message === ABORT_SIGNAL_MESSAGE ? '' : error.message
+            )
+          );
         }
 
         if (!errorResponse && isLoadingServer) {
@@ -131,32 +142,19 @@ export default function CoachTrainingList(): JSX.Element {
       if (timerError.timerId) {
         clearTimeout(timerError.timerId);
       }
+
+      dispatch(setStateErrorServer(null));
+      controller.abort();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [buttonClickCount, filterValue]);
-
-  useEffect(() => {
-    const scroll = throttle(() => {
-      if (window.scrollY > 1000) {
-        setIsShowButtonScrollUp(true);
-      }
-      if (window.scrollY < 1000) {
-        setIsShowButtonScrollUp(false);
-      }
-    }, 300);
-
-    window.addEventListener('scroll', scroll);
-    return () => {
-      window.removeEventListener('scroll', scroll);
-    };
-  }, []);
 
   return (
     <div className="my-trainings">
       {isFirstLoadingServer ? (
         <Spinner spinnerScreen />
       ) : isFirstServerError ? (
-        <p className="server-coach-friends__error">{isFirstServerError}</p>
+        <p className="server-coach-training__error">{isFirstServerError}</p>
       ) : (
         <>
           <ul className="my-trainings__list">
@@ -182,7 +180,7 @@ export default function CoachTrainingList(): JSX.Element {
                   : 'btn show-more__button show-more__button--more'
               }
               type="button"
-              style={hideButtonMoreByCondition()}
+              style={hideButtonMoreByCondition(workouts.length, CARDS_FOR_PAGE)}
               disabled={isLoadingServer}
               onClick={async () => {
                 setButtonClickCount((prev) => (prev += 1));
@@ -198,23 +196,10 @@ export default function CoachTrainingList(): JSX.Element {
             >
               {isLoadingServer ? <Spinner /> : 'Показать еще'}
             </button>
-            <button
-              className="btn show-more__button show-more__button--to-top"
-              type="button"
-              style={
-                isShowButtonScrollUp
-                  ? { display: 'inline-flex' }
-                  : { display: 'none' }
-              }
-              onClick={() =>
-                window.scrollTo({
-                  top: 0,
-                  behavior: 'smooth',
-                })
-              }
-            >
-              Вернуться в начало
-            </button>
+            <ButtonMoveUp
+              isShowButtonScrollUp={isShowButtonScrollUp}
+              setIsShowButtonScrollUp={setIsShowButtonScrollUp}
+            />
           </div>
         </>
       )}

@@ -120,14 +120,15 @@ export default function CoachTrainingFilterForm(): JSX.Element {
   const handlePriceSliderChange = throttle(
     (_event: Event, newValue: number | number[]) =>
       setValuePrice(newValue as number[]),
-    150
+    50,
+    { leading: false, trailing: true }
   );
 
   const handleCaloriesSliderChange = throttle(
     (_event: Event, newValue: number | number[]) => {
       setValueCalories(newValue as number[]);
     },
-    150,
+    50,
     { leading: false, trailing: true }
   );
 

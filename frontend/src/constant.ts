@@ -37,4 +37,6 @@ export enum APIRoute {
   AdditionalInfo = '/additional-info',
   MyFriends = '/my-friends',
   Coach = '/coach',
+  CoachOrders = '/coach-orders',
+  PersonalTrainingRequests = '/personal-training',
 }

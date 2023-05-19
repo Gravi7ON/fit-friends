@@ -25,29 +25,6 @@ export default function CoachAccountFriends(): JSX.Element {
           </button>
           <div className="friends-list__title-wrapper">
             <h1 className="friends-list__title">Мои друзья</h1>
-            <div
-              className="custom-toggle custom-toggle--switch custom-toggle--switch-right"
-              data-validate-type="checkbox"
-            >
-              <label>
-                <input
-                  type="checkbox"
-                  value="user-agreement-1"
-                  name="user-agreement"
-                  disabled
-                />
-                <span className="custom-toggle__icon">
-                  <svg
-                    width="9"
-                    height="6"
-                    aria-hidden="true"
-                  >
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Только онлайн</span>
-              </label>
-            </div>
           </div>
           <CoachAccountFriendsList />
         </div>

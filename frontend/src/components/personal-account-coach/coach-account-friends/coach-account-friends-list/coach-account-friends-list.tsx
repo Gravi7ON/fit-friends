@@ -1,5 +1,4 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { throttle } from 'lodash';
 import { useEffect, useState } from 'react';
 import Spinner from 'src/components/animate-ui/spinner/spinner';
 import { APIRoute } from 'src/constant';
@@ -7,11 +6,19 @@ import { createAppApi, RESTService } from 'src/services/app.api';
 import { ErrorResponse } from 'src/types/error-response';
 import { Customer, Coach } from 'src/types/user';
 import CoachFriendCard from '../coach-friend-card/coach-friend-card';
-
-const CARDS_FOR_PAGE = 6;
-const SHOW_ERROR_TIME = 600;
+import ButtonMoveUp from 'src/components/common-ui/button-move-up/button-move-up';
+import { hideButtonMoreByCondition } from 'src/utils/helpers';
+import {
+  CARDS_FOR_PAGE,
+  SHOW_ERROR_TIME,
+} from 'src/components/constant-components';
+import { isEqual, uniqWith } from 'lodash';
+import { useAppSelector } from 'src/hooks/store.hooks';
+import { getUserId } from 'src/store/user-proccess/selectors';
 
 export default function CoachAccountFriendsList(): JSX.Element {
+  const coachId = useAppSelector(getUserId);
+
   const [isFirstLoadingServer, setIsFirstLoadingServer] = useState(true);
   const [isLoadingServer, setIsLoadingServer] = useState(false);
   const [isFirstServerError, setIsFirstServerError] = useState<null | string>(
@@ -24,15 +31,11 @@ export default function CoachAccountFriendsList(): JSX.Element {
   const [isShowButtonScrollUp, setIsShowButtonScrollUp] = useState(false);
   const [friends, setFriends] = useState<(Customer & Coach)[]>([]);
   const [buttonClickCount, setButtonClickCount] = useState(0);
-
-  const hideButtonMoreByCondition = () => {
-    if (
-      friends.length < CARDS_FOR_PAGE ||
-      friends.length % CARDS_FOR_PAGE !== 0
-    ) {
-      return { display: 'none' };
-    }
-  };
+  const [personalTrainingRequests, setPersonalTrainingRequests] = useState<
+    { fromUserId: string; toUserId: string; requestStatus: string }[]
+  >([]);
+  const [isCoachReadyPersonalTraining, setIsCoachReadyPersonalTraining] =
+    useState(null);
 
   useEffect(() => {
     const timerError: {
@@ -53,13 +56,20 @@ export default function CoachAccountFriendsList(): JSX.Element {
         const { data: partFriends } = await api.get(
           `${APIRoute.MyFriends}?limit=${CARDS_FOR_PAGE}&page=${pageNumber}`
         );
-        const set = new Set<Customer & Coach>(friends);
-        for (const friend of partFriends) {
-          if (!set.has(friend)) {
-            set.add(friend);
-          }
+
+        if (!personalTrainingRequests.length) {
+          const fetchServer = await Promise.all([
+            api.get(APIRoute.PersonalTrainingRequests),
+            api.get(coachId),
+          ]);
+
+          setPersonalTrainingRequests(fetchServer[0].data);
+          setIsCoachReadyPersonalTraining(
+            fetchServer[1].data.isIndividualTraining
+          );
         }
-        setFriends(() => [...set]);
+
+        setFriends(() => uniqWith([...friends, ...partFriends], isEqual));
         setSuccessPageNumber(pageNumber);
         setIsFirstLoadingServer(false);
         setIsLoadingServer(false);
@@ -101,17 +111,6 @@ export default function CoachAccountFriendsList(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [buttonClickCount]);
 
-  useEffect(() => {
-    const scroll = throttle(() => {
-      if (window.scrollY > 1000) {
-        setIsShowButtonScrollUp(true);
-      }
-    }, 300);
-
-    window.addEventListener('scroll', scroll);
-    return () => window.removeEventListener('scroll', scroll);
-  }, []);
-
   return isFirstLoadingServer ? (
     <Spinner spinnerScreen />
   ) : isFirstServerError ? (
@@ -128,6 +127,12 @@ export default function CoachAccountFriendsList(): JSX.Element {
             isReadyTraining={
               friend.isReadyTraining || friend.isIndividualTraining
             }
+            isPersonalRequest={
+              Boolean(isCoachReadyPersonalTraining) &&
+              personalTrainingRequests.some(
+                (request) => request.fromUserId === friend.id
+              )
+            }
           />
         ))}
       </ul>
@@ -139,7 +144,7 @@ export default function CoachAccountFriendsList(): JSX.Element {
               : 'btn show-more__button show-more__button--more'
           }
           type="button"
-          style={hideButtonMoreByCondition()}
+          style={hideButtonMoreByCondition(friends.length, CARDS_FOR_PAGE)}
           disabled={isLoadingServer}
           onClick={async () => {
             setButtonClickCount((prev) => (prev += 1));
@@ -155,23 +160,10 @@ export default function CoachAccountFriendsList(): JSX.Element {
         >
           {isLoadingServer ? <Spinner /> : 'Показать еще'}
         </button>
-        <button
-          className="btn show-more__button show-more__button--to-top"
-          type="button"
-          style={
-            isShowButtonScrollUp
-              ? { display: 'inline-flex' }
-              : { display: 'none' }
-          }
-          onClick={() =>
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth',
-            })
-          }
-        >
-          Вернуться в начало
-        </button>
+        <ButtonMoveUp
+          isShowButtonScrollUp={isShowButtonScrollUp}
+          setIsShowButtonScrollUp={setIsShowButtonScrollUp}
+        />
       </div>
     </>
   );
