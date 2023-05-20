@@ -62,14 +62,54 @@ export class WorkoutRepository {
   public findMany({
     limit,
     page,
-    sortDirection,
     workoutIds,
-  }: WorkoutsQuery = {}): Promise<Workout[]> {
+    minMaxPrice,
+    calories,
+    costs,
+    rating,
+    specializations,
+    sort,
+  }: WorkoutsQuery = {}): Promise<Workout[] | Record<string, unknown>> {
+    if (minMaxPrice) {
+      return this.prisma.workout.aggregate({
+        _max: {
+          cost: true,
+        },
+        _min: {
+          cost: true,
+        },
+      });
+    }
+
     return this.prisma.workout.findMany({
       where: {
         id: { in: workoutIds },
+        cost: {
+          equals: sort === 'free' ? 0 : undefined,
+          gte: costs?.at(0),
+          lte: costs?.at(1),
+        },
+        calories: {
+          gte: calories?.at(0),
+          lte: calories?.at(1),
+        },
+        rating: {
+          gte: rating?.at(0),
+          lte: rating?.at(1),
+        },
+        specialization: { in: specializations },
       },
-      orderBy: [{ createdAt: sortDirection }],
+      include: {
+        reviews: true,
+      },
+      orderBy: {
+        cost:
+          sort === 'cheeper'
+            ? 'asc'
+            : sort === 'moreExpensive'
+            ? 'desc'
+            : undefined,
+      },
       skip: page > 0 ? limit * (page - 1) : undefined,
       take: limit,
     });

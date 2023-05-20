@@ -7,6 +7,8 @@ const initialState: WorkoutFilterValue = {
   ratings: [],
   calories: [],
   trainingTimes: [],
+  specializations: [],
+  sort: '',
 };
 
 export const workoutFilter = createSlice({
@@ -18,6 +20,8 @@ export const workoutFilter = createSlice({
       state.costs = action.payload.costs;
       state.ratings = action.payload.ratings;
       state.trainingTimes = action.payload.trainingTimes;
+      state.specializations = action.payload.specializations;
+      state.sort = action.payload.sort;
     },
   },
 });

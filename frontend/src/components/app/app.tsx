@@ -3,9 +3,9 @@ import {
   AppRoute,
   AuthorizationStatus,
   PersonalCoachRoute,
+  PersonalCustomerRoute,
 } from 'src/constant';
 import Intro from 'src/pages/intro/intro';
-import Main from 'src/pages/personal-customer-account/main';
 import PersonalCoach from 'src/pages/personal-coach-account/personal-coach';
 import SignIn from 'src/pages/sign-on/sign-in/sign-in';
 import SignUp from 'src/pages/sign-on/sign-up/sign-up';
@@ -25,6 +25,11 @@ import NotFound from 'src/pages/not-found/not-found';
 import CoachAccountCreateTraining from '../personal-account-coach/coach-account-create-training/coach-account-create-training';
 import CoachAccountTrainings from '../personal-account-coach/coach-account-trainings/coach-account-trainings';
 import CoachAccountOrders from '../personal-account-coach/coach-account-orders/coach-account-orders';
+import PersonalCustomer from 'src/pages/personal-customer-account/personal-customer';
+import CustomerMain from '../personal-account-customer/customer-main/customer-main';
+import WorkoutsCatalogue from '../workouts/workouts-catalogue/workouts-catalogue';
+import CustomerAccount from '../personal-account-customer/customer-account/customer-account';
+import CustomerAccountFriends from '../personal-account-customer/customer-account-friends/customer-account-friends';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -40,7 +45,7 @@ export default function App(): JSX.Element {
         case UserRole.Customer:
           return (
             <Navigate
-              to={AppRoute.Main}
+              to={AppRoute.PersonalCustomer}
               replace
             />
           );
@@ -72,16 +77,62 @@ export default function App(): JSX.Element {
         element={redirectInOrderRole(authorizationStatus, userRole, <SignUp />)}
       />
       <Route
-        path={AppRoute.Main}
+        path={AppRoute.PersonalCustomer}
         element={
           <PrivateCustomerRoute
             authorizationStatus={authorizationStatus}
             role={userRole}
+            toNavigate={AppRoute.PersonalCoach}
           >
-            <Main />
+            <PersonalCustomer />
           </PrivateCustomerRoute>
         }
-      ></Route>
+      >
+        <Route
+          index
+          element={
+            <PrivateCustomerRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CustomerMain />
+            </PrivateCustomerRoute>
+          }
+        />
+        <Route
+          path={PersonalCustomerRoute.Workouts}
+          element={
+            <PrivateCustomerRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <WorkoutsCatalogue />
+            </PrivateCustomerRoute>
+          }
+        />
+        <Route
+          path={PersonalCustomerRoute.Account}
+          element={
+            <PrivateCustomerRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CustomerAccount />
+            </PrivateCustomerRoute>
+          }
+        />
+        <Route
+          path={PersonalCustomerRoute.Friends}
+          element={
+            <PrivateCustomerRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CustomerAccountFriends />
+            </PrivateCustomerRoute>
+          }
+        />
+      </Route>
       <Route
         path={AppRoute.PersonalCoach}
         element={

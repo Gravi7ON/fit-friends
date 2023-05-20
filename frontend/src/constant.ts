@@ -1,12 +1,22 @@
 export enum AppRoute {
   Intro = '/',
-  Main = '/main',
   SignIn = '/login',
   SignUp = '/register',
-  LogOut = '/logout',
   PersonalCoach = '/personal-coach',
+  PersonalCustomer = '/personal-customer',
   QuestionnaireCoach = '/questionnaire-coach',
   QuestionnaireCustomer = '/questionnaire-customer',
+  NotFound = '/not-found',
+}
+
+export enum PersonalCustomerRoute {
+  Friends = '/personal-customer/friends',
+  Account = '/personal-customer/account',
+  Trainings = '/personal-customer/trainings',
+  Purchases = '/personal-customer/purshases',
+  TrainingsDiary = '/personal-customer/trainings-diary',
+  FoodDiary = '/personal-customer/food-diary',
+  Workouts = '/personal-customer/workouts',
 }
 
 export enum PersonalCoachRoute {
@@ -15,7 +25,7 @@ export enum PersonalCoachRoute {
   Trainings = '/personal-coach/trainings',
   Orders = '/personal-coach/orders',
   CreateTraining = '/personal-coach/create-training',
-  Workout = '/personal-coach/workout',
+  Workouts = '/personal-coach/workouts',
 }
 
 export enum NameSpaceStore {

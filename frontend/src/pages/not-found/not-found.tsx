@@ -2,9 +2,18 @@ import NavBar from 'src/components/common-ui/personal-account-header/nav-bar/nav
 import SearchBar from 'src/components/common-ui/personal-account-header/search-bar/search-bar';
 import './not-found.css';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from 'src/hooks/store.hooks';
+import { getUserRole } from 'src/store/user-proccess/selectors';
+import { UserRole } from 'src/types/user';
+import {
+  AppRoute,
+  PersonalCoachRoute,
+  PersonalCustomerRoute,
+} from 'src/constant';
 
 export default function NotFound(): JSX.Element {
   const navigate = useNavigate();
+  const userRole = useAppSelector(getUserRole);
 
   return (
     <div className="wrapper">
@@ -14,7 +23,23 @@ export default function NotFound(): JSX.Element {
             className="header__logo"
             style={{ visibility: 'hidden' }}
           ></div>
-          <NavBar />
+          <NavBar
+            toMain={
+              userRole === UserRole.Customer
+                ? AppRoute.PersonalCustomer
+                : AppRoute.PersonalCoach
+            }
+            toAccount={
+              userRole === UserRole.Customer
+                ? PersonalCustomerRoute.Account
+                : PersonalCoachRoute.Account
+            }
+            toFriends={
+              userRole === UserRole.Customer
+                ? PersonalCustomerRoute.Friends
+                : PersonalCoachRoute.Friends
+            }
+          />
           <SearchBar />
         </div>
       </header>
@@ -51,6 +76,13 @@ export default function NotFound(): JSX.Element {
               onClick={() => navigate(-1)}
             >
               return back
+            </button>
+            <button
+              className="btn-return-back"
+              style={{ marginTop: '20px' }}
+              onClick={() => navigate(AppRoute.Intro)}
+            >
+              return intro
             </button>
           </div>
         </main>

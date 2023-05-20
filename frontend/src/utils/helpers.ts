@@ -41,3 +41,12 @@ export function hideButtonMoreByCondition(
     return { display: 'none' };
   }
 }
+
+export function getObjectWithKeysFromList(list: string[]) {
+  const entriesTransform = [...list.entries()].map((entry) => [
+    entry[1].toLowerCase(),
+    false,
+  ]);
+
+  return Object.fromEntries(entriesTransform);
+}

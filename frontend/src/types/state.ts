@@ -14,7 +14,9 @@ export type WorkoutFilterValue = {
   costs: number[];
   ratings: number[];
   calories: number[];
-  trainingTimes: string[];
+  trainingTimes?: string[];
+  specializations?: string[];
+  sort?: string;
 };
 
 export type WorkoutState = {

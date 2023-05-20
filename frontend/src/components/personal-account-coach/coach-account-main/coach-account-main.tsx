@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import CoachInfo from './coach-info/coach-info';
 import CoachWidget from './coach-widgets/coach-widget';
 import { PersonalCoachRoute } from 'src/constant';

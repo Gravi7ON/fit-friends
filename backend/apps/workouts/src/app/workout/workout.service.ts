@@ -134,6 +134,12 @@ export class WorkoutService {
   async findWorkouts(query: WorkoutsQuery) {
     const existedWorkouts = await this.workoutRepository.findMany(query);
 
+    if (Array.isArray(existedWorkouts)) {
+      return existedWorkouts.sort(
+        (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+      );
+    }
+
     return existedWorkouts;
   }
 

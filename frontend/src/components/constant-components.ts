@@ -28,5 +28,11 @@ export const TRAINING_TIMES = [
   'больше 80 мин',
 ];
 
+export enum SORT_WORKOUTS {
+  Cheeper = 'cheeper',
+  MoreExpensive = 'moreExpensive',
+  Free = 'free',
+}
+
 export const CARDS_FOR_PAGE = 6;
 export const SHOW_ERROR_TIME = 600;

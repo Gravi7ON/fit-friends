@@ -5,9 +5,11 @@ import { throttle } from 'lodash';
 import { useForm } from 'react-hook-form';
 import { AxiosError, AxiosResponse } from 'axios';
 import '../../../GlobalCssSlider.css';
-import { TRAINING_TIMES } from 'src/components/constant-components';
+import {
+  SORT_WORKOUTS,
+  SPECIALIZATIONS,
+} from 'src/components/constant-components';
 import { RESTService, createAppApi } from 'src/services/app.api';
-import { APIRoute } from 'src/constant';
 import { useAppDispatch } from 'src/hooks/store.hooks';
 import { changeWorkoutFilterValue } from 'src/store/workout-filter/workout-filter';
 import {
@@ -26,6 +28,7 @@ type Inputs = {
   caloriesMax: string;
   ratingMin: string;
   ratingMax: string;
+  sort: string;
 };
 
 const MIN_RATING = 0;
@@ -35,7 +38,7 @@ const MAX_CALORIES = 5000;
 let minPrice = 0;
 let maxPrice = 0;
 
-export default function CoachTrainingFilterForm(): JSX.Element {
+export default function WorkoutsCatalogueFilterForm(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const [valuePrice, setValuePrice] = useState<number[]>([minPrice, maxPrice]);
@@ -44,9 +47,10 @@ export default function CoachTrainingFilterForm(): JSX.Element {
     MAX_CALORIES,
   ]);
   const [valueRating, setValueRating] = useState([MIN_RATING, MAX_RATING]);
-  const [valueTimeTraining, setValueTimeTraining] = useState(
-    getObjectWithKeysFromList(TRAINING_TIMES)
+  const [valueSpecialization, setValueSpecialization] = useState(
+    getObjectWithKeysFromList(SPECIALIZATIONS)
   );
+  const [valueSort, setValueSort] = useState('');
 
   const { register, setValue, watch } = useForm<Inputs>({
     mode: 'onChange',
@@ -58,9 +62,7 @@ export default function CoachTrainingFilterForm(): JSX.Element {
     const getMinMaxPrice = async () => {
       try {
         const api = createAppApi(RESTService.Workouts);
-        const { data: price } = await api.get(
-          `${APIRoute.Coach}?minMaxPrice=true`
-        );
+        const { data: price } = await api.get(`?minMaxPrice=true`);
         minPrice = price._min.cost;
         maxPrice = price._max.cost;
         dispatch(setStateLoadingServer(false));
@@ -101,18 +103,26 @@ export default function CoachTrainingFilterForm(): JSX.Element {
         costs: valuePrice,
         calories: valueCalories,
         ratings: valueRating,
-        trainingTimes: Object.entries(valueTimeTraining)
+        specializations: Object.entries(valueSpecialization)
           .map((keyValue) => {
             if (keyValue[1]) {
-              return keyValue[0];
+              return keyValue[0].toLowerCase();
             }
             return null;
           })
           .filter((value) => Boolean(value)),
+        sort: valueSort,
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setValue, valueCalories, valuePrice, valueRating, valueTimeTraining]);
+  }, [
+    setValue,
+    valueCalories,
+    valuePrice,
+    valueRating,
+    valueSpecialization,
+    valueSort,
+  ]);
 
   const handlePriceSliderChange = throttle(
     (_event: Event, newValue: number | number[]) =>
@@ -137,15 +147,19 @@ export default function CoachTrainingFilterForm(): JSX.Element {
     setValueRating(newValue as number[]);
   };
 
-  const handleTrainingTimeChange = debounce(
+  const handleSpecializationChange = debounce(
     (evt: ChangeEvent<HTMLInputElement>) => {
-      setValueTimeTraining({
-        ...valueTimeTraining,
+      setValueSpecialization({
+        ...valueSpecialization,
         [evt.target.name]: evt.target.checked,
       });
     },
     300
   );
+
+  const handleSortChange = debounce((evt: ChangeEvent<HTMLInputElement>) => {
+    setValueSort(evt.target.value);
+  }, 300);
 
   return (
     <form className="my-training-form__form">
@@ -325,21 +339,21 @@ export default function CoachTrainingFilterForm(): JSX.Element {
           />
         </StyledEngineProvider>
       </div>
-      <div className="my-training-form__block my-training-form__block--duration">
-        <h4 className="my-training-form__block-title">Длительность</h4>
-        <ul className="my-training-form__check-list">
-          {TRAINING_TIMES.map((time) => (
+      <div className="gym-catalog-form__block gym-catalog-form__block--type">
+        <h4 className="gym-catalog-form__block-title">Тип</h4>
+        <ul className="gym-catalog-form__check-list">
+          {SPECIALIZATIONS.map((specialization) => (
             <li
-              key={time}
-              className="my-training-form__check-list-item"
+              key={specialization}
+              className="gym-catalog-form__check-list-item"
             >
               <div className="custom-toggle custom-toggle--checkbox">
                 <label>
                   <input
                     type="checkbox"
-                    value="duration-1"
-                    name={time}
-                    onChange={handleTrainingTimeChange}
+                    value="type-1"
+                    name={specialization}
+                    onChange={handleSpecializationChange}
                   />
                   <span className="custom-toggle__icon">
                     <svg
@@ -350,12 +364,46 @@ export default function CoachTrainingFilterForm(): JSX.Element {
                       <use xlinkHref="#arrow-check"></use>
                     </svg>
                   </span>
-                  <span className="custom-toggle__label">{time}</span>
+                  <span className="custom-toggle__label">{specialization}</span>
                 </label>
               </div>
             </li>
           ))}
         </ul>
+      </div>
+      <div className="gym-catalog-form__block gym-catalog-form__block--sort">
+        <h4 className="gym-catalog-form__title gym-catalog-form__title--sort">
+          Сортировка
+        </h4>
+        <div className="btn-radio-sort gym-catalog-form__radio">
+          <label>
+            <input
+              type="radio"
+              value={SORT_WORKOUTS.Cheeper}
+              {...register('sort')}
+              onChange={handleSortChange}
+            />
+            <span className="btn-radio-sort__label">Дешевле</span>
+          </label>
+          <label>
+            <input
+              type="radio"
+              value={SORT_WORKOUTS.MoreExpensive}
+              {...register('sort')}
+              onChange={handleSortChange}
+            />
+            <span className="btn-radio-sort__label">Дороже</span>
+          </label>
+          <label>
+            <input
+              type="radio"
+              value={SORT_WORKOUTS.Free}
+              {...register('sort')}
+              onChange={handleSortChange}
+            />
+            <span className="btn-radio-sort__label">Бесплатные</span>
+          </label>
+        </div>
       </div>
     </form>
   );

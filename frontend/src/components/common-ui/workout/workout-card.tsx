@@ -49,14 +49,10 @@ export default memo(function WorkoutCard({
             </picture>
           </div>
           <p className="thumbnail-training__price">
-            {isForOrder ? (
-              <>
-                <span className="thumbnail-training__price-value">{cost}</span>
-                <span>₽</span>
-              </>
-            ) : (
-              cost
-            )}
+            <span className="thumbnail-training__price-value">
+              {cost === 0 ? 'Бесплатно' : cost}
+            </span>
+            {cost > 0 && <span>₽</span>}
           </p>
           <h3 className="thumbnail-training__title">{title}</h3>
           <div className="thumbnail-training__info">
@@ -89,7 +85,7 @@ export default memo(function WorkoutCard({
           {isForOrder && (
             <Link
               className="btn-flat btn-flat--underlined thumbnail-training__button-orders"
-              to={`${PersonalCoachRoute.Workout}/${id}`}
+              to={`${PersonalCoachRoute.Workouts}/${id}`}
             >
               <svg
                 width="18"
@@ -106,7 +102,7 @@ export default memo(function WorkoutCard({
               <>
                 <Link
                   className="btn btn--small thumbnail-training__button-catalog"
-                  to={`${PersonalCoachRoute.Workout}/${id}`}
+                  to={`${PersonalCoachRoute.Workouts}/${id}`}
                 >
                   Подробнее
                 </Link>

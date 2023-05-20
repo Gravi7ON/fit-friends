@@ -6,9 +6,8 @@ import WorkoutCard from 'src/components/common-ui/workout/workout-card';
 import {
   CARDS_FOR_PAGE,
   SHOW_ERROR_TIME,
-  TRAINING_TIMES,
+  SPECIALIZATIONS,
 } from 'src/components/constant-components';
-import { APIRoute } from 'src/constant';
 import { useAppDispatch, useAppSelector } from 'src/hooks/store.hooks';
 import { RESTService, createAppApi } from 'src/services/app.api';
 import { getWorkoutFilterValue } from 'src/store/workout-filter/selectors';
@@ -31,7 +30,7 @@ import { hideButtonMoreByCondition } from 'src/utils/helpers';
 
 const ABORT_SIGNAL_MESSAGE = 'canceled';
 
-export default function CoachTrainingList(): JSX.Element {
+export default function WorkoutsCatalogueList(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const filterValue = useAppSelector(getWorkoutFilterValue);
@@ -66,17 +65,17 @@ export default function CoachTrainingList(): JSX.Element {
       try {
         const api = createAppApi(RESTService.Workouts);
         const { data: partWorkouts } = await api.get(
-          `${
-            APIRoute.Coach
-          }?limit=${CARDS_FOR_PAGE}&page=${pageNumber}&rating=${
+          `?limit=${CARDS_FOR_PAGE}&page=${pageNumber}&rating=${
             filterValue?.ratings
           }&costs=${filterValue?.costs}&calories=${
             filterValue?.calories
-          }&trainingTimes=${
-            filterValue?.trainingTimes?.length === 0
-              ? TRAINING_TIMES
-              : filterValue?.trainingTimes
-          }`,
+          }&specializations=${
+            filterValue?.specializations?.length === 0
+              ? SPECIALIZATIONS.map((specialization) =>
+                  specialization.toLowerCase()
+                )
+              : filterValue.specializations
+          }${filterValue.sort ? `&sort=${filterValue.sort}` : ''}`,
           {
             signal: controller.signal,
           }
@@ -142,7 +141,7 @@ export default function CoachTrainingList(): JSX.Element {
       {isFirstLoadingServer ? (
         <Spinner spinnerScreen />
       ) : isFirstServerError ? (
-        <p className="server-coach-training__error">{isFirstServerError}</p>
+        <p className="server-workouts-catalogue__error">{isFirstServerError}</p>
       ) : (
         <>
           <ul className="my-trainings__list">

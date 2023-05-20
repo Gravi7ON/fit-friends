@@ -1,24 +1,25 @@
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { AppRoute, PersonalCoachRoute } from 'src/constant';
+import { Link, NavLink } from 'react-router-dom';
 
-export default function NavBar(): JSX.Element {
-  const location = useLocation();
+type NavBarProps = {
+  toMain: string;
+  toAccount: string;
+  toFriends: string;
+};
 
+export default function NavBar({
+  toMain,
+  toAccount,
+  toFriends,
+}: NavBarProps): JSX.Element {
   return (
     <nav className="main-nav">
       <ul className="main-nav__list">
         <li className="main-nav__item">
           <NavLink
             className={({ isActive }) =>
-              isActive
-                ? 'main-nav__link is-active'
-                : location.pathname === PersonalCoachRoute.CreateTraining ||
-                  location.pathname === PersonalCoachRoute.Trainings ||
-                  location.pathname === PersonalCoachRoute.Orders
-                ? 'main-nav__link is-active'
-                : 'main-nav__link'
+              isActive ? 'main-nav__link is-active' : 'main-nav__link'
             }
-            to={AppRoute.PersonalCoach}
+            to={toMain}
             aria-label="На главную"
             end
           >
@@ -36,7 +37,7 @@ export default function NavBar(): JSX.Element {
             className={({ isActive }) =>
               isActive ? 'main-nav__link is-active' : 'main-nav__link'
             }
-            to={PersonalCoachRoute.Account}
+            to={toAccount}
             aria-label="Личный кабинет"
           >
             <svg
@@ -53,7 +54,7 @@ export default function NavBar(): JSX.Element {
             className={({ isActive }) =>
               isActive ? 'main-nav__link is-active' : 'main-nav__link'
             }
-            to={PersonalCoachRoute.Friends}
+            to={toFriends}
             aria-label="Друзья"
           >
             <svg
