@@ -61,7 +61,7 @@ export default function WorkoutsCatalogueList(): JSX.Element {
       },
     };
 
-    const getFriends = async () => {
+    const getWorkouts = async () => {
       try {
         const api = createAppApi(RESTService.Workouts);
         const { data: partWorkouts } = await api.get(
@@ -123,7 +123,7 @@ export default function WorkoutsCatalogueList(): JSX.Element {
       }
     };
 
-    getFriends();
+    getWorkouts();
 
     return () => {
       if (timerError.timerId) {

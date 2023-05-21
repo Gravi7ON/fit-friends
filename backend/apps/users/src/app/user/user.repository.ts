@@ -113,7 +113,7 @@ export class UserRepository {
     role,
   }: UsersQuery): Promise<UserCustomer[] & UserCoach[]> {
     switch (role) {
-      case UserRole.Customer:
+      case 'пользователи':
         return this.userCustomerModel.aggregate([
           locations || specializations || experience
             ? {
@@ -140,7 +140,7 @@ export class UserRepository {
             },
           },
         ]);
-      case UserRole.Coach:
+      case 'тренеры':
         return this.userCoachModel.aggregate([
           locations || specializations || experience
             ? {

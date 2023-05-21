@@ -16,6 +16,7 @@ export const SPECIALIZATIONS = [
   'Пилатес',
   'Стрейчинг',
 ];
+export const SORT_ROLE = ['Тренеры', 'Пользователи'];
 
 export const LEVELS = ['Новичок', 'Любитель', 'Профессионал'];
 

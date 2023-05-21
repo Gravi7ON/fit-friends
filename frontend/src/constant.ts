@@ -12,11 +12,11 @@ export enum AppRoute {
 export enum PersonalCustomerRoute {
   Friends = '/personal-customer/friends',
   Account = '/personal-customer/account',
-  Trainings = '/personal-customer/trainings',
   Purchases = '/personal-customer/purshases',
   TrainingsDiary = '/personal-customer/trainings-diary',
   FoodDiary = '/personal-customer/food-diary',
   Workouts = '/personal-customer/workouts',
+  Users = '/personal-customer/users',
 }
 
 export enum PersonalCoachRoute {

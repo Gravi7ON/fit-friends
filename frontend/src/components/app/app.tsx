@@ -26,10 +26,11 @@ import CoachAccountCreateTraining from '../personal-account-coach/coach-account-
 import CoachAccountTrainings from '../personal-account-coach/coach-account-trainings/coach-account-trainings';
 import CoachAccountOrders from '../personal-account-coach/coach-account-orders/coach-account-orders';
 import PersonalCustomer from 'src/pages/personal-customer-account/personal-customer';
-import CustomerMain from '../personal-account-customer/customer-main/customer-main';
-import WorkoutsCatalogue from '../workouts/workouts-catalogue/workouts-catalogue';
+import { CustomerMain } from '../personal-account-customer/customer-main/customer-main';
+import WorkoutsCatalogue from '../workouts-catalogue/workouts-catalogue';
 import CustomerAccount from '../personal-account-customer/customer-account/customer-account';
 import CustomerAccountFriends from '../personal-account-customer/customer-account-friends/customer-account-friends';
+import UsersCatalogue from '../users-catalogue/users-catalogue';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -107,6 +108,17 @@ export default function App(): JSX.Element {
               role={userRole}
             >
               <WorkoutsCatalogue />
+            </PrivateCustomerRoute>
+          }
+        />
+        <Route
+          path={PersonalCustomerRoute.Users}
+          element={
+            <PrivateCustomerRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <UsersCatalogue />
             </PrivateCustomerRoute>
           }
         />

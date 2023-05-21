@@ -144,7 +144,7 @@ export default function CoachTrainingFilterForm(): JSX.Element {
         [evt.target.name]: evt.target.checked,
       });
     },
-    300
+    150
   );
 
   return (

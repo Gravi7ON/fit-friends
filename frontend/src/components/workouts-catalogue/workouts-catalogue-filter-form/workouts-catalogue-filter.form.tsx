@@ -4,7 +4,7 @@ import { StyledEngineProvider } from '@mui/material';
 import { throttle } from 'lodash';
 import { useForm } from 'react-hook-form';
 import { AxiosError, AxiosResponse } from 'axios';
-import '../../../GlobalCssSlider.css';
+import '../../GlobalCssSlider.css';
 import {
   SORT_WORKOUTS,
   SPECIALIZATIONS,
@@ -154,7 +154,7 @@ export default function WorkoutsCatalogueFilterForm(): JSX.Element {
         [evt.target.name]: evt.target.checked,
       });
     },
-    300
+    150
   );
 
   const handleSortChange = debounce((evt: ChangeEvent<HTMLInputElement>) => {

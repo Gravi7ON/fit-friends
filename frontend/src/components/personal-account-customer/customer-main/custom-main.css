@@ -1,0 +1,30 @@
+.swiper-custom-pagination-progressbar {
+  background: #c5ec2a !important;
+}
+
+.swiper-custom-pagination-progressbar:hover,
+.swiper-custom-pagination:hover {
+  -webkit-box-shadow: 0 0 0 2px #c5ec2a;
+  box-shadow: 0 0 0 2px #c5ec2a;
+  outline: none;
+}
+
+.swiper-custom-pagination {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  opacity: 1;
+  background: #e8e8e8;
+  border: none;
+  border-radius: 50%;
+  -webkit-transition: -webkit-box-shadow 0.3s ease;
+  transition: -webkit-box-shadow 0.3s ease;
+  -o-transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, -webkit-box-shadow 0.3s ease;
+}
+
+.swiper-pagination {
+  bottom: 21.5px !important;
+  left: 1px !important;
+}

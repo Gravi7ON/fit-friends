@@ -52,7 +52,7 @@ export class UsersQuery {
   @IsOptional()
   public experience?: UserExperience;
 
-  @IsEnum(UserRole)
+  @IsIn(['пользователи', 'тренеры'])
   @IsOptional()
-  public role?: UserRole;
+  public role?: string;
 }

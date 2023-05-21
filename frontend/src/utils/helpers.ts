@@ -50,3 +50,9 @@ export function getObjectWithKeysFromList(list: string[]) {
 
   return Object.fromEntries(entriesTransform);
 }
+
+export function getArrayWithTruthyKeysFromObject(map: Record<string, boolean>) {
+  return Object.entries(map)
+    .filter((entry) => Boolean(entry[1]))
+    .map((entry) => entry[0]);
+}
