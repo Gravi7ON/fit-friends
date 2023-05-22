@@ -7,6 +7,7 @@ import { WorkoutEntity } from './workout.entity';
 import { WorkoutsQuery } from './queries/workouts.query';
 import { GymsQuery } from './queries/gyms.query';
 import { WorkoutReviewsQuery } from './queries/workout-reviews.query';
+import { features } from 'process';
 
 @Injectable()
 export class WorkoutRepository {
@@ -224,6 +225,52 @@ export class WorkoutRepository {
     return this.prisma.gym.findMany({
       where: {
         id: { in: gymIds },
+      },
+      orderBy: [{ createdAt: sortDirection }],
+      skip: page > 0 ? limit * (page - 1) : undefined,
+      take: limit,
+    });
+  }
+
+  public findAllGyms({
+    limit,
+    page,
+    sortDirection,
+    locations,
+    isOriginal,
+    costs,
+    features,
+    minMaxPrice,
+  }: GymsQuery) {
+    if (minMaxPrice) {
+      return this.prisma.gym.aggregate({
+        _max: {
+          cost: true,
+        },
+        _min: {
+          cost: true,
+        },
+      });
+    }
+
+    let isOficialParseToBoolean: boolean;
+    if (isOriginal) {
+      isOficialParseToBoolean = JSON.parse(isOriginal);
+    }
+
+    return this.prisma.gym.findMany({
+      where: {
+        cost: {
+          gte: costs?.at(0),
+          lte: costs?.at(1),
+        },
+        location: { in: locations },
+        features: features?.length
+          ? {
+              hasEvery: features,
+            }
+          : undefined,
+        isOriginal: isOficialParseToBoolean || undefined,
       },
       orderBy: [{ createdAt: sortDirection }],
       skip: page > 0 ? limit * (page - 1) : undefined,

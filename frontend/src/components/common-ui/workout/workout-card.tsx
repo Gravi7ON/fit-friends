@@ -37,11 +37,11 @@ export default memo(function WorkoutCard({
             <picture>
               <source
                 type="image/webp"
-                srcSet="img/content/thumbnails/training-02.webp, img/content/thumbnails/training-02@2x.webp 2x"
+                srcSet={backgroundImage}
               />
               <img
                 src={backgroundImage}
-                srcSet="img/content/thumbnails/training-02@2x.jpg 2x"
+                srcSet={backgroundImage}
                 width="330"
                 height="190"
                 alt=""

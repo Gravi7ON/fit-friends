@@ -28,3 +28,16 @@
   bottom: 21.5px !important;
   left: 1px !important;
 }
+
+.swiper,
+.swiper-initialized,
+.swiper-horizontal,
+.swiper-backface-hidden {
+  border-radius: 20px;
+  background-color: transparent;
+  box-shadow: transparent;
+}
+
+.swiper {
+  border-radius: 20px;
+}

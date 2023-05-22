@@ -122,6 +122,12 @@ export class WorkoutService {
     return existedGyms;
   }
 
+  async findAllGyms(query: GymsQuery) {
+    const existedGyms = await this.workoutRepository.findAllGyms(query);
+
+    return existedGyms;
+  }
+
   async findCoachWorkouts(coachId: string, query: CoachWorkoutsQuery) {
     const existedWorkouts = await this.workoutRepository.findCoachMany(
       coachId,

@@ -33,6 +33,14 @@ import { WorkoutReviewsQuery } from './queries/workout-reviews.query';
 export class WorkoutController {
   constructor(private readonly workoutService: WorkoutService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/gyms')
+  async findAllGyms(@Query() query: GymsQuery) {
+    const existedGyms = await this.workoutService.findAllGyms(query);
+
+    return existedGyms;
+  }
+
   @UseGuards(JwtAuthGuard, RoleCoachGuard)
   @Get('/coach-orders')
   async findCoachOrders(

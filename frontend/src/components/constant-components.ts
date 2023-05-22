@@ -6,6 +6,14 @@ export const LOCATIONS = [
   'ст. м. Спортивная',
 ];
 
+export const GYM_FEATURES = [
+  'Бассейн',
+  'Парковка',
+  'Сауна',
+  'Массаж',
+  'Детская комната',
+];
+
 export const SPECIALIZATIONS = [
   'Йога',
   'Бег',

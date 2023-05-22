@@ -2,6 +2,7 @@ import { AuthorizationStatus } from 'src/constant';
 import { store } from 'src/store/store';
 import { Workout } from './workout';
 import { User } from './user';
+import { Gym } from './gym';
 
 export type UserProcess = {
   authorizationStatus: AuthorizationStatus;
@@ -27,8 +28,22 @@ export type UserFilterValue = {
   sorts: string[];
 };
 
+export type GymFilterValue = {
+  features: string[];
+  locations: string[];
+  costs: number[];
+  isOficial: boolean;
+};
+
 export type WorkoutState = {
   workouts: Workout[];
+  pageNumber: number;
+  isFirstLoadingServer: boolean;
+  isFirstServerError: null | string;
+};
+
+export type GymState = {
+  gyms: Gym[];
   pageNumber: number;
   isFirstLoadingServer: boolean;
   isFirstServerError: null | string;

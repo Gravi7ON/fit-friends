@@ -31,6 +31,7 @@ import WorkoutsCatalogue from '../workouts-catalogue/workouts-catalogue';
 import CustomerAccount from '../personal-account-customer/customer-account/customer-account';
 import CustomerAccountFriends from '../personal-account-customer/customer-account-friends/customer-account-friends';
 import UsersCatalogue from '../users-catalogue/users-catalogue';
+import GymsCatalogue from '../gyms-catalogue/gyms-catalogue';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -119,6 +120,17 @@ export default function App(): JSX.Element {
               role={userRole}
             >
               <UsersCatalogue />
+            </PrivateCustomerRoute>
+          }
+        />
+        <Route
+          path={PersonalCustomerRoute.Gyms}
+          element={
+            <PrivateCustomerRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <GymsCatalogue />
             </PrivateCustomerRoute>
           }
         />

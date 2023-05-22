@@ -17,6 +17,7 @@ export enum PersonalCustomerRoute {
   FoodDiary = '/personal-customer/food-diary',
   Workouts = '/personal-customer/workouts',
   Users = '/personal-customer/users',
+  Gyms = '/personal-customer/gyms',
 }
 
 export enum PersonalCoachRoute {
@@ -31,9 +32,11 @@ export enum PersonalCoachRoute {
 export enum NameSpaceStore {
   WorkoutFilter = 'WORKOUT_FILTER',
   UserFilter = 'USER_FILTER',
+  GymsFilter = 'GYMS_FILTER',
   Workouts = 'WORKOUTS',
   User = 'USER_PROCCES',
   Users = 'USERS',
+  Gyms = 'GYMS',
 }
 
 export enum AuthorizationStatus {
@@ -51,4 +54,5 @@ export enum APIRoute {
   Coach = '/coach',
   CoachOrders = '/coach-orders',
   PersonalTrainingRequests = '/personal-training',
+  Gyms = '/gyms',
 }

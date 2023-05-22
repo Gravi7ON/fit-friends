@@ -239,7 +239,7 @@ export function CustomerMain(): JSX.Element {
                   </Link>
                   <Link
                     className="btn btn--small btn--outlined thumbnail-spec-gym__button"
-                    to="#"
+                    to={PersonalCustomerRoute.Gyms}
                   >
                     Все залы
                   </Link>
