@@ -1,6 +1,7 @@
 import { AuthorizationStatus } from 'src/constant';
 import { store } from 'src/store/store';
 import { Workout } from './workout';
+import { User } from './user';
 
 export type UserProcess = {
   authorizationStatus: AuthorizationStatus;
@@ -19,11 +20,24 @@ export type WorkoutFilterValue = {
   sort?: string;
 };
 
+export type UserFilterValue = {
+  experiences: string[];
+  locations: string[];
+  specializations: string[];
+  sorts: string[];
+};
+
 export type WorkoutState = {
   workouts: Workout[];
   pageNumber: number;
   isFirstLoadingServer: boolean;
   isFirstServerError: null | string;
+};
+
+export type UserState = {
+  users: User[];
+  pageNumber: number;
+  isFirstLoadingServer: boolean;
 };
 
 export type State = ReturnType<typeof store.getState>;

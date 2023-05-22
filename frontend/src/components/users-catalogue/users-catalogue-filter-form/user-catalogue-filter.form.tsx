@@ -1,23 +1,45 @@
-import { ChangeEvent, useContext, useState } from 'react';
-import {
-  ContextFilterForm,
-  CurrentFilterContext,
-  FilterFormValue,
-  REPLACED_LOCATIONS,
-} from '../users-catalogue';
-import { SPECIALIZATIONS } from 'src/components/constant-components';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { LOCATIONS, SPECIALIZATIONS } from 'src/components/constant-components';
 import { LEVELS } from 'src/components/constant-components';
 import { SORT_ROLE } from 'src/components/constant-components';
-import { debounce } from 'lodash';
+import { capitalize, debounce } from 'lodash';
+import { useAppDispatch } from 'src/hooks/store.hooks';
+import {
+  setStateLoadingServer,
+  setStatePageNumber,
+  setStateUsers,
+} from 'src/store/users/users';
+import { changeUserFilterValue } from 'src/store/user-filter/user-filter';
+import {
+  getArrayWithTruthyKeysFromObject,
+  getObjectWithKeysFromList,
+} from 'src/utils/helpers';
+
+type FilterFormValue = {
+  specialization: Record<string, boolean>;
+  location: Record<string, boolean>;
+  experience: Record<string, boolean>;
+  sort: Record<string, boolean>;
+};
 
 const INITIAL_COUNT_CHECKBOXES = 3;
 
+const REPLACED_LOCATIONS = LOCATIONS.map((location) =>
+  location.replace('ст. м. ', '')
+);
+
+const FILTER_DEFAULT_VALUE = {
+  location: getObjectWithKeysFromList(REPLACED_LOCATIONS),
+  experience: getObjectWithKeysFromList(LEVELS),
+  specialization: getObjectWithKeysFromList(SPECIALIZATIONS),
+  sort: getObjectWithKeysFromList(SORT_ROLE),
+};
+
 export default function UsersCatalogueFilterForm(): JSX.Element {
-  const filterFormContext = useContext<ContextFilterForm>(CurrentFilterContext);
-  const setFilterFormState =
-    filterFormContext?.setFilterFormState as React.Dispatch<
-      React.SetStateAction<FilterFormValue>
-    >;
+  const dispatch = useAppDispatch();
+
+  const [filterFormState, setFilterFormState] =
+    useState<FilterFormValue>(FILTER_DEFAULT_VALUE);
 
   const [countLocationCheckboxes, setCountLocationCheckboxes] = useState(
     INITIAL_COUNT_CHECKBOXES
@@ -25,6 +47,37 @@ export default function UsersCatalogueFilterForm(): JSX.Element {
 
   const [countSpecializationCheckboxes, setCountSpecializationCheckboxes] =
     useState(INITIAL_COUNT_CHECKBOXES);
+
+  useEffect(() => {
+    dispatch(setStateUsers([]));
+    dispatch(setStateLoadingServer(true));
+    dispatch(setStatePageNumber(1));
+
+    const locationsQuery = getArrayWithTruthyKeysFromObject(
+      filterFormState.location
+    ).map((location) => capitalize(location));
+
+    const experienceQuery = getArrayWithTruthyKeysFromObject(
+      filterFormState.experience
+    );
+
+    const specializationsQuery = getArrayWithTruthyKeysFromObject(
+      filterFormState.specialization
+    );
+
+    const sortsQuery = Object.entries(filterFormState.sort)
+      .filter((entry) => Boolean(entry[1]))
+      .map((role) => role[0]);
+
+    dispatch(
+      changeUserFilterValue({
+        locations: locationsQuery,
+        specializations: specializationsQuery,
+        experiences: experienceQuery,
+        sorts: sortsQuery,
+      })
+    );
+  }, [dispatch, filterFormState]);
 
   const handleSpecializationChange = debounce(
     (evt: ChangeEvent<HTMLInputElement>) => {

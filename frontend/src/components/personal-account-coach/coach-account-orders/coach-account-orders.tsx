@@ -278,7 +278,10 @@ export default function CoachAccountOrders(): JSX.Element {
                   type="button"
                   style={hideButtonMoreByCondition(
                     orderedWorkouts.length,
-                    CARDS_FOR_PAGE
+                    CARDS_FOR_PAGE,
+                    pageNumber,
+                    errorPageNumber,
+                    successPageNumber
                   )}
                   disabled={isLoadingServer}
                   onClick={async () => {

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { PersonalCustomerRoute } from 'src/constant';
 import { UserRole } from 'src/types/user';
@@ -10,7 +11,7 @@ type UserCardProps = {
   specializations: string[];
 };
 
-export default function UserCard({
+export default memo(function UserCard({
   role,
   userId,
   location,
@@ -30,19 +31,11 @@ export default function UserCard({
           <picture>
             <source
               type="image/webp"
-              srcSet={`img/content/thumbnails/user-0${Math.ceil(
-                Math.random() * 24
-              )}.webp, img/content/thumbnails/user-0${Math.ceil(
-                Math.random() * 24
-              )}@2x.webp 2x`}
+              srcSet="img/content/thumbnails/user-01.webp, img/content/thumbnails/user-01@2x.webp 2x"
             />
             <img
-              src={`img/content/thumbnails/user-0${Math.ceil(
-                Math.random() * 24
-              )}.jpg`}
-              srcSet={`img/content/thumbnails/user-0${Math.ceil(
-                Math.random() * 24
-              )}@2x.jpg 2x`}
+              src="img/content/thumbnails/user-01.jpg"
+              srcSet="img/content/thumbnails/user-01@2x.jpg 2x"
               width="82"
               height="82"
               alt=""
@@ -94,4 +87,4 @@ export default function UserCard({
       </div>
     </li>
   );
-}
+});

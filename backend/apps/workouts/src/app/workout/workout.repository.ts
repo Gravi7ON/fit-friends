@@ -81,6 +81,20 @@ export class WorkoutRepository {
       });
     }
 
+    let sortObject: Record<string, string>;
+    if (sort) {
+      switch (sort) {
+        case 'cheeper':
+          sortObject = { cost: 'asc' };
+          break;
+        case 'moreExpensive':
+          sortObject = { cost: 'desc' };
+          break;
+        default:
+          sortObject = { createdAt: 'desc' };
+      }
+    }
+
     return this.prisma.workout.findMany({
       where: {
         id: { in: workoutIds },
@@ -102,14 +116,7 @@ export class WorkoutRepository {
       include: {
         reviews: true,
       },
-      orderBy: {
-        cost:
-          sort === 'cheeper'
-            ? 'asc'
-            : sort === 'moreExpensive'
-            ? 'desc'
-            : undefined,
-      },
+      orderBy: sortObject,
       skip: page > 0 ? limit * (page - 1) : undefined,
       take: limit,
     });

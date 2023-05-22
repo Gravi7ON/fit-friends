@@ -30,8 +30,10 @@ export enum PersonalCoachRoute {
 
 export enum NameSpaceStore {
   WorkoutFilter = 'WORKOUT_FILTER',
+  UserFilter = 'USER_FILTER',
   Workouts = 'WORKOUTS',
-  User = 'USER',
+  User = 'USER_PROCCES',
+  Users = 'USERS',
 }
 
 export enum AuthorizationStatus {

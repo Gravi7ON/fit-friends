@@ -32,12 +32,22 @@ export function checkAuthOnRefresh() {
 
 export function hideButtonMoreByCondition(
   listLengthPart: number,
-  amountCardPerOne: number
+  amountCardPerOne: number,
+  pageNumber: number,
+  errorPage: number,
+  successPage: number
 ) {
   if (
-    listLengthPart < amountCardPerOne ||
-    listLengthPart % amountCardPerOne !== 0
+    pageNumber > 1 &&
+    (listLengthPart % amountCardPerOne !== 0 ||
+      listLengthPart === 0 ||
+      listLengthPart === amountCardPerOne) &&
+    errorPage < successPage
   ) {
+    return { display: 'none' };
+  }
+
+  if (pageNumber === 1 && listLengthPart < amountCardPerOne) {
     return { display: 'none' };
   }
 }

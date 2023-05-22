@@ -33,7 +33,7 @@ import { UpdatePersonalTrainingRequestDto } from './dto/update-personal-training
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard, RoleCoachGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/')
   async findUsers(@Query() query: UsersQuery) {
     const users = await this.userService.findUsers(query);

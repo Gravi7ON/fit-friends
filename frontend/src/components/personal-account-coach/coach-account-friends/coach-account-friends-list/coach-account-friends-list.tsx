@@ -144,7 +144,13 @@ export default function CoachAccountFriendsList(): JSX.Element {
               : 'btn show-more__button show-more__button--more'
           }
           type="button"
-          style={hideButtonMoreByCondition(friends.length, CARDS_FOR_PAGE)}
+          style={hideButtonMoreByCondition(
+            friends.length,
+            CARDS_FOR_PAGE,
+            pageNumber,
+            errorPageNumber,
+            successPageNumber
+          )}
           disabled={isLoadingServer}
           onClick={async () => {
             setButtonClickCount((prev) => (prev += 1));
