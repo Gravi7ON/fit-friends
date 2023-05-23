@@ -4,7 +4,7 @@ import { StyledEngineProvider } from '@mui/material';
 import { capitalize, throttle } from 'lodash';
 import { useForm } from 'react-hook-form';
 import { AxiosError, AxiosResponse } from 'axios';
-import '../../GlobalCssSlider.css';
+import '../../../GlobalCssSlider.css';
 import { GYM_FEATURES, LOCATIONS } from 'src/components/constant-components';
 import { RESTService, createAppApi } from 'src/services/app.api';
 import { useAppDispatch } from 'src/hooks/store.hooks';

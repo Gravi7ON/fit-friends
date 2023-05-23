@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import Spinner from 'src/components/animate-ui/spinner/spinner';
-import './coach-account-orders.css';
 import { useEffect, useState } from 'react';
 import WorkoutCard from 'src/components/common-ui/workout/workout-card';
 import { Workout } from 'src/types/workout';
@@ -12,6 +11,7 @@ import { SHOW_ERROR_TIME } from 'src/components/constant-components';
 import ButtonMoveUp from 'src/components/common-ui/button-move-up/button-move-up';
 import { hideButtonMoreByCondition } from 'src/utils/helpers';
 import { isEqual, uniqWith } from 'lodash';
+import Error from 'src/components/animate-ui/error/error';
 
 const CARDS_FOR_PAGE = 4;
 enum SortButtonName {
@@ -247,7 +247,7 @@ export default function CoachAccountOrders(): JSX.Element {
           {isFirstLoadingServer ? (
             <Spinner spinnerScreen />
           ) : isFirstServerError ? (
-            <p className="server-coach-orders__error">{isFirstServerError}</p>
+            <Error errorMessage={isFirstServerError} />
           ) : (
             <>
               <ul className="my-orders__list">

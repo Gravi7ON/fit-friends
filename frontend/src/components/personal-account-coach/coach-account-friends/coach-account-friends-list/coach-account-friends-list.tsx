@@ -15,6 +15,7 @@ import {
 import { isEqual, uniqWith } from 'lodash';
 import { useAppSelector } from 'src/hooks/store.hooks';
 import { getUserId } from 'src/store/user-proccess/selectors';
+import Error from 'src/components/animate-ui/error/error';
 
 export default function CoachAccountFriendsList(): JSX.Element {
   const coachId = useAppSelector(getUserId);
@@ -114,7 +115,7 @@ export default function CoachAccountFriendsList(): JSX.Element {
   return isFirstLoadingServer ? (
     <Spinner spinnerScreen />
   ) : isFirstServerError ? (
-    <p className="server-coach-friends__error">{isFirstServerError}</p>
+    <Error errorMessage={isFirstServerError} />
   ) : (
     <>
       <ul className="friends-list__list">

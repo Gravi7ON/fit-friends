@@ -1,0 +1,26 @@
+.server__error {
+  text-align: center;
+  margin-top: 35vh;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 15px;
+  color: #eb5555;
+}
+
+.text-error {
+  animation: server-error 2.5s linear infinite;
+}
+
+@keyframes server-error {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,29 @@
+.statusNotReady {
+  color: #adadad;
+  border-color: #cfcfcf;
+}
+
+.statusNotReady::after {
+  background-color: #cfcfcf;
+}
+
+.btnOutlinedDeleteUser {
+  margin-top: 10px;
+  background-color: transparent;
+  border: 1px solid #cfcfcf;
+}
+
+.btnOutlinedDeleteUser:hover:not(.focus-visible) {
+  background-color: transparent;
+  border: 1px solid #333333;
+}
+
+.btnOutlinedDeleteUser:active:not(.focus-visible) {
+  border: 1px solid #333333;
+  background-color: #f7f7f7;
+  outline: none;
+}
+
+.showMoreButtonErrorUser {
+  margin-top: 10px;
+}

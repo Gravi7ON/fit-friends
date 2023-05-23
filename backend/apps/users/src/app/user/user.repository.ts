@@ -227,8 +227,12 @@ export class UserRepository {
 
   public async findUserFriends(
     userId: string,
-    { limit, sortDirection, page }: MyFriendsQuery
+    { limit, sortDirection, page, isFriendId }: MyFriendsQuery
   ): Promise<UserCustomer[] | null> {
+    if (isFriendId) {
+      return this.myFriendsModel.find({ userId: userId, friendId: isFriendId });
+    }
+
     const userFiendsIds = (await this.myFriendsModel.find({ userId })).map(
       (record) => new Types.ObjectId(record.friendId)
     );

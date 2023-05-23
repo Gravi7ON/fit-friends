@@ -14,11 +14,11 @@ export class TokenRepository {
   ) {}
 
   public async findToken(userId: string) {
-    return this.tokenModel.findOne({ userId });
+    return this.tokenModel.findOne({ userId }).exec();
   }
 
   public async findRevokedToken(refreshToken: string) {
-    return this.blackListTokenModel.findOne({ refreshToken });
+    return this.blackListTokenModel.findOne({ refreshToken }).exec();
   }
 
   public async saveRevokedToken(refreshToken: string): Promise<void> {

@@ -75,9 +75,9 @@ export class UserController {
     @Query() query: MyFriendsQuery
   ) {
     const userId = request.user._id;
-    const users = await this.userService.findUserFriends(userId, query);
+    const userFriends = await this.userService.findUserFriends(userId, query);
 
-    return users;
+    return userFriends;
   }
 
   @UseGuards(JwtAuthGuard, RoleCustomerGuard)

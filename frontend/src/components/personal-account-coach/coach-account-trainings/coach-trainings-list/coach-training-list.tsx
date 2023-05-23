@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
+import Error from 'src/components/animate-ui/error/error';
 import Spinner from 'src/components/animate-ui/spinner/spinner';
 import ButtonMoveUp from 'src/components/common-ui/button-move-up/button-move-up';
 import WorkoutCard from 'src/components/common-ui/workout/workout-card';
@@ -142,7 +143,7 @@ export default function CoachTrainingList(): JSX.Element {
       {isFirstLoadingServer ? (
         <Spinner spinnerScreen />
       ) : isFirstServerError ? (
-        <p className="server-coach-training__error">{isFirstServerError}</p>
+        <Error errorMessage={isFirstServerError} />
       ) : (
         <>
           <ul className="my-trainings__list">

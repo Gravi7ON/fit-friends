@@ -27,11 +27,12 @@ import CoachAccountTrainings from '../personal-account-coach/coach-account-train
 import CoachAccountOrders from '../personal-account-coach/coach-account-orders/coach-account-orders';
 import PersonalCustomer from 'src/pages/personal-customer-account/personal-customer';
 import { CustomerMain } from '../personal-account-customer/customer-main/customer-main';
-import WorkoutsCatalogue from '../workouts-catalogue/workouts-catalogue';
 import CustomerAccount from '../personal-account-customer/customer-account/customer-account';
 import CustomerAccountFriends from '../personal-account-customer/customer-account-friends/customer-account-friends';
-import UsersCatalogue from '../users-catalogue/users-catalogue';
-import GymsCatalogue from '../gyms-catalogue/gyms-catalogue';
+import WorkoutsCatalogue from '../personal-account-customer/workouts-catalogue/workouts-catalogue';
+import UsersCatalogue from '../personal-account-customer/users-catalogue/users-catalogue';
+import GymsCatalogue from '../personal-account-customer/gyms-catalogue/gyms-catalogue';
+import UserScreen from '../common-ui/user/user-screen';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -120,6 +121,17 @@ export default function App(): JSX.Element {
               role={userRole}
             >
               <UsersCatalogue />
+            </PrivateCustomerRoute>
+          }
+        />
+        <Route
+          path={`${PersonalCustomerRoute.Users}/:userId`}
+          element={
+            <PrivateCustomerRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <UserScreen />
             </PrivateCustomerRoute>
           }
         />

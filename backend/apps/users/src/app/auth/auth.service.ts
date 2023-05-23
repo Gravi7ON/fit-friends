@@ -142,7 +142,7 @@ export class AuthService {
       );
 
       try {
-        this.jwtService.verify(accessToken, {
+        await this.jwtService.verify(accessToken, {
           secret: this.jwtConfig.accessTokenSecret,
         });
       } catch (err) {
@@ -167,19 +167,18 @@ export class AuthService {
       name: user.name,
     };
 
-    const [accessToken, refreshToken, existedToken] = await Promise.all([
+    const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
       this.jwtService.signAsync(payload, {
         secret: this.jwtConfig.refreshTokenSecret,
         expiresIn: this.jwtConfig.refreshTokenExpiresIn,
       }),
-      this.tokenRepository.findToken(request.user._id),
     ]);
 
-    if (existedToken) {
-      await this.tokenRepository.destroyToken(request.user._id);
-    }
-    await this.tokenRepository.saveToken(user._id, refreshToken);
+    await Promise.all([
+      this.tokenRepository.destroyToken(request.user._id),
+      this.tokenRepository.saveToken(user._id, refreshToken),
+    ]);
 
     return {
       accessToken,

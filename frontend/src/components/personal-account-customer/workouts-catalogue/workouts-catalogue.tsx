@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import './workouts-catalogue.css';
 import WorkoutsCatalogueFilterForm from './workouts-catalogue-filter-form/workouts-catalogue-filter.form';
 import WorkoutsCatalogueList from './workouts-catalogue-list/workouts-catalogue-list';
 

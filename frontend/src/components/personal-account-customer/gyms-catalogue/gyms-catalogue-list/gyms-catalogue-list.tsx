@@ -2,39 +2,37 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import Spinner from 'src/components/animate-ui/spinner/spinner';
 import ButtonMoveUp from 'src/components/common-ui/button-move-up/button-move-up';
-import WorkoutCard from 'src/components/common-ui/workout/workout-card';
 import {
   CARDS_FOR_PAGE,
   SHOW_ERROR_TIME,
-  SPECIALIZATIONS,
 } from 'src/components/constant-components';
 import { useAppDispatch, useAppSelector } from 'src/hooks/store.hooks';
 import { RESTService, createAppApi } from 'src/services/app.api';
-import { getWorkoutFilterValue } from 'src/store/workout-filter/selectors';
 import {
   getPageNumber,
   getServerErrorStatus,
   getServerLoadingStatus,
-  getWorkouts,
-} from 'src/store/workouts/selectors';
+  getGyms,
+} from 'src/store/gyms/selectors';
 import {
   setStateErrorServer,
   setStateLoadingServer,
-} from 'src/store/workouts/workouts';
-import {
-  setStatePageNumber,
-  setStateWorkouts,
-} from 'src/store/workouts/workouts';
+} from 'src/store/gyms/gyms';
+import { setStatePageNumber, setStateGyms } from 'src/store/gyms/gyms';
 import { ErrorResponse } from 'src/types/error-response';
 import { hideButtonMoreByCondition } from 'src/utils/helpers';
+import { getGymFilterValue } from 'src/store/gym-filter/selectors';
+import { APIRoute } from 'src/constant';
+import GymCard from 'src/components/common-ui/gym/gym-card';
+import Error from 'src/components/animate-ui/error/error';
 
 const ABORT_SIGNAL_MESSAGE = 'canceled';
 
-export default function WorkoutsCatalogueList(): JSX.Element {
+export default function GymsCatalogueList(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const filterValue = useAppSelector(getWorkoutFilterValue);
-  const workouts = useAppSelector(getWorkouts);
+  const filterValue = useAppSelector(getGymFilterValue);
+  const gyms = useAppSelector(getGyms);
   const pageNumber = useAppSelector(getPageNumber);
   const isFirstLoadingServer = useAppSelector(getServerLoadingStatus);
   const isFirstServerError = useAppSelector(getServerErrorStatus);
@@ -61,26 +59,30 @@ export default function WorkoutsCatalogueList(): JSX.Element {
       },
     };
 
-    const getWorkouts = async () => {
+    const getGyms = async () => {
+      console.log(filterValue);
+
       try {
         const api = createAppApi(RESTService.Workouts);
-        const { data: partWorkouts } = await api.get(
-          `?limit=${CARDS_FOR_PAGE}&page=${pageNumber}&rating=${
-            filterValue?.ratings
-          }&costs=${filterValue?.costs}&calories=${
-            filterValue?.calories
-          }&specializations=${
-            filterValue?.specializations?.length === 0
-              ? SPECIALIZATIONS.map((specialization) =>
-                  specialization.toLowerCase()
-                )
-              : filterValue.specializations
-          }${filterValue.sort ? `&sort=${filterValue.sort}` : ''}`,
+        const { data: partGyms } = await api.get(
+          `${APIRoute.Gyms}?limit=${CARDS_FOR_PAGE}&page=${pageNumber}&costs=${
+            filterValue?.costs
+          }${
+            filterValue.features.length
+              ? `&features=${filterValue.features}`
+              : ''
+          }${
+            filterValue.locations.length
+              ? `&locations=${filterValue.locations}`
+              : ''
+          }${
+            filterValue.isOficial ? `&isOriginal=${filterValue.isOficial}` : ''
+          }`,
           {
             signal: controller.signal,
           }
         );
-        dispatch(setStateWorkouts([...workouts, ...partWorkouts]));
+        dispatch(setStateGyms([...gyms, ...partGyms]));
         setSuccessPageNumber(pageNumber);
         dispatch(setStateLoadingServer(false));
         setIsLoadingServer(false);
@@ -123,7 +125,7 @@ export default function WorkoutsCatalogueList(): JSX.Element {
       }
     };
 
-    getWorkouts();
+    getGyms();
 
     return () => {
       if (timerError.timerId) {
@@ -141,21 +143,19 @@ export default function WorkoutsCatalogueList(): JSX.Element {
       {isFirstLoadingServer ? (
         <Spinner spinnerScreen />
       ) : isFirstServerError ? (
-        <p className="server-workouts-catalogue__error">{isFirstServerError}</p>
+        <Error errorMessage={isFirstServerError} />
       ) : (
         <>
-          <ul className="my-trainings__list">
-            {workouts.map((workout) => (
-              <WorkoutCard
-                key={workout.id}
-                specialization={workout.specialization}
-                title={workout.title}
-                cost={workout.cost}
-                rating={workout.rating}
-                description={workout.description}
-                calories={workout.calories}
-                id={workout.id}
-                backgroundImage={workout.backgroundImage}
+          <ul className="gyms-catalog__list">
+            {gyms.map((gym) => (
+              <GymCard
+                key={gym.id}
+                id={gym.id}
+                location={gym.location}
+                isOficial={gym.isOriginal}
+                backgroundimage={gym.image}
+                description={gym.description}
+                title={gym.title}
               />
             ))}
           </ul>
@@ -168,7 +168,7 @@ export default function WorkoutsCatalogueList(): JSX.Element {
               }
               type="button"
               style={hideButtonMoreByCondition(
-                workouts.length,
+                gyms.length,
                 CARDS_FOR_PAGE,
                 pageNumber,
                 errorPageNumber,

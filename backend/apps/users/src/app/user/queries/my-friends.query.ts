@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsOptional,
   IsPositive,
+  IsString,
   Max,
   Min,
 } from 'class-validator';
@@ -26,4 +27,8 @@ export class MyFriendsQuery {
   @Transform(({ value }) => +value)
   @IsOptional()
   public page?: number;
+
+  @IsString()
+  @IsOptional()
+  public isFriendId?: string;
 }

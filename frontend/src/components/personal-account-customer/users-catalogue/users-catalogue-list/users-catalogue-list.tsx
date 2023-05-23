@@ -20,6 +20,7 @@ import { setStateLoadingServer } from 'src/store/users/users';
 import { setStatePageNumber } from 'src/store/users/users';
 import { setStateUsers } from 'src/store/users/users';
 import { getUserFilterValue } from 'src/store/user-filter/selectors';
+import Error from 'src/components/animate-ui/error/error';
 
 const ABORT_SIGNAL_MESSAGE = 'canceled';
 
@@ -134,7 +135,7 @@ export default function UsersCatalogueList(): JSX.Element {
       {isFirstLoadingServer ? (
         <Spinner spinnerScreen />
       ) : isFirstServerError ? (
-        <p className="server-workouts-catalogue__error">{isFirstServerError}</p>
+        <Error errorMessage={isFirstServerError} />
       ) : (
         <>
           <ul className="my-trainings__list">
