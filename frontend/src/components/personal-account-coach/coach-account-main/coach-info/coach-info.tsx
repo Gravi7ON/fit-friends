@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { AxiosError, AxiosResponse } from 'axios';
 import {
   LEVELS,
   LOCATIONS,
@@ -10,9 +12,7 @@ import { RESTService, createAppApi } from 'src/services/app.api';
 import { getUserId } from 'src/store/user-proccess/selectors';
 import './coach-info.css';
 import { Coach } from 'src/types/user';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import CustomSelectText from './custom-selected-text';
-import { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResponse } from 'src/types/error-response';
 
 type Inputs = {

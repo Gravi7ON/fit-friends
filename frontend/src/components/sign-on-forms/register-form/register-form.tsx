@@ -74,7 +74,7 @@ export default function RegisterForm(): JSX.Element {
         message: responsePayload.data.message,
       });
     } else {
-      const userRole = store.getState().USER.role;
+      const userRole = store.getState().USER_PROCCES.role;
       userRole === UserRole.Customer
         ? navigate(AppRoute.QuestionnaireCustomer)
         : navigate(AppRoute.QuestionnaireCoach);

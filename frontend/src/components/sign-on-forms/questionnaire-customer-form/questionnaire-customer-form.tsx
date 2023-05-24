@@ -62,7 +62,7 @@ export default function QuestionnaireCustomerForm(): JSX.Element {
         additionalCustomerInfoAdapter
       );
 
-      navigate(AppRoute.Main);
+      navigate(AppRoute.PersonalCustomer);
     } catch (err) {
       const error = err as AxiosError;
       const errorResponse = error?.response as AxiosResponse<ErrorResponse>;

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import styles from './user-location.popup.module.css';
 
-type UserLocationPopup = {
+type UserLocationPopupProps = {
   changeIsShowPopup: (value: React.SetStateAction<boolean>) => void;
   userName: string;
   location: string;
@@ -21,7 +21,7 @@ export default function UserLocationPopup({
   changeIsShowPopup,
   userName,
   location,
-}: UserLocationPopup): JSX.Element {
+}: UserLocationPopupProps): JSX.Element {
   useEffect(() => {
     document
       .querySelector('.leaflet-control-attribution.leaflet-control')
@@ -66,25 +66,20 @@ export default function UserLocationPopup({
         </div>
         <div className="popup__content-map">
           <div className="popup__map">
-            <div
-              id="map"
-              style={{ height: '622px' }}
+            <MapContainer
+              center={position}
+              zoom={10}
+              scrollWheelZoom={true}
+              style={{ height: '622px', width: '1160px' }}
             >
-              <MapContainer
-                center={position}
-                zoom={10}
-                scrollWheelZoom={true}
-                style={{ height: '622px' }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={LocationStation[location]}>
-                  <Popup>ст. м. {location}</Popup>
-                </Marker>
-              </MapContainer>
-            </div>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={LocationStation[location]}>
+                <Popup>ст. м. {location}</Popup>
+              </Marker>
+            </MapContainer>
           </div>
         </div>
       </div>

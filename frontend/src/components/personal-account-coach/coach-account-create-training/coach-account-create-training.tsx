@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { AxiosError, AxiosResponse } from 'axios';
 import {
   SPECIALIZATIONS,
   TRAINING_TIMES,
@@ -10,7 +11,6 @@ import CheckMark from 'src/components/animate-ui/check-mark/check-mark';
 import { LEVELS } from 'src/components/constant-components';
 import { RESTService, createAppApi } from 'src/services/app.api';
 import { APIRoute } from 'src/constant';
-import { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResponse } from 'src/types/error-response';
 import Spinner from 'src/components/animate-ui/spinner/spinner';
 
