@@ -56,6 +56,10 @@ export class WorkoutSubscriberService {
     });
   }
 
+  public async getSubscribe(userEmail: string, coachId: string) {
+    return this.workoutSubscriberRepository.findSubscribe(userEmail, coachId);
+  }
+
   public async unSubscribe(userSubscriberEmail: string) {
     const existedSubscribes =
       await this.workoutSubscriberRepository.findAllUserSubscribes(

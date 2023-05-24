@@ -4,6 +4,7 @@ import {
   IsInt,
   IsNumber,
   IsOptional,
+  IsString,
   Max,
   Min,
 } from 'class-validator';
@@ -84,4 +85,8 @@ export class WorkoutsQuery {
 
   @IsOptional()
   public minMaxPrice?: boolean;
+
+  @IsString()
+  @IsOptional()
+  public coachId?: string;
 }

@@ -11,7 +11,14 @@ import { ConfigService } from '@nestjs/config';
 import { getRabbitMqWorkoutsQueueConfig } from './config/rabbitmq.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
+    },
+  });
 
   const configService = app.get<ConfigService>(ConfigService);
   app.connectMicroservice(getRabbitMqWorkoutsQueueConfig(configService));

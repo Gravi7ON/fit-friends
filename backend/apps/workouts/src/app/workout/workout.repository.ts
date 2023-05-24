@@ -70,6 +70,7 @@ export class WorkoutRepository {
     rating,
     specializations,
     sort,
+    coachId,
   }: WorkoutsQuery = {}): Promise<Workout[] | Record<string, unknown>> {
     if (minMaxPrice) {
       return this.prisma.workout.aggregate({
@@ -80,6 +81,10 @@ export class WorkoutRepository {
           cost: true,
         },
       });
+    }
+
+    if (coachId) {
+      return this.findAllCoachWorkout(coachId);
     }
 
     let sortObject: Record<string, string>;

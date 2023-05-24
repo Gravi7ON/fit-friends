@@ -55,4 +55,5 @@ export enum APIRoute {
   CoachOrders = '/coach-orders',
   PersonalTrainingRequests = '/personal-training',
   Gyms = '/gyms',
+  Subscribe = '/subscribe',
 }

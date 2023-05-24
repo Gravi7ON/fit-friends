@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PersonalCustomerRoute } from 'src/constant';
 
@@ -11,7 +11,7 @@ type GymCardProps = {
   description: string;
 };
 
-export default function GymCard({
+export default memo(function GymCard({
   id,
   backgroundimage,
   isOficial,
@@ -98,4 +98,4 @@ export default function GymCard({
       </div>
     </li>
   );
-}
+});

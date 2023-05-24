@@ -12,6 +12,7 @@ const BackendUrl = {
   Users: 'http://localhost:3333/api/users',
   PersonalAccount: 'http://localhost:3333/api/personal-account',
   Workouts: 'http://localhost:3334/api/workouts',
+  Notify: 'http://localhost:3335/api/workout-subscriber',
 } as const;
 
 export enum RESTService {
@@ -19,6 +20,7 @@ export enum RESTService {
   Workouts = 'Workouts',
   Users = 'Users',
   PersonalAccount = 'PersonalAccount',
+  Notify = 'Notify',
 }
 
 const REQUEST_TIMEOUT = 5000;

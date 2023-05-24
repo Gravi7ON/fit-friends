@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -55,6 +56,16 @@ export class WorkoutSubscriberController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async sendNewWorkouts() {
     this.subscribeService.sendNotifications();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('subscribe/:coachId')
+  async getSubscribe(
+    @Param('coachId') coachId: string,
+    @Request() request: RequestWithTokenPayload
+  ) {
+    const userEmail = request.user.email;
+    return this.subscribeService.getSubscribe(userEmail, coachId);
   }
 
   @EventPattern({ cmd: CommandEvent.SendWorkout })

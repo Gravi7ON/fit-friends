@@ -16,7 +16,7 @@ export function CustomerMain(): JSX.Element {
 
   const swiperPopularRef = useRef<SwiperCore>();
   const [isBeginningPopular, setIsBeginningPopular] = useState(true);
-  const [isEndPopular, setIsEndPopularl] = useState(false);
+  const [isEndPopular, setIsEndPopular] = useState(false);
 
   const swiperActiveRef = useRef<SwiperCore>();
   const [isBeginningActive, setIsBeginningActive] = useState(true);
@@ -311,7 +311,7 @@ export function CustomerMain(): JSX.Element {
                   }}
                   onSlideChange={(swiper) => {
                     setIsBeginningPopular(swiper.isBeginning);
-                    setIsEndPopularl(swiper.isEnd);
+                    setIsEndPopular(swiper.isEnd);
                   }}
                 >
                   {Array(8)

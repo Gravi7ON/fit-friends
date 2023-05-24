@@ -20,6 +20,12 @@ export class WorkoutSubscriberRepository {
     this.workoutSubscriberModel.deleteMany({ email }).exec();
   }
 
+  public async findSubscribe(userEmail: string, coachId: string) {
+    return this.workoutSubscriberModel
+      .find({ email: userEmail, subscribeCoachId: coachId })
+      .exec();
+  }
+
   public async findAllUserSubscribes(email: string): Promise<Subscriber[]> {
     return this.workoutSubscriberModel.find({ email }).exec();
   }
