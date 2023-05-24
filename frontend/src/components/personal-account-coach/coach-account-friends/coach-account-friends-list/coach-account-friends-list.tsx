@@ -33,7 +33,12 @@ export default function CoachAccountFriendsList(): JSX.Element {
   const [friends, setFriends] = useState<(Customer & Coach)[]>([]);
   const [buttonClickCount, setButtonClickCount] = useState(0);
   const [personalTrainingRequests, setPersonalTrainingRequests] = useState<
-    { fromUserId: string; toUserId: string; requestStatus: string }[]
+    {
+      fromUserId: string;
+      toUserId: string;
+      requestStatus: string;
+      id: string;
+    }[]
   >([]);
   const [isCoachReadyPersonalTraining, setIsCoachReadyPersonalTraining] =
     useState(null);
@@ -128,11 +133,12 @@ export default function CoachAccountFriendsList(): JSX.Element {
             isReadyTraining={
               friend.isReadyTraining || friend.isIndividualTraining
             }
-            isPersonalRequest={
-              Boolean(isCoachReadyPersonalTraining) &&
-              personalTrainingRequests.some(
-                (request) => request.fromUserId === friend.id
-              )
+            personalRequest={
+              isCoachReadyPersonalTraining
+                ? personalTrainingRequests.find(
+                    (request) => request.fromUserId === friend.id
+                  )
+                : undefined
             }
           />
         ))}

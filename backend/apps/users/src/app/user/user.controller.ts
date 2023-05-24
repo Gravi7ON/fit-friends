@@ -129,7 +129,7 @@ export class UserController {
     return fillObject(PersonalTrainingRequestRdo, personalTraining);
   }
 
-  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch('/personal-training')
   async updateStatusPersonalTrainigRequest(
     @Request() request: RequestWithTokenPayload,
