@@ -10,18 +10,21 @@ import { RESTService, createAppApi } from 'src/services/app.api';
 import { ErrorResponse } from 'src/types/error-response';
 import { Coach, Customer, User, UserRole } from 'src/types/user';
 import styles from './user-screen.module.css';
-import UserLocationPopup from '../popups/user-location-popup';
 import { APIRoute } from 'src/constant';
 import { SHOW_ERROR_TIME } from 'src/components/constant-components';
 import { Workout } from 'src/types/workout';
 import WorkoutCard from '../workout/workout-card';
 import CheckMark from 'src/components/animate-ui/check-mark/check-mark';
+import { useAppSelector } from 'src/hooks/store.hooks';
+import { getUserRole } from 'src/store/user-proccess/selectors';
+import LocationPopup from '../popups/location-popup';
 
 const SHOW_TEXT_ON_CONSIDERATION_TIME = 2000;
 
 export default function UserScreen(): JSX.Element {
   const navigate = useNavigate();
   const { userId } = useParams();
+  const userRole = useAppSelector(getUserRole);
 
   const swiperWorkoutRef = useRef<SwiperCore>();
   const [isBeginningWorkout, setIsBeginningWorkout] = useState(true);
@@ -365,6 +368,7 @@ export default function UserScreen(): JSX.Element {
                           calories={workout.calories}
                           backgroundImage={workout.backgroundImage}
                           description={workout.description}
+                          role={userRole}
                         />
                       </SwiperSlide>
                     ))}
@@ -468,7 +472,7 @@ export default function UserScreen(): JSX.Element {
           open={isShowMapPopup}
           onClose={() => setIsShowMapPopup(false)}
         >
-          <UserLocationPopup
+          <LocationPopup
             changeIsShowPopup={setIsShowMapPopup}
             userName={user.name}
             location={user.location}

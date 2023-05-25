@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { PersonalCoachRoute } from 'src/constant';
+import { PersonalCoachRoute, PersonalCustomerRoute } from 'src/constant';
+import { UserRole } from 'src/types/user';
 
 type WorkoutCardProps = {
   cost: number;
@@ -11,6 +12,7 @@ type WorkoutCardProps = {
   calories: number;
   id: number;
   backgroundImage: string;
+  role: string;
   isForOrder?: boolean;
   boughtWorkout?: number;
   totalSumOfBought?: number;
@@ -25,6 +27,7 @@ export default memo(function WorkoutCard({
   calories,
   backgroundImage,
   id,
+  role,
   isForOrder = false,
   boughtWorkout = 0,
   totalSumOfBought = 0,
@@ -102,7 +105,11 @@ export default memo(function WorkoutCard({
               <>
                 <Link
                   className="btn btn--small thumbnail-training__button-catalog"
-                  to={`${PersonalCoachRoute.Workouts}/${id}`}
+                  to={
+                    role === UserRole.Coach
+                      ? `${PersonalCoachRoute.Workouts}/${id}`
+                      : `${PersonalCustomerRoute.Workouts}/${id}`
+                  }
                 >
                   Подробнее
                 </Link>

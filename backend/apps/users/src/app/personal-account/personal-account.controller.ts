@@ -210,6 +210,15 @@ export class PersonalAccountController {
   }
 
   @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Get('/my-balance')
+  async findMyBalance(@Request() request: RequestWithTokenPayload) {
+    const userId = request.user._id;
+    const myBalace = await this.personalAccountService.findMyBalance(userId);
+
+    return myBalace;
+  }
+
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
   @Get('/my-notifies')
   async findUserNotifies(
     @Request() request: RequestWithTokenPayload,

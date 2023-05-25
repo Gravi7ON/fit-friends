@@ -2,7 +2,6 @@ import { Dialog } from '@headlessui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
-import UserLocationPopup from '../popups/user-location-popup';
 import { RESTService, createAppApi } from 'src/services/app.api';
 import { APIRoute } from 'src/constant';
 import { ErrorResponse } from 'src/types/error-response';
@@ -10,6 +9,7 @@ import Spinner from 'src/components/animate-ui/spinner/spinner';
 import Error from 'src/components/animate-ui/error/error';
 import { Gym } from 'src/types/gym';
 import GymBuySubPopup from '../popups/gym-buy-sub-popup';
+import LocationPopup from '../popups/location-popup';
 
 export default function GymScreen(): JSX.Element {
   const navigate = useNavigate();
@@ -104,12 +104,8 @@ export default function GymScreen(): JSX.Element {
                       </svg>
                       <span
                         onClick={() => setIsShowMapPopup(() => true)}
-                        onMouseEnter={(evt) => {
+                        onMouseOver={(evt) => {
                           evt.currentTarget.style.cursor = 'pointer';
-                          evt.currentTarget.style.color = '#d6d6d6';
-                        }}
-                        onMouseLeave={(evt) => {
-                          evt.currentTarget.style.color = 'rgb(214, 214, 214)';
                         }}
                       >
                         м. {gym.location}
@@ -225,7 +221,7 @@ export default function GymScreen(): JSX.Element {
           open={isShowMapPopup}
           onClose={() => setIsShowMapPopup(false)}
         >
-          <UserLocationPopup
+          <LocationPopup
             changeIsShowPopup={setIsShowMapPopup}
             userName={gym.title}
             location={gym.location}

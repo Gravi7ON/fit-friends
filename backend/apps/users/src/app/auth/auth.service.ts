@@ -175,10 +175,8 @@ export class AuthService {
       }),
     ]);
 
-    await Promise.all([
-      this.tokenRepository.destroyToken(request.user._id),
-      this.tokenRepository.saveToken(user._id, refreshToken),
-    ]);
+    await this.tokenRepository.destroyToken(request.user._id);
+    await this.tokenRepository.saveToken(user._id, refreshToken);
 
     return {
       accessToken,

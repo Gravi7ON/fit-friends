@@ -48,7 +48,7 @@ export const createAppApi = (direction: RESTService): AxiosInstance => {
       const originalConfig = error.config;
 
       if (
-        originalConfig.url !== `${BackendUrl.Auth}/${APIRoute.SignIn}` &&
+        originalConfig.url !== `${BackendUrl.Auth}${APIRoute.SignIn}` &&
         error.response
       ) {
         if (

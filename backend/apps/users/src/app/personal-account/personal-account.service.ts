@@ -346,10 +346,15 @@ export class PersonalAccountService {
         PersonalAccountMessageException.NotFoundPurchaseWorkout
       );
     }
+
+    const removedIndex = existedPurchases.purchasedWorkoutIds.findIndex(
+      (id) => id === workoutId
+    );
+    existedPurchases.purchasedWorkoutIds.splice(removedIndex, 1);
     const updatedPurchaseWorkout =
       await this.personalAccountRepository.updateWorkoutPurchase(
         userId,
-        existedPurchases.purchasedWorkoutIds.filter((id) => id !== workoutId)
+        existedPurchases.purchasedWorkoutIds
       );
 
     return updatedPurchaseWorkout;
@@ -364,6 +369,7 @@ export class PersonalAccountService {
         PersonalAccountMessageException.NotFoundPurchaseGym
       );
     }
+
     const updatedPurchaseWorkout =
       await this.personalAccountRepository.updatePurchaseGym(
         userId,
@@ -371,6 +377,14 @@ export class PersonalAccountService {
       );
 
     return updatedPurchaseWorkout;
+  }
+
+  async findMyBalance(userId: string) {
+    const myBalance = await this.personalAccountRepository.findMyPurchase(
+      userId
+    );
+
+    return myBalance;
   }
 
   async findMyNotifies(userId: string, query: MyNotifiesQuery) {

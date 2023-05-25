@@ -11,6 +11,7 @@ import {
 } from 'src/components/constant-components';
 import { useAppDispatch, useAppSelector } from 'src/hooks/store.hooks';
 import { RESTService, createAppApi } from 'src/services/app.api';
+import { getUserRole } from 'src/store/user-proccess/selectors';
 import { getWorkoutFilterValue } from 'src/store/workout-filter/selectors';
 import {
   getPageNumber,
@@ -33,6 +34,7 @@ const ABORT_SIGNAL_MESSAGE = 'canceled';
 
 export default function WorkoutsCatalogueList(): JSX.Element {
   const dispatch = useAppDispatch();
+  const userRole = useAppSelector(getUserRole);
 
   const filterValue = useAppSelector(getWorkoutFilterValue);
   const workouts = useAppSelector(getWorkouts);
@@ -157,6 +159,7 @@ export default function WorkoutsCatalogueList(): JSX.Element {
                 calories={workout.calories}
                 id={workout.id}
                 backgroundImage={workout.backgroundImage}
+                role={userRole}
               />
             ))}
           </ul>

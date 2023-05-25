@@ -12,6 +12,8 @@ import ButtonMoveUp from 'src/components/common-ui/button-move-up/button-move-up
 import { hideButtonMoreByCondition } from 'src/utils/helpers';
 import { isEqual, uniqWith } from 'lodash';
 import Error from 'src/components/animate-ui/error/error';
+import { useAppSelector } from 'src/hooks/store.hooks';
+import { getUserRole } from 'src/store/user-proccess/selectors';
 
 const CARDS_FOR_PAGE = 4;
 enum SortButtonName {
@@ -23,6 +25,7 @@ const ABORT_SIGNAL_MESSAGE = 'canceled';
 
 export default function CoachAccountOrders(): JSX.Element {
   const navigate = useNavigate();
+  const userRole = useAppSelector(getUserRole);
 
   const [isFirstLoadingServer, setIsFirstLoadingServer] = useState(true);
   const [isLoadingServer, setIsLoadingServer] = useState(false);
@@ -262,6 +265,7 @@ export default function CoachAccountOrders(): JSX.Element {
                     calories={orderedWorkout.calories}
                     backgroundImage={orderedWorkout.backgroundImage}
                     id={orderedWorkout.id}
+                    role={userRole}
                     isForOrder
                     boughtWorkout={orderedWorkout.orders?.amountWorkout}
                     totalSumOfBought={orderedWorkout.orders?.sum}

@@ -60,8 +60,6 @@ export default function GymsCatalogueList(): JSX.Element {
     };
 
     const getGyms = async () => {
-      console.log(filterValue);
-
       try {
         const api = createAppApi(RESTService.Workouts);
         const { data: partGyms } = await api.get(

@@ -57,4 +57,7 @@ export enum APIRoute {
   Gyms = '/gyms',
   Gym = '/gym',
   Subscribe = '/subscribe',
+  Reviews = '/reviews',
+  MyBalance = '/my-balance',
+  MyPurchasesWorkouts = '/my-purchases/workouts',
 }

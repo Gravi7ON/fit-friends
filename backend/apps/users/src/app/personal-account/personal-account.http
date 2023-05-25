@@ -58,7 +58,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiY
 
 ### Find user's purchases
 GET http://localhost:3333/api/personal-account/my-purchases?limit=8&page=1&purchaseType=workouts HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4MTEyNTg2OCwiZXhwIjoxNjgxMTI2NzY4fQ.L9r2PnonEJXBxgh9DBcdn8X5qnbtv4qDGedGP7-Es7Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDBiNDJiYzg0YjcxZGZjMzY2ODM3ZjIiLCJlbWFpbCI6Im1lMUBnbWFpbC5jb20iLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwibmFtZSI6Ikhhd2sgQ2hpcCIsImlhdCI6MTY4NTAxNDIyNSwiZXhwIjoxNjg1MDE1MTI1fQ.cl5g1FQpRFW_y14QI71QTErWIaz92-FWafjBSORV6TI
 
 ### Find user's notifies
 GET http://localhost:3333/api/personal-account/my-notifies?limit=50&page=1 HTTP/1.1

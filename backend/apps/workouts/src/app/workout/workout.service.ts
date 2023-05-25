@@ -271,6 +271,6 @@ export class WorkoutService {
       query
     );
 
-    return existedReviews.reviews;
+    return existedReviews?.reviews;
   }
 }
