@@ -31,8 +31,6 @@ export default function GymBuySubPopup({
     mode: 'onChange',
   });
 
-  const onSubmit: SubmitHandler<Inputs> = () => null;
-
   useEffect(() => {
     const arrowLeftPressHandler = (evt: KeyboardEvent) => {
       if (evt.key === 'ArrowLeft') {
@@ -59,6 +57,8 @@ export default function GymBuySubPopup({
       document.removeEventListener('keydown', arrowRightPressHandler);
     };
   }, []);
+
+  const onSubmit: SubmitHandler<Inputs> = () => null;
 
   return (
     <div className="popup-form popup-form--membership">

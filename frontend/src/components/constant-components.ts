@@ -45,3 +45,8 @@ export enum SORT_WORKOUTS {
 
 export const CARDS_FOR_PAGE = 6;
 export const SHOW_ERROR_TIME = 600;
+
+export enum TypePurchase {
+  Workout = 'тренировка',
+  Gym = 'абонемент',
+}

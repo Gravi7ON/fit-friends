@@ -1,7 +1,7 @@
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import { useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
-import styles from './user-location.popup.module.css';
+import styles from './location.popup.module.css';
 
 type UserLocationPopupProps = {
   changeIsShowPopup: (value: React.SetStateAction<boolean>) => void;

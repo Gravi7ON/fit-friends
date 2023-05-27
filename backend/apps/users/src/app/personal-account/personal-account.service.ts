@@ -233,8 +233,10 @@ export class PersonalAccountService {
     }
 
     const newPurchasedWorkoutIds = [
-      ...new Set([...existedPurchases.purchasedWorkoutIds, workoutId]),
+      ...existedPurchases.purchasedWorkoutIds,
+      workoutId,
     ];
+
     const updatedPurchase =
       await this.personalAccountRepository.updateWorkoutPurchase(
         userId,

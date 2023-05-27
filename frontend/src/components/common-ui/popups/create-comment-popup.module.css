@@ -1,0 +1,11 @@
+.inputError {
+  margin: 0;
+  position: absolute;
+  right: 0;
+  bottom: -20px;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 15px;
+
+  color: #eb5555;
+}
