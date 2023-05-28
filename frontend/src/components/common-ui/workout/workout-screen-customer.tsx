@@ -65,7 +65,7 @@ export default function WorkoutScreenCustomer(): JSX.Element {
     data: user,
     error: userError,
     isLoading: userIsLoading,
-  } = useSWR<User>(() => `/${workout?.coachId}`, userFetcher);
+  } = useSWR<User>(workout ? `/${workout?.coachId}` : null, userFetcher);
 
   const {
     trigger,
@@ -125,16 +125,19 @@ export default function WorkoutScreenCustomer(): JSX.Element {
               ) : (
                 <h2 style={{ margin: 'auto' }}>No comments</h2>
               )}
-              {myBalance &&
-                myBalance.purchasedWorkoutIds.includes(Number(workoutId)) && (
-                  <button
-                    className="btn btn--medium reviews-side-bar__button"
-                    type="button"
-                    onClick={() => setIsShowCommentPopup(true)}
-                  >
-                    Оставить отзыв
-                  </button>
-                )}
+              <button
+                className="btn btn--medium reviews-side-bar__button"
+                type="button"
+                disabled={
+                  !(
+                    myBalance &&
+                    myBalance.purchasedWorkoutIds.includes(Number(workoutId))
+                  )
+                }
+                onClick={() => setIsShowCommentPopup(true)}
+              >
+                Оставить отзыв
+              </button>
             </aside>
             <div className="training-card">
               <div className="training-info">

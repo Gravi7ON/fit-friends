@@ -35,6 +35,7 @@ import GymsCatalogue from '../personal-account-customer/gyms-catalogue/gyms-cata
 import UserScreen from '../common-ui/user/user-screen';
 import GymScreen from '../common-ui/gym/gym-screen';
 import WorkoutScreenCustomer from '../common-ui/workout/workout-screen-customer';
+import WorkoutScreenCoach from '../common-ui/workout/workout-screen-coach';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -267,6 +268,17 @@ export default function App(): JSX.Element {
               role={userRole}
             >
               <CoachAccountOrders />
+            </PrivateCoachRoute>
+          }
+        />
+        <Route
+          path={`${PersonalCoachRoute.Workouts}/:workoutId`}
+          element={
+            <PrivateCoachRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <WorkoutScreenCoach />
             </PrivateCoachRoute>
           }
         />

@@ -1,0 +1,18 @@
+input:disabled,
+textarea:disabled {
+  background-color: rgba(247,247,247,.02) !important;
+  border: 1px solid rgba(149,149,149,.1) !important;
+  transition: border .3s ease,box-shadow .3s ease,-webkit-box-shadow .3s ease !important;
+}
+
+.input__error {
+  margin: 11px 5px 0 auto;
+  position: absolute;
+  right: 0;
+
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 15px;
+
+  color: #eb5555;
+}
