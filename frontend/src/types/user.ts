@@ -32,7 +32,7 @@ export interface Coach extends User {
 
 export interface Customer extends User {
   trainingTime: string;
-  certitargetDeclineСaloriesficates: number;
+  targetDeclineСaloriesficates: number;
   dayDeclineCalories: number;
   isReadyTraining: boolean;
 }

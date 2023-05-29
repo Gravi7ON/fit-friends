@@ -3,7 +3,7 @@ import CoachWidget from './coach-widgets/coach-widget';
 import { PersonalCoachRoute } from 'src/constant';
 import CoachCertificates from './coach-certificates/coach-certificates';
 
-const coachWidgetsProps = [
+const COACH_WIDGETS_PROPS = [
   {
     linkTo: PersonalCoachRoute.Trainings,
     iconPath: '#icon-flash',
@@ -36,7 +36,7 @@ export default function CoachAccountMain(): JSX.Element {
           <div className="inner-page__content">
             <div className="personal-account-coach">
               <div className="personal-account-coach__navigation">
-                {coachWidgetsProps.map(({ linkTo, title, iconPath }) => (
+                {COACH_WIDGETS_PROPS.map(({ linkTo, title, iconPath }) => (
                   <CoachWidget
                     key={title}
                     linkTo={linkTo}

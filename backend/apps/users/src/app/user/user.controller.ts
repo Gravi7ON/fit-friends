@@ -68,6 +68,21 @@ export class UserController {
     return fillObject(PersonalTrainingRequestRdo, allPersonalTrainingRequests);
   }
 
+  @UseGuards(JwtAuthGuard, RoleCustomerGuard)
+  @Get('/personal-training/customer')
+  async findAllPersonalTrainigCustomerRequests(
+    @Request() request: RequestWithTokenPayload
+  ) {
+    const customerId = request.user._id;
+
+    const allPersonalTrainingRequests =
+      await this.userService.findAllPersonalTrainingCustomerRequests(
+        customerId
+      );
+
+    return fillObject(PersonalTrainingRequestRdo, allPersonalTrainingRequests);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('/my-friends')
   async findUserFriends(

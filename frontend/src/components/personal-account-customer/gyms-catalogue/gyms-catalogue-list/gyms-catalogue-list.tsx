@@ -25,8 +25,14 @@ import { getGymFilterValue } from 'src/store/gym-filter/selectors';
 import { APIRoute } from 'src/constant';
 import GymCard from 'src/components/common-ui/gym/gym-card';
 import Error from 'src/components/animate-ui/error/error';
+import useSWR from 'swr';
+import { Gym } from 'src/types/gym';
 
 const ABORT_SIGNAL_MESSAGE = 'canceled';
+
+const apiAccount = createAppApi(RESTService.PersonalAccount);
+const myGymsFetcher = async (endPoint: string) =>
+  (await apiAccount.get(endPoint)).data;
 
 export default function GymsCatalogueList(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -43,6 +49,12 @@ export default function GymsCatalogueList(): JSX.Element {
   const [successPageNumber, setSuccessPageNumber] = useState(pageNumber);
   const [errorPageNumber, setErrorPageNumber] = useState(0);
   const [buttonClickCount, setButtonClickCount] = useState(0);
+
+  const {
+    data: favoriteGyms,
+    error: favoriteGymsError,
+    isLoading: favoriteGymsIsLoading,
+  } = useSWR<Gym[]>(`${APIRoute.FavotiteGyms}`, myGymsFetcher);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -138,10 +150,16 @@ export default function GymsCatalogueList(): JSX.Element {
 
   return (
     <div className="my-trainings">
-      {isFirstLoadingServer ? (
+      {isFirstLoadingServer || favoriteGymsIsLoading ? (
         <Spinner spinnerScreen />
-      ) : isFirstServerError ? (
-        <Error errorMessage={isFirstServerError} />
+      ) : isFirstServerError || favoriteGymsError ? (
+        <Error
+          errorMessage={
+            isFirstServerError ||
+            favoriteGymsError.mesage ||
+            favoriteGymsError.response.data.message
+          }
+        />
       ) : (
         <>
           <ul className="gyms-catalog__list">
@@ -154,6 +172,9 @@ export default function GymsCatalogueList(): JSX.Element {
                 backgroundimage={gym.image}
                 description={gym.description}
                 title={gym.title}
+                isFavoriteGym={favoriteGyms?.some(
+                  (favoriteGym) => favoriteGym.id === gym.id
+                )}
               />
             ))}
           </ul>

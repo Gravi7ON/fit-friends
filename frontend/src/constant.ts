@@ -18,6 +18,7 @@ export enum PersonalCustomerRoute {
   Workouts = '/personal-customer/workouts',
   Users = '/personal-customer/users',
   Gyms = '/personal-customer/gyms',
+  MyGyms = '/personal-customer/my-gyms',
 }
 
 export enum PersonalCoachRoute {
@@ -61,4 +62,5 @@ export enum APIRoute {
   Reviews = '/reviews',
   MyBalance = '/my-balance',
   MyPurchasesWorkouts = '/my-purchases/workouts',
+  FavotiteGyms = 'favorite-gyms',
 }

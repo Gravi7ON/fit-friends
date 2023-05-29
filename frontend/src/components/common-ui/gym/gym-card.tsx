@@ -1,6 +1,10 @@
 import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PersonalCustomerRoute } from 'src/constant';
+import { APIRoute, PersonalCustomerRoute } from 'src/constant';
+import { RESTService, createAppApi } from 'src/services/app.api';
+import { Gym } from 'src/types/gym';
+import { KeyedMutator } from 'swr';
+import useSWRMutation from 'swr/mutation';
 
 type GymCardProps = {
   id: number;
@@ -9,7 +13,15 @@ type GymCardProps = {
   title: string;
   location: string;
   description: string;
+  isFavoriteGym?: boolean;
+  mutateCache?: KeyedMutator<Gym[]>;
 };
+
+const apiWorkout = createAppApi(RESTService.PersonalAccount);
+const gymsRemoveFetcher = async (endPoint: string) =>
+  (await apiWorkout.delete(endPoint)).data;
+const gymsAddFetcher = async (endPoint: string) =>
+  (await apiWorkout.post(endPoint)).data;
 
 export default memo(function GymCard({
   id,
@@ -18,8 +30,18 @@ export default memo(function GymCard({
   title,
   location,
   description,
+  isFavoriteGym = false,
+  mutateCache,
 }: GymCardProps): JSX.Element {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(isFavoriteGym);
+
+  const {
+    trigger: removeFavoriteTrigger,
+    isMutating: isMutatingRemoveFavorite,
+  } = useSWRMutation(`${APIRoute.FavotiteGyms}/${id}`, gymsRemoveFetcher);
+
+  const { trigger: addFavoriteTrigger, isMutating: isMutatingAddFavorite } =
+    useSWRMutation(`${APIRoute.FavotiteGyms}/${id}`, gymsAddFetcher);
 
   return (
     <li className="gyms-catalog__item">
@@ -54,7 +76,18 @@ export default memo(function GymCard({
           className={`thumbnail-gym__favourite-button ${
             isFavorite ? 'is-active' : ''
           }`}
-          onClick={() => setIsFavorite((prev) => !prev)}
+          disabled={isMutatingRemoveFavorite || isMutatingAddFavorite}
+          onClick={async () => {
+            if (isFavorite) {
+              await removeFavoriteTrigger();
+              if (mutateCache) {
+                mutateCache();
+              }
+            } else {
+              await addFavoriteTrigger();
+            }
+            setIsFavorite((prev) => !prev);
+          }}
         >
           <span className="visually-hidden">
             {isFavorite ? 'Удалить из Избранного' : 'Добавить в Избранное'}

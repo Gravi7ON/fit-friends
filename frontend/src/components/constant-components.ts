@@ -50,3 +50,8 @@ export enum TypePurchase {
   Workout = 'тренировка',
   Gym = 'абонемент',
 }
+
+export enum WidgetTheme {
+  Light = 'light',
+  Dark = 'dark',
+}

@@ -1,5 +1,5 @@
 import { throttle } from 'lodash';
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import './button-move-up.css';
 
 type ButtonMoveUpProps = {

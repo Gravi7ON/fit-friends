@@ -311,4 +311,12 @@ export class UserRepository {
       })
       .exec();
   }
+
+  public async findAllPersonalTrainingCustomerRequests(customerId: string) {
+    return this.personalTrainingRequestModel
+      .find({
+        fromUserId: customerId,
+      })
+      .exec();
+  }
 }

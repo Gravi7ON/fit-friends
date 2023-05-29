@@ -166,4 +166,13 @@ export class UserService {
 
     return personalTrainingRequests;
   }
+
+  async findAllPersonalTrainingCustomerRequests(customerId: string) {
+    const personalTrainingRequests =
+      await this.userRepository.findAllPersonalTrainingCustomerRequests(
+        customerId
+      );
+
+    return personalTrainingRequests;
+  }
 }

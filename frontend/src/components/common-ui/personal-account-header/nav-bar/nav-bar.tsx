@@ -81,9 +81,9 @@ export default function NavBar({
             </svg>
           </Link>
           <div className="main-nav__dropdown">
-            <p className="main-nav__label">Оповещения</p>
+            <p className="main-nav__label">Оповещения отсутствуют</p>
             <ul className="main-nav__sublist">
-              <li className="main-nav__subitem">
+              {/* <li className="main-nav__subitem">
                 <Link
                   className="notification is-active"
                   to="#"
@@ -146,7 +146,7 @@ export default function NavBar({
                     14 декабря, 08:15
                   </time>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </li>
