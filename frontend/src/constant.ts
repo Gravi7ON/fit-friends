@@ -63,4 +63,5 @@ export enum APIRoute {
   MyBalance = '/my-balance',
   MyPurchasesWorkouts = '/my-purchases/workouts',
   FavotiteGyms = 'favorite-gyms',
+  FoodDiary = '/food-diary',
 }

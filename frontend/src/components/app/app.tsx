@@ -38,6 +38,7 @@ import WorkoutScreenCustomer from '../common-ui/workout/workout-screen-customer'
 import WorkoutScreenCoach from '../common-ui/workout/workout-screen-coach';
 import CustomerAccountGyms from '../personal-account-customer/customer-account-gyms/customer-account-gyms';
 import CustomerAccountPurchases from '../personal-account-customer/customer-account-purchases/customer-account-purchases';
+import CustomerAccountFoodDiary from '../personal-account-customer/customer-account-food-diary/customer-account-food-diary';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -214,6 +215,17 @@ export default function App(): JSX.Element {
               role={userRole}
             >
               <CustomerAccountPurchases />
+            </PrivateCustomerRoute>
+          }
+        />
+        <Route
+          path={PersonalCustomerRoute.FoodDiary}
+          element={
+            <PrivateCustomerRoute
+              authorizationStatus={authorizationStatus}
+              role={userRole}
+            >
+              <CustomerAccountFoodDiary />
             </PrivateCustomerRoute>
           }
         />

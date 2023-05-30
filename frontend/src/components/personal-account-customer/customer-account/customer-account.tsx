@@ -1,4 +1,3 @@
-import { Link, useNavigate } from 'react-router-dom';
 import CustomerInfo from './customer-info/customer-info';
 import { RESTService, createAppApi } from 'src/services/app.api';
 import useSWR from 'swr';
@@ -39,6 +38,7 @@ export default function CustomerAccount(): JSX.Element {
                         <input
                           type="text"
                           name="schedule-for-the-day"
+                          readOnly
                           value={user?.dayDeclineCalories}
                         />
                       </label>
@@ -51,6 +51,7 @@ export default function CustomerAccount(): JSX.Element {
                         <input
                           type="text"
                           name="schedule-for-the-week"
+                          readOnly
                           value={user && user?.dayDeclineCalories * DAY_OF_WEEK}
                         />
                       </label>
