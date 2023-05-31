@@ -39,7 +39,7 @@ export default function CustomerAccount(): JSX.Element {
                           type="text"
                           name="schedule-for-the-day"
                           readOnly
-                          value={user?.dayDeclineCalories}
+                          defaultValue={user?.dayDeclineCalories}
                         />
                       </label>
                     </div>
@@ -52,7 +52,9 @@ export default function CustomerAccount(): JSX.Element {
                           type="text"
                           name="schedule-for-the-week"
                           readOnly
-                          value={user && user?.dayDeclineCalories * DAY_OF_WEEK}
+                          defaultValue={
+                            user && user?.dayDeclineCalories * DAY_OF_WEEK
+                          }
                         />
                       </label>
                     </div>
@@ -130,70 +132,58 @@ export default function CustomerAccount(): JSX.Element {
                       </div>
                     </div>
                     <table className="my-progress__table">
-                      <tr className="my-progress__row my-progress__row--head">
-                        <th className="my-progress__cell my-progress__cell--head">
-                          пн
-                        </th>
-                        <th className="my-progress__cell my-progress__cell--head">
-                          вт
-                        </th>
-                        <th className="my-progress__cell my-progress__cell--head">
-                          ср
-                        </th>
-                        <th className="my-progress__cell my-progress__cell--head">
-                          чт
-                        </th>
-                        <th className="my-progress__cell my-progress__cell--head">
-                          пт
-                        </th>
-                        <th className="my-progress__cell my-progress__cell--head">
-                          сб
-                        </th>
-                        <th className="my-progress__cell my-progress__cell--head">
-                          вс
-                        </th>
-                      </tr>
-                      <tr className="my-progress__row">
-                        <td className="my-progress__cell">3000</td>
-                        <td className="my-progress__cell">1000</td>
-                        <td className="my-progress__cell">3000</td>
-                        <td className="my-progress__cell">1000</td>
-                        <td className="my-progress__cell">3000</td>
-                        <td className="my-progress__cell">1000</td>
-                        <td className="my-progress__cell">3000</td>
-                      </tr>
-                      <tr className="my-progress__row">
-                        <td className="my-progress__cell">2000</td>
-                        <td className="my-progress__cell">4500</td>
-                        <td className="my-progress__cell">2000</td>
-                        <td className="my-progress__cell">4500</td>
-                        <td className="my-progress__cell">2000</td>
-                        <td className="my-progress__cell">4500</td>
-                        <td className="my-progress__cell">2000</td>
-                      </tr>
-                      <tr className="my-progress__row">
-                        <td className="my-progress__cell my-progress__cell--red">
-                          1000
-                        </td>
-                        <td className="my-progress__cell my-progress__cell--green">
-                          3500
-                        </td>
-                        <td className="my-progress__cell my-progress__cell--red">
-                          1000
-                        </td>
-                        <td className="my-progress__cell my-progress__cell--green">
-                          3500
-                        </td>
-                        <td className="my-progress__cell my-progress__cell--red">
-                          1000
-                        </td>
-                        <td className="my-progress__cell my-progress__cell--green">
-                          3500
-                        </td>
-                        <td className="my-progress__cell my-progress__cell--red">
-                          1000
-                        </td>
-                      </tr>
+                      <tbody>
+                        <tr className="my-progress__row my-progress__row--head">
+                          <th className="my-progress__cell my-progress__cell--head">
+                            пн
+                          </th>
+                          <th className="my-progress__cell my-progress__cell--head">
+                            вт
+                          </th>
+                          <th className="my-progress__cell my-progress__cell--head">
+                            ср
+                          </th>
+                          <th className="my-progress__cell my-progress__cell--head">
+                            чт
+                          </th>
+                          <th className="my-progress__cell my-progress__cell--head">
+                            пт
+                          </th>
+                          <th className="my-progress__cell my-progress__cell--head">
+                            сб
+                          </th>
+                          <th className="my-progress__cell my-progress__cell--head">
+                            вс
+                          </th>
+                        </tr>
+                        <tr className="my-progress__row">
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                        </tr>
+                        <tr className="my-progress__row">
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                        </tr>
+                        <tr className="my-progress__row">
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                          <td className="my-progress__cell">0</td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                 </section>
