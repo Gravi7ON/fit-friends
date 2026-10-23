@@ -7,12 +7,14 @@ import {
 } from './token.stotage';
 import { APIRoute } from 'src/constant';
 
+// Относительные пути: в docker-образе запросы маршрутизирует nginx,
+// при локальной разработке — proxy из vite.config.ts.
 const BackendUrl = {
-  Auth: 'http://localhost:3333/api/auth',
-  Users: 'http://localhost:3333/api/users',
-  PersonalAccount: 'http://localhost:3333/api/personal-account',
-  Workouts: 'http://localhost:3334/api/workouts',
-  Notify: 'http://localhost:3335/api/workout-subscriber',
+  Auth: '/api/auth',
+  Users: '/api/users',
+  PersonalAccount: '/api/personal-account',
+  Workouts: '/api/workouts',
+  Notify: '/api/workout-subscriber',
 } as const;
 
 export enum RESTService {

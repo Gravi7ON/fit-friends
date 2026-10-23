@@ -51,9 +51,7 @@ export class WorkoutService {
   ): Promise<Workout> {
     const workoutEntity = new WorkoutEntity({
       ...dto,
-      backgroundImage: `http://localhost:${
-        process.env.PORT
-      }/api/files/workouts/training-${getRandomPositiveInteger(
+      backgroundImage: `/api/files/workouts/training-${getRandomPositiveInteger(
         RangeImages.Min,
         RangeImages.Max
       )}.jpg`,

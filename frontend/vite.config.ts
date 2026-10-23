@@ -9,6 +9,11 @@ export default defineConfig({
   server: {
     port: 4200,
     host: 'localhost',
+    proxy: {
+      '^/api/(auth|users|personal-account)': 'http://localhost:3333',
+      '^/api/(workouts|files)': 'http://localhost:3334',
+      '^/api/workout-subscriber': 'http://localhost:3335',
+    },
   },
 
   preview: {

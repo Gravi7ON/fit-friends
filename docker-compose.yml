@@ -1,0 +1,20 @@
+services:
+  fitfriends:
+    build:
+      context: .
+      args:
+        DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
+    image: fitfriends:latest
+    container_name: fitfriends
+    restart: unless-stopped
+    ports:
+      - "${FITFRIENDS_PORT:-80}:80"
+    volumes:
+      - fitfriends-data:/data
+    stop_grace_period: 60s
+    # Необязательно: свои JWT-секреты или реальный SMTP (см. README).
+    # env_file:
+    #   - ./fitfriends.env
+
+volumes:
+  fitfriends-data:

@@ -1,0 +1,18 @@
+.git
+.claude
+**/node_modules
+**/dist
+**/tmp
+**/coverage
+**/.nx
+
+# локальные данные docker-compose сервисов
+**/db
+**/redis-db
+
+# переменные окружения и секреты не попадают в образ
+**/.env
+**/.env.*
+**/*.env
+**/*.pem
+**/*.key

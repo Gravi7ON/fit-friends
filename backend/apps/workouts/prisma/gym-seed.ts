@@ -59,12 +59,14 @@ export async function fillDb() {
     ['бассейн', 'бесплатная парковка', 'детская комната', 'массаж'],
   ];
 
-  for (const iter of Array(MOCK_GYMS_AMOUNT)) {
+  if ((await prisma.gym.count()) > 0) {
+    return;
+  }
+
+  for (let i = 0; i < MOCK_GYMS_AMOUNT; i++) {
     const randomImageNumber = randomInteger(RangeImage.Min, RangeImage.Max);
-    await prisma.gym.upsert({
-      where: { id: iter },
-      update: {},
-      create: {
+    await prisma.gym.create({
+      data: {
         title: titles[randomInteger(RangeMockField.Min, RangeMockField.Max)],
         location:
           locations[randomInteger(RangeMockField.Min, RangeMockField.Max)],
@@ -73,9 +75,7 @@ export async function fillDb() {
         ),
         features:
           features[randomInteger(RangeMockField.Min, RangeMockField.Max)],
-        image: `http://localhost:${
-          globalThis.process.env.PORT
-        }/api/files/gyms/gym-${
+        image: `/api/files/gyms/gym-${
           randomImageNumber < 10 ? `0${randomImageNumber}` : randomImageNumber
         }.jpg`,
         description:
